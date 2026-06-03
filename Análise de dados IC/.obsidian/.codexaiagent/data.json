@@ -1,0 +1,156 @@
+{
+  "sessions": [
+    {
+      "id": "session-1780462248055-e3c9ef30bf7a58",
+      "title": "New Agent",
+      "timeline": [],
+      "statusItemIndex": null,
+      "runStartedAt": 0,
+      "createdAt": 1780462248055,
+      "updatedAt": 1780462248055
+    }
+  ],
+  "archivedSessions": [
+    {
+      "id": "session-1780460556088-3aa5792809666",
+      "title": "Como faço login com mi...",
+      "tokenUsageLimit": null,
+      "timeline": [
+        {
+          "title": "You",
+          "body": "Como faço login com minha conta OPENAI aqui?",
+          "tone": "user",
+          "contextChips": [],
+          "messageParts": [
+            {
+              "type": "text",
+              "text": "Como faço login com minha conta OPENAI aqui?"
+            }
+          ],
+          "expanded": false,
+          "readSummary": false,
+          "diffSummary": false,
+          "planSummary": false,
+          "streaming": false
+        },
+        {
+          "title": "Codex app-server failed to start",
+          "body": "spawn codex ENOENT. Tried: codex",
+          "tone": "command",
+          "expanded": false,
+          "readSummary": false,
+          "diffSummary": false,
+          "planSummary": false,
+          "streaming": false
+        },
+        {
+          "title": "Run failed",
+          "body": "Codex exited with code 1.",
+          "tone": "status",
+          "expanded": false,
+          "readSummary": false,
+          "diffSummary": false,
+          "planSummary": false,
+          "streaming": false
+        }
+      ],
+      "statusItemIndex": 2,
+      "runStartedAt": 1780460565069,
+      "createdAt": 1780460556088,
+      "updatedAt": 1780462248055,
+      "closedAt": 1780462248055
+    },
+    {
+      "id": "session-1780459988807-5c03bd01a54ba8",
+      "title": "codex login",
+      "tokenUsageLimit": null,
+      "timeline": [
+        {
+          "title": "You",
+          "body": "codex login",
+          "tone": "user",
+          "contextChips": [],
+          "messageParts": [
+            {
+              "type": "text",
+              "text": "codex login"
+            }
+          ],
+          "expanded": false,
+          "readSummary": false,
+          "diffSummary": false,
+          "planSummary": false,
+          "streaming": false
+        },
+        {
+          "title": "Codex app-server failed to start",
+          "body": "spawn codex ENOENT. Tried: codex",
+          "tone": "command",
+          "expanded": false,
+          "readSummary": false,
+          "diffSummary": false,
+          "planSummary": false,
+          "streaming": false
+        },
+        {
+          "title": "Run failed",
+          "body": "Codex exited with code 1.",
+          "tone": "status",
+          "expanded": false,
+          "readSummary": false,
+          "diffSummary": false,
+          "planSummary": false,
+          "streaming": false
+        }
+      ],
+      "statusItemIndex": 2,
+      "runStartedAt": 1780460518597,
+      "createdAt": 1780459988807,
+      "updatedAt": 1780460556655,
+      "closedAt": 1780460556655
+    }
+  ],
+  "activeSessionId": "session-1780462248055-e3c9ef30bf7a58",
+  "settings": {
+    "codexBin": "C:\\Users\\thede\\AppData\\Roaming\\npm\\node_modules\\@openai\\codex\\bin\\codex.js",
+    "nodeBin": "C:\\Program Files\\nodejs\\node.exe",
+    "adapterMode": "exec-json",
+    "defaultMode": "agent",
+    "defaultModel": "GPT-5.5",
+    "defaultReasoningLevel": "Medium",
+    "autoAttachActiveNote": false,
+    "enableRightClickAddToAgent": true,
+    "maxNoteLength": 10000,
+    "maxSelectionLength": 10000,
+    "folderTreeDepth": 3,
+    "externalPathAccess": "ask-each-time",
+    "showDetailedApprovals": true,
+    "stickyUserPrompts": true,
+    "compactCommandGroups": true,
+    "diffLineNumbers": true,
+    "enableDiffReview": true,
+    "enableGitManagement": true,
+    "language": "en",
+    "pastedImageBehavior": "chip",
+    "chatViewLocation": "right-pane",
+    "chatFontSize": 15,
+    "inlineEditQuickCommands": [
+      {
+        "id": "polish",
+        "name": "Polish",
+        "prompt": "Polish the selected content for clarity and natural flow while preserving the original meaning and Markdown structure."
+      },
+      {
+        "id": "summarize",
+        "name": "Summarize",
+        "prompt": "Summarize the selected content into concise points while preserving the key information."
+      }
+    ]
+  },
+  "diffReviewState": {
+    "acceptedFiles": [],
+    "acceptedHunks": [],
+    "acceptedLines": [],
+    "rejectedFiles": []
+  }
+}

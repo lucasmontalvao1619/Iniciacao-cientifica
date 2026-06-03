@@ -1,0 +1,2 @@
+-- Placeholder para schema futuro.
+-- Não contém modelagem real ainda.

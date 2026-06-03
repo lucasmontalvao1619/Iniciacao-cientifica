@@ -1,0 +1,2 @@
+-- Placeholder para dados iniciais futuros.
+-- Não contém dados reais ainda.
