@@ -10,11 +10,8 @@ operacional (:func:`gerar_plano`), registrar o que voltou da bancada
 resultados (:func:`analisar_experimento`, :func:`exportar_experimento_csv`).
 """
 
-from .estatistica_service import (
-    analisar_experimento,
-    analisar_grupos,
-    exportar_experimento_csv,
-)
+from typing import Any
+
 from .experimento_service import (
     adicionar_medicoes,
     criar_experimento,
@@ -43,3 +40,18 @@ __all__ = [
     "analisar_experimento",
     "exportar_experimento_csv",
 ]
+
+
+def __getattr__(name: str) -> Any:
+    """Carrega estatística apenas quando um de seus serviços é solicitado."""
+    if name not in {
+        "analisar_experimento",
+        "analisar_grupos",
+        "exportar_experimento_csv",
+    }:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    from . import estatistica_service
+
+    value = getattr(estatistica_service, name)
+    globals()[name] = value
+    return value

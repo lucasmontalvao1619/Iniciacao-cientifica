@@ -1,8 +1,14 @@
-# Aplicativo macOS
+# Distribuição — Windows como prioridade
 
 Nome: **Planejador de Experimentos**. O bundle `.app` inclui Python, PyQt6, bibliotecas científicas, catálogo e ícone; não exige abrir terminal nem ativar `.venv` para usar.
 
-## Gerar a partir do código
+## Entrega principal: Windows
+
+O alvo principal é um aplicativo **desktop nativo para Windows**, com executável `.exe`, interface PyQt6 e bibliotecas empacotadas para uso sem instalação manual de Python. macOS é suporte secundário. Nenhuma decisão de interface ou dependência deve tornar o Windows uma adaptação posterior.
+
+A compilação e a validação do `.exe` precisam ocorrer em ambiente Windows, verificando inicialização, catálogo, planejamento, estatística, gráfico, exportação e instância única. O `.app` abaixo não comprova esses testes nem é um executável Windows. **Estado: build e validação Windows pendentes.** A receita `packaging/Planejador.spec` é específica do macOS e não deve ser usada como receita Windows.
+
+## Suporte secundário: gerar macOS a partir do código
 
 No macOS, na raiz do repositório:
 

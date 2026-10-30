@@ -27,6 +27,13 @@ Auxiliar pesquisadores e estudantes no planejamento de experimentos laboratoriai
 - Ensaios biológicos.
 - Novos protocolos experimentais.
 
+## Plataformas
+
+- **Windows é a plataforma principal:** aplicativo desktop nativo, distribuição `.exe` e prioridade de interface, testes e empacotamento.
+- macOS é suporte secundário; uma compilação `.app` não substitui a entrega Windows.
+- Manter o código PyQt6 multiplataforma. Só afirmar funcionamento/validação em Windows após teste real nesse sistema.
+- Atualizar `REGISTRO.md` em cada nova obtenção de informações de protocolos, preservando origem, data e horário reais com fuso.
+
 ## Tecnologias
 
 - Python (>=3.11).

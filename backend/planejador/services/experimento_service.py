@@ -12,7 +12,6 @@ from collections.abc import Mapping, Sequence
 
 from sqlalchemy.orm import Session
 
-from ..core import tabelas
 from ..core.exceptions import EntradaInvalida
 from ..database import repositories
 
@@ -110,6 +109,8 @@ def obter_experimento(session: Session, experimento_id: int) -> dict:
     Raises:
         RegistroNaoEncontrado: Se o experimento não existir.
     """
+    from ..core import tabelas
+
     experimento = repositories.obter_experimento(session, experimento_id)
     grupos = repositories.medicoes_por_grupo(session, experimento_id)
 

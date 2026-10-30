@@ -71,3 +71,9 @@ Na raiz: `.venv/bin/python -m frontend.app`. Instalação: `pip install -e ".[ui
 ## Aplicativo no macOS
 
 Nome do aplicativo: **Planejador de Experimentos**. Empacotamento e instruções em [distribuição macOS](docs/distribuicao/README.md). Abrir o bundle `.app` no Desktop dispensa o terminal.
+
+## Plataforma prioritária e registro de fontes
+
+**Windows é o alvo principal**, com aplicativo desktop nativo e distribuição `.exe`; macOS é secundário. A compilação macOS existente não comprova validação em Windows. Consulte [distribuição](docs/distribuicao/README.md).
+
+A origem, dia e horário disponíveis para os protocolos estão em [REGISTRO.md](REGISTRO.md). Consultas ao catálogo e consultas às fontes primárias são identificadas separadamente.

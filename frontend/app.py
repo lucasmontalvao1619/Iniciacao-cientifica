@@ -42,7 +42,6 @@ from sqlalchemy.orm import Session
 
 # Running from the source checkout does not require an editable installation.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
-from frontend.analysis import AnalysisWidget
 from planejador.core.exceptions import ErroPlanejamento
 from planejador.database import models  # noqa: F401
 from planejador.database.connection import Base
@@ -125,7 +124,7 @@ class PlannerWindow(QMainWindow):
         self.ready = False
         shell = QWidget()
         self.setCentralWidget(shell)
-        self.analysis = AnalysisWidget()
+        self.analysis = None
         layout = QHBoxLayout(shell)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
@@ -171,18 +170,14 @@ class PlannerWindow(QMainWindow):
         self.build_protocols()
         self.build_parameters()
         self.build_plan()
-        analysis_scroll = QScrollArea()
-        analysis_scroll.setWidgetResizable(True)
-        self.analysis.setMinimumHeight(1000)
-        analysis_scroll.setWidget(self.analysis)
-        self.stack.addWidget(analysis_scroll)
-        self.analysis.save_experiment.clicked.connect(self.export_plan)
+        self.analysis_scroll = QScrollArea()
+        self.analysis_scroll.setWidgetResizable(True)
+        self.stack.addWidget(self.analysis_scroll)
         self.steps[2].setToolTip("Disponível depois de confirmar o protocolo.")
         self.steps[3].setToolTip("Disponível depois de gerar um plano válido.")
         self.steps[4].setToolTip(
             "Registre as medições do experimento após concluir o plano."
         )
-        self.analysis.back.clicked.connect(lambda: self.show_page(3))
         self.ready = True
         self.protocol.currentIndexChanged.connect(self.protocol_changed)
         self.protocol.lineEdit().textEdited.connect(self.protocol_changed)
@@ -218,6 +213,16 @@ class PlannerWindow(QMainWindow):
             return
         if index >= 3 and self.plan is None:
             return
+        if index == 4 and self.analysis is None:
+            from frontend.analysis import AnalysisWidget
+
+            self.analysis = AnalysisWidget()
+            self.analysis.setMinimumHeight(1000)
+            self.analysis_scroll.setWidget(self.analysis)
+            self.analysis.save_experiment.clicked.connect(self.export_plan)
+            self.analysis.back.clicked.connect(lambda: self.show_page(3))
+            if self.analysis is not None:
+                self.analysis.set_experiment(self.title.text().strip(), self.plan)
         self.stack.setCurrentIndex(index)
         for i, item in enumerate(self.steps):
             item.setEnabled(
@@ -250,7 +255,8 @@ class PlannerWindow(QMainWindow):
         self.export_button.setEnabled(False)
         self.steps[3].setEnabled(False)
         self.steps[4].setEnabled(False)
-        self.analysis.clear_experiment()
+        if self.analysis is not None:
+            self.analysis.clear_experiment()
 
     def reset_parameters(self):
         self.title.clear()
@@ -499,7 +505,8 @@ class PlannerWindow(QMainWindow):
             self.solution_fields["conc_final"].setFocus()
             return
         self.export_button.setEnabled(True)
-        self.analysis.set_experiment(self.title.text().strip(), self.plan)
+        if self.analysis is not None:
+            self.analysis.set_experiment(self.title.text().strip(), self.plan)
         self.parameters = params
         self.result_title.setText(self.title.text().strip())
         self.summary.setText(
@@ -600,7 +607,7 @@ class PlannerWindow(QMainWindow):
             "parametros": self.parameters,
             "plano": self.plan,
         }
-        if self.analysis.report is not None:
+        if self.analysis is not None and self.analysis.report is not None:
             payload["resultados_observados"] = {
                 "medicoes": self.analysis.read_groups(),
                 "unidade": self.analysis.unit.text().strip(),

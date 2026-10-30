@@ -8,6 +8,8 @@ ver [decisões](../decisoes/README.md).
 
 > **Nenhum protocolo deve ser implementado antes de estar documentado aqui.**
 
+Registro consolidado: [REGISTRO.md](../../REGISTRO.md). Atualizá-lo em cada nova consulta, extração ou inclusão, além da ficha individual.
+
 ## O que cada protocolo deve registrar
 
 - nome do protocolo;

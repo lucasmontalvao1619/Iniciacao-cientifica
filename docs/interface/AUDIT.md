@@ -100,3 +100,13 @@ Construção PyInstaller 6.22.3 para macOS arm64, saída em `/private/tmp/planej
 A janela nativa identifica App e menu como Planejador de Experimentos, não Python. Catálogo com dez candidatos e dois exemplos carregado do bundle. A ativação de um botão lateral pela acessibilidade inicialmente apenas alterava seu estado; conexão de toggled corrige o encaminhamento. Novo teste verifica a ativação por estado; nova compilação validada na janela nativa passando de Início a Protocolo com destaque único.
 
 88 testes da suíte completa passaram; ruff check backend/frontend/tests, formatação e diff --check passaram. Um aviso de depreciação da dependência Starlette/httpx foi emitido, sem falha. `.venv`, build e bundles não entram no Git; fontes, ícone e receita de compilação são versionados.
+
+## Abertura: carregamento sob demanda
+
+A janela inicial construía AnalysisWidget e importava SciPy/Pandas/Matplotlib antes de aparecer. Além do import da UI, `services.__init__` carregava estatística e o módulo de experimentos importava tabelas globalmente. Foram adiados a resolução dos serviços estatísticos, o import das tabelas de experimento e a construção/import da UI de Resultados.
+
+Medição local no modo de desenvolvimento, com Qt offscreen, neste Mac: antes, 1,762 s de imports e 2,010 s até renderização inicial; depois, 0,386 s de imports e 0,577 s até renderização. Amostras pontuais, não benchmark de inicialização fria do executável nem medição em Windows. Nenhuma promessa de tempo máximo de abertura.
+
+Teste em processo Python isolado confirma ausência de SciPy, Pandas, Matplotlib e frontend.analysis ao abrir a janela, e ausência de SciPy durante o planejamento; ao entrar em Resultados, os módulos e a tela são carregados com o experimento correto. Estatística e exportações foram preservadas. A suíte completa passou com 89 testes.
+
+Executável macOS reconstruído e cópia do Desktop atualizada. Verificação na janela nativa: abertura inicial, seleção de protocolo, geração do plano e primeira entrada em Resultados com o experimento correto. A primeira entrada em Resultados ainda teve espera perceptível durante o carregamento das bibliotecas; não foi atribuído tempo instrumentado a essa etapa. Dados de teste removidos pelo fluxo Novo planejamento e aplicativo deixado na tela inicial. A medição de 0,577 s acima se refere ao código de desenvolvimento, não ao bundle ou ao Windows.

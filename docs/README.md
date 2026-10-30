@@ -10,6 +10,8 @@ de cada uma é a porta de entrada daquele tema.
 3. [Decisões](decisoes/) — escolhas técnicas e suas justificativas.
 4. [Arquitetura](arquitetura/) — como o sistema é construído.
 
+Registro de origem e datas dos protocolos: [REGISTRO](../REGISTRO.md).
+
 ## Mapa
 
 | Pasta | Conteúdo |

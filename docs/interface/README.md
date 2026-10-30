@@ -27,3 +27,7 @@ A UI chama services diretamente, sem HTTP e sem duplicar fórmulas. Matplotlib a
 ## Verificação
 
 50 testes direcionados, inspeção Qt em 1180 e 880 px e conferência da janela nativa. Capturas em `capturas/`; evidências e limitações em [AUDIT.md](AUDIT.md). Acessibilidade usa widgets/foco/labels nativos e rolagem; não foi feita auditoria completa com leitores de tela nem teste de usabilidade com participantes.
+
+## Abertura otimizada
+
+A tela inicial e o planejamento não carregam o motor estatístico nem os gráficos. Essas bibliotecas e a tela são inicializadas na primeira entrada em Resultados e reutilizadas nas seguintes. O fluxo e as regras de invalidação permanecem iguais. A medição de desenvolvimento está no relatório de auditoria; os tempos do executável e do Windows precisam de medição própria.

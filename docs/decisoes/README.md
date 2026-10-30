@@ -12,6 +12,7 @@ atualizado.
 | Tema | Decisão |
 |---|---|
 | Linguagem | Python (>= 3.11) |
+| Plataforma principal | Windows desktop nativo; macOS secundário |
 | Interface | PyQt6 (primeira prévia de planejamento implementada) |
 | Banco de dados | SQLite por padrão, via SQLAlchemy, agnóstico de motor |
 | Acesso a dados | SQLAlchemy (ORM), isolando o SQL do restante do app |
@@ -80,3 +81,9 @@ A pedido de Lucas, esta revisão substitui as duas áreas independentes por uma 
 A entrada de medições usa uma tabela por grupo e unidade informada pelo usuário. Estatística descritiva e gráfico são o caminho padrão; teste t/ANOVA permanecem como comparação opcional, nas opções avançadas, sem pressupor independência das replicatas. A exportação JSON pode reunir plano, parâmetros, valores observados e análise; o PNG é o gráfico do experimento identificado. Ainda não é persistência de medições no banco pela UI.
 
 O dropdown editável abre sugestões ao clicar no próprio campo; permanece pesquisável por nome/código sem acentos, com primitives Qt e navegação por teclado. Não há área de pesquisa separada.
+
+## Windows como prioridade (2026-10-30)
+
+Instrução explícita de Lucas: priorizar Windows em interface, testes, instalação e distribuição nativa `.exe`, mantendo macOS como suporte secundário. PyQt6 permanece como tecnologia multiplataforma. A compilação macOS já produzida é uma prévia secundária; teste real do executável Windows permanece necessário antes de declarar a entrega Windows validada.
+
+A proveniência dos protocolos é centralizada em `REGISTRO.md` na raiz, com ligação às fichas. Horários existentes de consulta ao catálogo não são horários de leitura das fontes primárias.

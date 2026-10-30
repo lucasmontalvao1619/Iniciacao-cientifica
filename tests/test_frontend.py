@@ -217,3 +217,39 @@ def test_accessibility_sidebar_state_activates_page(app):
     assert w.stack.currentIndex() == 0
     assert not w.steps[1].isChecked()
     w.close()
+
+
+def test_startup_defers_scientific_stack_until_results():
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    code = """
+import sys
+from frontend.app import create_app, PlannerWindow
+app = create_app()
+w = PlannerWindow()
+w.show()
+app.processEvents()
+assert w.analysis is None
+assert not any(name in sys.modules for name in ('scipy', 'pandas', 'matplotlib', 'frontend.analysis'))
+w.protocol.setCurrentIndex(0)
+w.complete_protocol()
+w.title.setText('Carregamento')
+w.generate()
+assert w.analysis is None
+assert 'scipy' not in sys.modules
+w.navigate(4)
+assert w.analysis is not None
+assert w.analysis.context['titulo'] == 'Carregamento'
+assert 'matplotlib' in sys.modules and 'scipy' in sys.modules
+w.close()
+"""
+    env = dict(os.environ, QT_QPA_PLATFORM="offscreen")
+    subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=Path(__file__).resolve().parents[1],
+        env=env,
+        check=True,
+        timeout=60,
+    )
