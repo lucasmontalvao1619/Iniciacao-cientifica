@@ -1,8 +1,6 @@
 # Frontend
 
-**Estado: não implementado.** A pasta `frontend/` está reservada. Este documento
-registra as decisões já tomadas sobre como a interface deve se conectar ao
-backend, para orientar a implementação quando ela começar.
+**Estado: primeira prévia implementada.** `frontend/app.py` cobre início, seleção, parâmetros e revisão do plano usando services e seed em memória. Ver [fluxo e auditoria](../interface/README.md). A interface também recebe medições em memória para estatística e gráfico de pontos; persistência das medições pela UI ainda está pendente.
 
 ## Tecnologia prevista
 

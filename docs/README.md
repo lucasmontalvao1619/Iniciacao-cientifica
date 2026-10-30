@@ -25,8 +25,12 @@ de cada uma é a porta de entrada daquele tema.
 ## Estado do projeto
 
 O **backend está implementado** (cálculos, estatística, banco, services e API
-opcional), com testes automatizados. A **interface PyQt6 é a próxima etapa** —
+opcional), com testes automatizados. A **interface PyQt6 tem uma primeira prévia navegável** —
 ver [frontend](arquitetura/frontend.md).
+
+Prévia e fluxo: [interface](interface/README.md).
+
+Aplicativo macOS: [distribuição](distribuicao/README.md).
 
 ## Fora desta pasta
 

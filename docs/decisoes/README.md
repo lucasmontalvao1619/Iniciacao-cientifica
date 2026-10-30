@@ -12,7 +12,7 @@ atualizado.
 | Tema | Decisão |
 |---|---|
 | Linguagem | Python (>= 3.11) |
-| Interface | PyQt6 (prevista, ainda não implementada) |
+| Interface | PyQt6 (primeira prévia de planejamento implementada) |
 | Banco de dados | SQLite por padrão, via SQLAlchemy, agnóstico de motor |
 | Acesso a dados | SQLAlchemy (ORM), isolando o SQL do restante do app |
 | Arquitetura | Modular: `core` / `database` / `services` / `api` / `ui` |
@@ -64,3 +64,19 @@ reagente já está no banco, no campo `unidade`.
 
 **Consequências.** Cabe à camada superior (services/UI) garantir que as unidades
 combinam. Conversão automática de unidades não está implementada.
+
+## Prévia da interface (2026-10-30)
+
+Quatro telas PyQt6 baseadas em UC01–UC06, chamando services diretamente. O seed usa SQLite em memória isolado, sem tocar no banco real. Exportação JSON identifica conteúdo demonstrativo e fonte científica ausente. Fontes/versões e integração com dados persistentes ficam para o ciclo seguinte; não há validação para bancada nesta prévia.
+
+## Interface: planejamento, análise e gráficos (2026-10-30)
+
+Manter uma aplicação desktop única com duas áreas: o fluxo de planejamento sequencial e análise/plotagem de medições. Reusar `analisar_grupos`, com Matplotlib embutido no Qt; inferência desativada inicialmente e habilitada explicitamente. Guardar planejamento separado de observações. Instância única via QLockFile; não muda banco ou camada de cálculos.
+
+## Processo único: do planejamento aos resultados (2026-10-30)
+
+A pedido de Lucas, esta revisão substitui as duas áreas independentes por uma navegação sequencial única: Início, Protocolo, Parâmetros, Plano, Resultados. Resultados depende do plano válido e recebe sua identificação, protocolo e organização; os valores observados são inseridos pelo usuário, sem preenchimento a partir de parâmetros planejados. Mudança de planejamento invalida o contexto, as medições e análises anteriores para não misturar experimentos.
+
+A entrada de medições usa uma tabela por grupo e unidade informada pelo usuário. Estatística descritiva e gráfico são o caminho padrão; teste t/ANOVA permanecem como comparação opcional, nas opções avançadas, sem pressupor independência das replicatas. A exportação JSON pode reunir plano, parâmetros, valores observados e análise; o PNG é o gráfico do experimento identificado. Ainda não é persistência de medições no banco pela UI.
+
+O dropdown editável abre sugestões ao clicar no próprio campo; permanece pesquisável por nome/código sem acentos, com primitives Qt e navegação por teclado. Não há área de pesquisa separada.

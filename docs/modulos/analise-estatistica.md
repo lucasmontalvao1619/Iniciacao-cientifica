@@ -90,3 +90,7 @@ decisão foi tomada.
 
 Geração de gráficos (RF16). Os dados que a alimentam já estão prontos; falta a
 camada de apresentação — ver [frontend](../arquitetura/frontend.md).
+
+## Primeira interface (30/10/2026)
+
+`frontend/analysis.py` apresenta resumos e comparação opcional dos services, além de gráfico de pontos Matplotlib e exportação PNG. A primeira entrega cobre gráfico de pontos por grupo, não todas as visualizações futuras. Entrada em memória, sem gravação automática das medições no banco.

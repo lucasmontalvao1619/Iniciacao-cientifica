@@ -30,7 +30,7 @@ Auxiliar pesquisadores e estudantes no planejamento de experimentos laboratoriai
 ## Tecnologias
 
 - Python (>=3.11).
-- PyQt6 (interface — ainda não implementada).
+- PyQt6 (primeira prévia do planejamento implementada).
 - SQLite via SQLAlchemy (banco atual; Postgres/MySQL plugáveis pela variável
   `APP_DATABASE_URL`). Ver `docs/decisoes/README.md`.
 - NumPy, Pandas, SciPy, Matplotlib (cálculos e estatística).
@@ -44,7 +44,7 @@ O backend já foi implementado. Estrutura real do código:
 - `backend/planejador/services/`: orquestração core + database (implementado).
 - `backend/planejador/api/`: API HTTP opcional em FastAPI (implementado).
 - `backend/planejador/bootstrap.py`: inicialização do banco.
-- `frontend/`: interface PyQt6 — ainda não implementada.
+- `frontend/`: fluxo PyQt6 integrado de planejamento e resultados, com banco demonstrativo em memória.
 - `database/`: `schema.sql` (referência do modelo) e `seed.sql`.
 - `tests/`: testes (pytest) do backend — implementado.
 - `docs/`: fonte principal de contexto.
@@ -90,3 +90,4 @@ Regras:
 - Não remover conhecimento sem autorização explícita.
 - Não implementar código sem pedido explícito.
 - Não criar funcionalidades, telas, APIs, banco, cálculos ou estatística sem pedido explícito.
+- Para cada protocolo adicionado ou atualizado, registrar data, horário com fuso e origem das informações, conforme `docs/protocolos/README.md`. Priorizar as fontes previstas na metodologia da revisão sistemática; identificar separadamente fontes técnicas complementares. Não inventar datas nem referências ausentes.

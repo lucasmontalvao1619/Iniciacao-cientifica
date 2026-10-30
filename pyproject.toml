@@ -17,6 +17,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+bundle = ["pyinstaller>=6.22,<7"]
+ui = ["PyQt6>=6.7,<7", "matplotlib>=3.9,<4"]
 # Motores de banco alternativos (opcionais). SQLite já vem com o Python.
 postgres = ["psycopg[binary]>=3.1"]
 mysql = ["PyMySQL>=1.1"]
@@ -84,4 +86,4 @@ addopts = "-ra -q"
 # UF_HIDDEN, e o `site` do Python >= 3.11 ignora .pth ocultos — o pacote some do
 # sys.path e todo import de `planejador` falha. Apontar o pytest direto para
 # `backend/` elimina essa dependência.
-pythonpath = ["backend"]
+pythonpath = ["backend", "."]

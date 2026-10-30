@@ -24,7 +24,7 @@ O sistema deverá permitir selecionar protocolos, informar variáveis experiment
 ## Tecnologias
 
 - Python (>=3.11).
-- PyQt6 (interface — ainda não implementada).
+- PyQt6 (primeira prévia navegável de planejamento).
 - SQLite via SQLAlchemy (banco atual; Postgres/MySQL plugáveis por configuração).
 - NumPy, Pandas, SciPy, Matplotlib (cálculos e estatística).
 
@@ -39,7 +39,7 @@ Iniciacao-cientifica/
 │   ├── api/                # API HTTP opcional (FastAPI)
 │   ├── config.py           # configuração via variáveis de ambiente
 │   └── bootstrap.py        # cria tabelas e semeia dados de exemplo
-├── frontend/               # interface PyQt6 — ainda não implementada
+├── frontend/               # prévia PyQt6 de planejamento
 ├── database/               # schema.sql (referência do modelo) e seed.sql
 ├── docs/                   # documentação, organizada por tema
 ├── tests/                  # testes do backend (pytest)
@@ -62,4 +62,12 @@ documentação, começar por `docs/README.md`.
 3. Modelar banco de dados.
 4. Planejar implementação.
 5. Implementar mediante pedido explícito (backend já implementado; frontend
-   PyQt6 é a próxima etapa).
+   PyQt6 já tem uma primeira prévia em `frontend/`).
+
+## Abrir a prévia
+
+Na raiz: `.venv/bin/python -m frontend.app`. Instalação: `pip install -e ".[ui]"`. Ver [fluxo e auditoria](docs/interface/README.md).
+
+## Aplicativo no macOS
+
+Nome do aplicativo: **Planejador de Experimentos**. Empacotamento e instruções em [distribuição macOS](docs/distribuicao/README.md). Abrir o bundle `.app` no Desktop dispensa o terminal.

@@ -7,7 +7,7 @@ Como o sistema é construído.
 | [Visão do sistema](visao-do-sistema.md) | Retrato de alto nível, regra de dependência entre camadas e fluxo de uma requisição |
 | [Backend](backend.md) | Camadas `core`, `database`, `services` e `api` em detalhe |
 | [Banco de dados](banco-de-dados.md) | Motor, modelo de dados, arquivos e segurança |
-| [Frontend](frontend.md) | Interface PyQt6 — ainda não implementada; decisões já tomadas |
+| [Frontend](frontend.md) | Primeira prévia PyQt6 do planejamento e decisões de integração |
 
 ## Princípio central
 

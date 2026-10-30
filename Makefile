@@ -20,11 +20,11 @@ test:
 	pytest
 
 lint:
-	ruff check backend tests
+	ruff check backend frontend tests
 
 format:
-	ruff format backend tests
-	ruff check --fix backend tests
+	ruff format backend frontend tests
+	ruff check --fix backend frontend tests
 
 type-check:
 	mypy backend
