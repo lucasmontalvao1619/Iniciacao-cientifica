@@ -1,5 +1,20 @@
-# arquitetura
+# Arquitetura
 
-Documentação arquitetural do projeto.
+Como o sistema é construído.
 
-A preencher antes da implementação.
+| Documento | Conteúdo |
+|---|---|
+| [Visão do sistema](visao-do-sistema.md) | Retrato de alto nível, regra de dependência entre camadas e fluxo de uma requisição |
+| [Backend](backend.md) | Camadas `core`, `database`, `services` e `api` em detalhe |
+| [Banco de dados](banco-de-dados.md) | Motor, modelo de dados, arquivos e segurança |
+| [Frontend](frontend.md) | Interface PyQt6 — ainda não implementada; decisões já tomadas |
+
+## Princípio central
+
+Dependências apontam apenas "para baixo": `ui/api → services → core / database`.
+
+O núcleo de cálculo não conhece banco nem interface — é o que permite validá-lo
+contra conta feita à mão.
+
+Justificativas das escolhas em [decisões](../decisoes/README.md); instruções de
+execução em `backend/README.md`.
