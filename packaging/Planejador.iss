@@ -9,6 +9,7 @@ AppPublisher=Lucas Montalvão
 DefaultDirName={localappdata}\Programs\Planejador de Experimentos
 DefaultGroupName=Planejador de Experimentos
 PrivilegesRequired=lowest
+MinVersion=10.0
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir=..\dist\installer

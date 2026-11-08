@@ -216,9 +216,7 @@ def test_plano_sem_concentracao_nao_traz_preparo(session):
 
 def test_plano_como_dict_tem_todas_as_secoes(session):
     semear(session)
-    prot = next(
-        p for p in repo.listar_protocolos(session) if p.tipo == "microplaca"
-    )
+    prot = next(p for p in repo.listar_protocolos(session) if p.tipo == "microplaca")
     plano = gerar_plano(
         session,
         prot.id,

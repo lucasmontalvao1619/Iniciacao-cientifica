@@ -22,7 +22,7 @@ def test_limit_restart_archive_and_update(tmp_path):
     assert len(store.list()) == 10
     files = list(store.archive_dir.glob("*.json"))
     assert len(files) == 1
-    archived = json.loads(files[0].read_text())
+    archived = json.loads(files[0].read_text(encoding="utf-8"))
     assert (
         archived["consulta_apenas"]
         and archived["experimento"]["plano"]["resultado"] == 4.5

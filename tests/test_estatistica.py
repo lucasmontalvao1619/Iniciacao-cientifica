@@ -49,9 +49,7 @@ def test_teste_t_amostra_pequena_erro():
 
 
 def test_anova_tres_grupos():
-    r = estatistica.anova_uma_via(
-        [1.0, 2.0, 3.0], [1.1, 2.1, 3.1], [1.2, 2.2, 3.2]
-    )
+    r = estatistica.anova_uma_via([1.0, 2.0, 3.0], [1.1, 2.1, 3.1], [1.2, 2.2, 3.2])
     assert r.n_grupos == 3
     assert r.significativo is False
 

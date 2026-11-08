@@ -66,6 +66,7 @@ class PreparoForm(QWidget):
         self.formula_form = None
         self.comercial_form = None
         form = QFormLayout(self)
+        form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
         self.form = form
         form.setVerticalSpacing(12)
         form.setHorizontalSpacing(24)
@@ -264,6 +265,7 @@ class PreparoForm(QWidget):
         metadata_layout = QVBoxLayout(self.metadata_group)
         self.metadata_widget = QWidget()
         metadata_form = QFormLayout(self.metadata_widget)
+        metadata_form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
         self.meta_fields = {}
         for key, question in [
             ("identificacao_estoque", "Qual será a identificação do estoque?"),
@@ -700,12 +702,13 @@ class PreparoResults(QWidget):
                 "desidratado": "Preparo de meio comercial desidratado",
             }.get(protocol["tipo_calculo"], "Resultados do preparo percentual")
         )
+        title.setWordWrap(True)
         layout.addWidget(title)
-        layout.addWidget(
-            QLabel(
-                "Edite os parâmetros abaixo para recalcular o dimensionamento e o gráfico."
-            )
+        instruction = QLabel(
+            "Edite os parâmetros abaixo para recalcular o dimensionamento e o gráfico."
         )
+        instruction.setWordWrap(True)
+        layout.addWidget(instruction)
         self.form = PreparoForm(protocol["tipo_calculo"])
         self.form.set_values(values)
         layout.addWidget(self.form)

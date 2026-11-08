@@ -18,6 +18,7 @@ class MeioComercialForm(QWidget):
     def __init__(self):
         super().__init__()
         form = QFormLayout(self)
+        form.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
         form.setVerticalSpacing(12)
         self.name = QLineEdit()
         self.name.setMaxLength(160)

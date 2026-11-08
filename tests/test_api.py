@@ -93,9 +93,7 @@ def test_criar_plano_completo(cliente):
 
 
 def test_criar_plano_protocolo_inexistente(cliente):
-    resp = cliente.post(
-        "/planos", json={"protocolo_id": 999, "n_amostras": 1}
-    )
+    resp = cliente.post("/planos", json={"protocolo_id": 999, "n_amostras": 1})
     assert resp.status_code == 404
 
 
@@ -115,9 +113,7 @@ def test_criar_plano_entrada_invalida_traz_dica(cliente):
 
 def test_amostras_zero_rejeitado_pelo_schema(cliente):
     protocolo_id = _id_do_protocolo(cliente, "preparo_solucao")
-    resp = cliente.post(
-        "/planos", json={"protocolo_id": protocolo_id, "n_amostras": 0}
-    )
+    resp = cliente.post("/planos", json={"protocolo_id": protocolo_id, "n_amostras": 0})
     assert resp.status_code == 422
 
 

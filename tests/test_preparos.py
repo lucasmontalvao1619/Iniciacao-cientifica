@@ -54,7 +54,9 @@ def test_percentual_rejects_invalid_or_nonfinite(base, c, q, t):
 
 def test_percentual_service_keeps_source_and_named_components():
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[0]
     params = {
         "base": "v/v",
@@ -224,7 +226,9 @@ def test_stock_invalid_or_incompatible_inputs(changes):
 
 def test_stock_optional_label_data_never_invents_identity_or_validity():
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[2]
     params = {
         "unidade_concentracao": "mg/mL",
@@ -260,7 +264,9 @@ def test_stock_never_assumes_missing_purity():
     with pytest.raises(EntradaInvalida):
         preparar_estoque("mg/mL", 2, 100)
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[2]
     with pytest.raises(EntradaInvalida):
         calcular_preparo(
@@ -287,7 +293,9 @@ def test_stock_never_assumes_missing_purity():
 )
 def test_stock_dilution_independent_cases(unit, c1, c2, v, expected):
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[3]
     plan = calcular_preparo(
         protocol,
@@ -323,7 +331,9 @@ def test_stock_dilution_independent_cases(unit, c1, c2, v, expected):
 )
 def test_stock_dilution_rejects_bad_inputs(changes):
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[3]
     params = {
         "unidade_concentracao": "mg/mL",
@@ -349,7 +359,9 @@ def test_stock_dilution_rejects_bad_inputs(changes):
 )
 def test_serial_balances_and_remaining_volumes(factor, n, equalize):
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[4]
     c0, volume = 100, 10
     plan = calcular_preparo(
@@ -404,7 +416,9 @@ def test_serial_balances_and_remaining_volumes(factor, n, equalize):
 )
 def test_serial_rejects_bad_or_unrepresentable_inputs(changes):
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[4]
     params = {
         "unidade_concentracao": "mg/mL",
@@ -437,7 +451,9 @@ def test_final_concentration_from_volumes_independent(c0, a, v, expected, factor
     assert r.volume_alicota == a and r.volume_final == v
     assert c2 / c0 == pytest.approx(a / v)
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[5]
     plan = calcular_preparo(
         protocol,
@@ -472,7 +488,9 @@ def test_final_concentration_from_volumes_independent(c0, a, v, expected, factor
 )
 def test_factor_concentration_rejects_invalid_inputs(changes):
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[5]
     params = {
         "unidade_concentracao": "mg/mL",
@@ -496,7 +514,9 @@ def test_factor_concentration_rejects_invalid_inputs(changes):
 )
 def test_volume_totals_independent(v, n, e, base, total):
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[6]
     plan = calcular_preparo(
         protocol,
@@ -537,7 +557,9 @@ def test_volume_totals_independent(v, n, e, base, total):
 )
 def test_volume_rejects_invalid_inputs(changes):
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[6]
     params = {
         "volume_unitario": 20,
@@ -552,7 +574,9 @@ def test_volume_rejects_invalid_inputs(changes):
 
 def test_reference_formula_scaling_and_attribution():
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[7]
     params = {"formulacao_id": "anvisa_agar_nutriente", "volume_alvo_mL": 250}
     plan = calcular_preparo(protocol, params)
@@ -571,7 +595,9 @@ def test_reference_formula_scaling_and_attribution():
 
 def test_custom_formula_preserves_units_and_researcher_source():
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[7]
     params = {
         "formulacao_id": "pesquisador",
@@ -636,7 +662,9 @@ def test_formula_rejects_invalid_inputs(components, base, target):
 @pytest.mark.parametrize("basis", ["agua", "final"])
 def test_commercial_medium_scales_label_proportion(basis):
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[8]
     params = {
         "massa_referencia_g": 26,
@@ -672,7 +700,9 @@ def test_commercial_medium_scales_label_proportion(basis):
 )
 def test_commercial_medium_rejects_invalid_inputs(changes):
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[8]
     params = {
         "massa_referencia_g": 26,
@@ -688,7 +718,9 @@ def test_commercial_medium_rejects_invalid_inputs(changes):
 
 def test_medium_by_recipients_independent_values_and_declared_method():
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[9]
     params = {
         "recipiente": "placas",
@@ -743,7 +775,9 @@ def test_medium_by_recipients_independent_values_and_declared_method():
 )
 def test_medium_by_recipients_rejects_invalid_answers(field, value):
     protocol = json.loads(
-        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text()
+        (Path(__file__).parents[1] / "frontend/protocolos.json").read_text(
+            encoding="utf-8"
+        )
     )[9]
     params = {
         "recipiente": "placas",

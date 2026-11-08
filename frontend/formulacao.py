@@ -110,6 +110,7 @@ class FormulaForm(QWidget):
         conditions.addRow("Qual procedimento acompanha a formulação?", self.procedure)
         layout.addLayout(conditions)
         for grid in (form, conditions):
+            grid.setRowWrapPolicy(QFormLayout.RowWrapPolicy.WrapLongRows)
             for row in range(grid.rowCount()):
                 label = grid.itemAt(row, QFormLayout.ItemRole.LabelRole).widget()
                 label.setWordWrap(True)

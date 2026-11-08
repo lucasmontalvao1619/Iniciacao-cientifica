@@ -66,7 +66,7 @@ def test_wizard_reset_calculation_export(app, tmp_path):
     assert w.plan["preparo"]["diluicao"]["volume_alicota"] == 1
     path = tmp_path / "plan.json"
     w.write_export(path)
-    assert json.loads(path.read_text())["plano"]["n_reacoes"] == 26
+    assert json.loads(path.read_text(encoding="utf-8"))["plano"]["n_reacoes"] == 26
     w.navigate(2)
     w.fields["n_amostras"].setValue(3)
     assert w.plan is None
@@ -178,7 +178,7 @@ def test_integrated_results_and_reset(app, tmp_path):
     assert panel.report["teste_t"] is not None
     bundle = tmp_path / "experimento.json"
     w.write_export(bundle)
-    saved = json.loads(bundle.read_text())
+    saved = json.loads(bundle.read_text(encoding="utf-8"))
     assert (
         saved["plano"]["protocolo"]
         == saved["resultados_observados"]["analise"]["experimento"]["protocolo"]
@@ -447,7 +447,7 @@ def test_percentual_parameters_results_live_graph_and_export(app, tmp_path):
     assert w.plan is not None and panel.save.isEnabled()
     path = tmp_path / "plano.json"
     w.write_export(path)
-    saved = json.loads(path.read_text())
+    saved = json.loads(path.read_text(encoding="utf-8"))
     assert saved["fontes"][0]["year"] == 2009
     assert "resultados_observados" not in saved
     doc = tmp_path / "POP.docx"
@@ -487,7 +487,9 @@ def test_home_history_has_ten_and_archives_without_reopening(app):
     records = w.history.list()
     w.archive_record(records[0]["id"])
     assert w.history_table.rowCount() == 9
-    payload = json.loads(list(w.history.archive_dir.glob("*.json"))[0].read_text())
+    payload = json.loads(
+        list(w.history.archive_dir.glob("*.json"))[0].read_text(encoding="utf-8")
+    )
     w.view_record(payload)
     app.processEvents()
     dialog = app.activeModalWidget()
@@ -538,7 +540,7 @@ def test_molar_custom_form_live_results_history_and_protocol_switch(app, tmp_pat
     assert w.percent_form.forma.currentData() == "volume"
     path = tmp_path / "molar.json"
     w.write_export(path)
-    saved = json.loads(path.read_text())
+    saved = json.loads(path.read_text(encoding="utf-8"))
     assert saved["protocolo_id"] == "PREP-002"
     assert saved["plano"]["fontes"][0]["paginas"][-2:] == [249, 250]
     doc = tmp_path / "molar.docx"
@@ -623,7 +625,7 @@ def test_stock_questions_equivalence_live_graph_optional_label_and_export(
     assert panel.save.isEnabled()
     path = tmp_path / "estoque.json"
     w.write_export(path)
-    saved = json.loads(path.read_text())
+    saved = json.loads(path.read_text(encoding="utf-8"))
     assert saved["plano"]["rotulo_planejado"]["data_validade"] == "Data incompleta"
     assert len(saved["fontes"]) == 2
     doc = tmp_path / "POP-003.docx"
@@ -705,7 +707,7 @@ def test_stock_dilution_questions_plan_graph_export_and_switch(app, tmp_path):
     assert w.history_id == record
     path = tmp_path / "diluicao.json"
     w.write_export(path)
-    saved = json.loads(path.read_text())
+    saved = json.loads(path.read_text(encoding="utf-8"))
     assert saved["plano"]["concentracao_estoque"]["valor"] == 2
     assert saved["plano"]["resultado"]["volume_diluente_nominal"] == pytest.approx(9.5)
     assert saved["fontes"][0]["paginas"] == [230, 231, 232]
@@ -774,7 +776,7 @@ def test_serial_questions_tables_live_graph_and_export(app, tmp_path):
     assert w.history_id == record
     path = tmp_path / "serie.json"
     w.write_export(path)
-    saved = json.loads(path.read_text())
+    saved = json.loads(path.read_text(encoding="utf-8"))
     assert len(saved["plano"]["etapas"]) == 3 and len(saved["fontes"]) == 2
     assert saved["plano"]["igualar_ultimo"]
     panel.form.fator.setValue(1)
@@ -848,7 +850,7 @@ def test_factor_questions_graph_live_export_and_switch(app, tmp_path):
     assert w.history_id == record
     path = tmp_path / "fator.json"
     w.write_export(path)
-    saved = json.loads(path.read_text())
+    saved = json.loads(path.read_text(encoding="utf-8"))
     assert saved["plano"]["resultado"]["concentracao_calculada"] == 10
     assert saved["parametros"]["volume_alicota"] == 2
     panel.form.volume_alicota.setValue(21)
@@ -920,7 +922,7 @@ def test_volume_questions_live_totals_units_graph_and_export(app, tmp_path):
     assert len(panel.figure.axes[0].lines) == 1
     path = tmp_path / "volume.json"
     w.write_export(path)
-    saved = json.loads(path.read_text())
+    saved = json.loads(path.read_text(encoding="utf-8"))
     assert saved["parametros"]["unidade_volume"] == "mL"
     assert saved["fontes"][0]["paginas_pdf"] == [49]
     panel.form.n_unidades.setValue(0)
@@ -1004,7 +1006,7 @@ def test_formula_reference_custom_questions_live_results_and_export(app, tmp_pat
     )
     path = tmp_path / "formula.json"
     w.write_export(path)
-    saved = json.loads(path.read_text())
+    saved = json.loads(path.read_text(encoding="utf-8"))
     assert (
         saved["parametros"]["fonte_formula"] == "Receita própria, v1"
         and saved["plano"]["pendencias_preparo"]
@@ -1078,7 +1080,7 @@ def test_commercial_medium_questions_live_graph_provenance_export_and_switch(
     assert w.history_id == record
     path = tmp_path / "meio.json"
     w.write_export(path)
-    saved = json.loads(path.read_text())
+    saved = json.loads(path.read_text(encoding="utf-8"))
     assert (
         saved["plano"]["fonte_fabricante_declarada"]["referencia"]
         == "Instrução declarada para teste, v1"
@@ -1170,7 +1172,7 @@ def test_recipients_questions_live_graph_history_export_and_reset(app, tmp_path)
     assert w.history_id == record
     path = tmp_path / "recipientes.json"
     w.write_export(path)
-    saved = json.loads(path.read_text())
+    saved = json.loads(path.read_text(encoding="utf-8"))
     assert saved["parametros"]["recipiente"] == "tubos"
     assert (
         saved["plano"]["distribuicao"]["metodo_distribuicao"] == "Método declarado v1"
@@ -1328,7 +1330,7 @@ def test_observations_associate_with_each_real_protocol_and_clear_on_plan_edit(
     assert panel.figure.axes[0].collections[0].get_offsets()[:, 1].tolist() == [2, 4, 6]
     target = tmp_path / f"{code}.json"
     w.write_export(target)
-    saved = json.loads(target.read_text())
+    saved = json.loads(target.read_text(encoding="utf-8"))
     assert saved["resultados_observados"]["estado"] == "analisado"
     assert (
         saved["resultados_observados"]["analise"]["experimento"]["protocolo_id"]
@@ -1366,7 +1368,9 @@ def test_observations_associate_with_each_real_protocol_and_clear_on_plan_edit(
         panel.data.setItem(0, 1, QTableWidgetItem("3;pendente"))
         assert w.observation_timer.isActive()
         w.archive_record(record)
-        archived = json.loads(next(w.history.archive_dir.glob("*.json")).read_text())
+        archived = json.loads(
+            next(w.history.archive_dir.glob("*.json")).read_text(encoding="utf-8")
+        )
         assert (
             archived["experimento"]["resultados_observados"]["linhas_informadas"][0][
                 "valores"
@@ -1406,7 +1410,9 @@ def test_observation_drafts_survive_close_archive_and_readonly_consultation(
     reopened.history_id = record
     reopened.archive_record(record)
     assert not reopened.history.list()
-    archived = json.loads(next(reopened.history.archive_dir.glob("*.json")).read_text())
+    archived = json.loads(
+        next(reopened.history.archive_dir.glob("*.json")).read_text(encoding="utf-8")
+    )
     assert archived["experimento"]["resultados_observados"] == observed
     reopened.view_record(archived)
     app.processEvents()
@@ -1532,7 +1538,7 @@ def test_pending_snapshot_can_be_exported_after_plan_invalidated(
     target = tmp_path / "backup.json"
     monkeypatch.setattr(QFileDialog, "getSaveFileName", lambda *args: (str(target), ""))
     w.export_pending()
-    data = json.loads(target.read_text())
+    data = json.loads(target.read_text(encoding="utf-8"))
     assert data["consulta_apenas"] is True
     assert data["experimento"]["parametros"]["quantidade_final"] == 100
     assert (

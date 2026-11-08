@@ -30,9 +30,7 @@ def test_listar_protocolos_traz_descricao(session):
     semear(session)
     protocolos = listar_protocolos(session)
     assert len(protocolos) == 2
-    assert all(
-        {"id", "nome", "tipo", "descricao"} <= set(p) for p in protocolos
-    )
+    assert all({"id", "nome", "tipo", "descricao"} <= set(p) for p in protocolos)
     assert any(p["descricao"] for p in protocolos)
 
 
@@ -52,9 +50,7 @@ def test_criar_experimento_com_medicoes(session, protocolo):
 
 
 def test_criar_experimento_sem_medicoes_tabelas_vazias(session, protocolo):
-    exp = criar_experimento(
-        session, protocolo_id=protocolo.id, titulo="Só planejado"
-    )
+    exp = criar_experimento(session, protocolo_id=protocolo.id, titulo="Só planejado")
     assert exp["n_medicoes"] == 0
     assert exp["medicoes"] == []
     assert exp["resumo"] == []
@@ -85,9 +81,7 @@ def test_adicionar_medicoes_acumula(session, protocolo):
 
 
 def test_adicionar_medicoes_lote_vazio_erro(session, protocolo):
-    exp = criar_experimento(
-        session, protocolo_id=protocolo.id, titulo="Vazio"
-    )
+    exp = criar_experimento(session, protocolo_id=protocolo.id, titulo="Vazio")
     with pytest.raises(EntradaInvalida, match="Nenhuma medição"):
         adicionar_medicoes(session, exp["id"], {})
     with pytest.raises(EntradaInvalida, match="sem nenhuma medição"):
@@ -123,9 +117,7 @@ def test_fluxo_completo_ate_estatistica(session, protocolo):
     assert len(relatorio["tabela_medicoes"]) == 6
     assert len(relatorio["tabela_resumo"]) == 2
     controle = next(
-        linha
-        for linha in relatorio["tabela_resumo"]
-        if linha["grupo"] == "controle"
+        linha for linha in relatorio["tabela_resumo"] if linha["grupo"] == "controle"
     )
     assert math.isclose(controle["media"], 1.0)
 
@@ -144,8 +136,6 @@ def test_exportar_experimento_csv(session, protocolo, tmp_path):
 
 
 def test_exportar_experimento_sem_medicoes_erro(session, protocolo, tmp_path):
-    exp = criar_experimento(
-        session, protocolo_id=protocolo.id, titulo="Sem dados"
-    )
+    exp = criar_experimento(session, protocolo_id=protocolo.id, titulo="Sem dados")
     with pytest.raises(EntradaInvalida, match="não possui medições"):
         exportar_experimento_csv(session, exp["id"], tmp_path)
