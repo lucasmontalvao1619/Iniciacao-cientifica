@@ -34,3 +34,22 @@ A falha `cp1252` da captura foi reproduzida na leitura sem codificação do cat�
 Limites: testes automatizados não equivalem a cliques manuais no PC de Lucas, avaliação com pesquisadores/leitor de tela ou validação em bancada. Instalador Windows sem certificado comercial de assinatura; pacote Mac com assinatura ad hoc, sem notarização Apple. As evidências acima atualizam a situação de empacotamento da tabela histórica sem apagar seus registros.
 
 Correção da conferência: ao abrir os relatórios JSON do CI 42529979732, foi encontrado erro de limpeza da base temporária SQLite após as verificações funcionais. O indicador `ok` havia sido marcado antes dessa limpeza. A publicação v0.2.0 foi cancelada, as conexões passam a ser encerradas e qualquer exceção agora define `ok=false`. A versão v0.2.1 exige uma nova execução sem esse erro; o CI anterior comprova as etapas funcionais, mas não uma verificação integral sem falhas.
+
+## Conferência final da entrega v0.2.1 — 2026-11-08T19:42:44-03:00
+
+A [versão publicada](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/releases/tag/v0.2.1), commit `0334edf`, foi aprovada integralmente no [CI 42530512091](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/actions/runs/42530512091). Os três relatórios `mac-smoke.json`, `windows-smoke.json` e `installed-smoke.json` foram baixados e conferidos: `ok=true`, sem campo de erro. Esta evidência substitui a pendência de limpeza do teste anterior.
+
+| Requisito do pedido | Evidência conferida |
+|---|---|
+| Dez P1 originais com parâmetros próprios | PREP-001 a PREP-010 no catálogo; dez tipos de cálculo; testes independentes de fórmulas, unidades, limites e perguntas condicionais em `tests/test_preparos.py` e `tests/test_frontend.py` |
+| Fontes da metodologia, dia/hora e origem | Todas as fontes técnicas correntes têm URL Arca/Anvisa/BVS MS, datas com fuso, páginas e SHA-256 correspondente aos cinco PDFs preservados; fichas e busca dirigida de edições em `docs/referencias` |
+| POP individual, DOCX e imagens com fonte | Dez DOCXs extraídos do ZIP publicado e renderizados; todas as 23 páginas inspecionadas. Imagens, autoria, licença, URLs e datas presentes; hashes das três imagens conferidos. OOXML dos POPs Mac/Windows idêntico |
+| Resultados e gráficos recalculados pela edição | Testes do fluxo específico de cada PREP, coordenadas/tabelas/gráficos e invalidação; integração de medições observadas aos dez protocolos, persistência e exportação |
+| Histórico de dez e arquivo para consulta/exportação | Testes de limite, reinício, arquivamento automático/manual, somente leitura e preservação após erro de escrita; pasta `Registros de Experimentos` nos ZIPs |
+| Mac e Windows nativo | Builds PyInstaller em cada SO, verificação do pacote e instalador por usuário. Mac publicado aberto nativamente em sessão isolada; tela inicial inspecionada e navegação até Protocolo observada pela árvore de acessibilidade |
+| Pacote completo sem dados pessoais | CRC dos dois ZIPs aprovado; dez POPs ilustrados e pasta de registros; nenhum banco pessoal; catálogo empacotado com conteúdo JSON igual ao checkout (quebras de linha do Windows distintas). Downloads Windows/Mac retornaram HTTP 200 |
+| Retirar linguagem de prévia do fluxo | Busca em Python/JSON do frontend sem ocorrências de prévia, demonstrativo ou não implementado; originais e registros anteriores preservados |
+
+297 testes passaram em cada plataforma e o lint foi aprovado. Não houve mudança de cálculo nesta conferência. O processo Mac de QA usou dados temporários separados e foi encerrado; a sessão Desktop de Lucas foi preservada. O controle de cliques pelo Orca apresentou falhas de observação de janela após ações; não se declara percurso manual completo. A comprovação funcional dos dez fluxos vem dos testes de interface executados em ambos os sistemas, complementados pela verificação dos executáveis.
+
+Entrega de software do escopo solicitado concluída. Isso não declara revisão sistemática integral, validação em bancada, teste com pesquisadores/leitor de tela ou assinatura comercial dos executáveis. Os limites técnicos específicos continuam no aplicativo e em cada POP.
