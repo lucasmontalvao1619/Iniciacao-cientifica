@@ -253,3 +253,23 @@ Integração de medições aos dez PREP inspecionada em Qt de desenvolvimento, a
 ## Preservação de gravação — 2026-11-08T11:21:55.089869-03:00
 
 Falha de gravação simulada: o fechamento antes permitido foi bloqueado, assim como arquivo e troca de protocolo, com exportação de recuperação explícita. Inspeção a 880 px confirmou ação visível sem rolagem horizontal. 295 testes completos e três de recuperação repetidos passaram; sem score/gates web ou alegação de teste nativo.
+
+## Correção de gravação e clareza — 08/11/2026
+
+| Região | Tier/superfície | Tarefa | Defeito confirmado | Verificação prevista |
+|---|---|---|---|---|
+| Início e Novo planejamento | T3/C | Preservar e iniciar experimentos | Conexão SQLite anterior à mudança de pasta falha com SQLITE_READONLY_DBMOVED e bloqueia reinício; reproduzido em teste real | Recuperação da conexão, persistência, botão real e falha genuína de permissão |
+| Aviso do histórico | T2/B | Entender falha e recuperar dados | SQL/JSON técnico ocupa a tela inteira em save_history | Mensagem curta, ação de repetir e detalhes recolhidos |
+| Ficha de protocolo | T2/B | Entender finalidade e consultar fontes | Descrição concatena estado interno, catálogo, data ISO e URL longa | Finalidade legível; fontes/datas/links preservados sob expansão; 880 px |
+
+Gates disponíveis: pytest e Ruff. Scanners upstream Visant ausentes nesta instalação local; não executados. Sem pontuação inventada. Dados pendentes reais de PREP-004 exportados para arquivo de recuperação e reinseridos no histórico antes de encerrar a sessão antiga.
+
+### Screen seen — conferência desta correção
+
+| Tela | Largura/dados | Ação e resultado |
+|---|---|---|
+| Protocolo | 880 px, PREP-004 | Captura Qt aberta e inspecionada: título/finalidade separados; URLs e datas fora do resumo |
+| Fontes e rastreabilidade | 880 px, PREP-004 | Expansão conferida em captura Qt: referência, páginas, data legível e link para obra/catálogo preservados |
+| Início com falha | 880 px, falha simulada sem dados reais | Mensagem curta, exportação, tentativa de salvar e detalhes recolhidos; tabela vazia substituída por estado vazio |
+
+Teste real reproduziu conexão SQLite após mover a pasta; correção reconecta uma vez somente para SQLITE_READONLY_DBMOVED. Erro SQLITE_READONLY genuíno não é repetido nem mascarado. O clique real em Novo planejamento preserva medições anteriores, limpa seleção/parâmetros e permite confirmar outro protocolo. Suíte de 302 casos aprovada antes do ajuste visual final; 44 testes de interface aprovados após o ajuste de espaçamento e altura do histórico, Ruff aprovado. A interface utiliza QPalette/widgets Qt; gates web não se aplicam. Compilação/pacote atualizado e verificação nativa ainda em andamento nesta anotação.

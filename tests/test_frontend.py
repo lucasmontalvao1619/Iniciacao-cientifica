@@ -2,6 +2,7 @@
 
 import json
 import os
+import sys
 
 import pytest
 
@@ -1642,3 +1643,108 @@ def test_packaged_app_check_checks_catalog_pop_and_observations(
     assert "erro" not in data
     assert data["ok"] and data["protocolos"] == data["pops_exportados"] == 10
     assert data["massa_percentual_g"] == 9 and data["media_observada"] == 4
+
+
+def test_new_planning_from_home_saves_after_database_move(app, tmp_path):
+    from PyQt6.QtWidgets import QPushButton, QTableWidgetItem
+
+    w = PlannerWindow()
+    w.show()
+    w.protocol.setCurrentIndex(w.protocol.findData("PREP-004"))
+    w.complete_protocol()
+    w.percent_form.set_values(
+        {
+            "unidade_concentracao": "mg/mL",
+            "concentracao_inicial": 10,
+            "concentracao": 1,
+            "quantidade_final": 100,
+        }
+    )
+    w.generate()
+    record = w.history_id
+    w.navigate(4)
+    w.analysis.data.setItem(0, 0, QTableWidgetItem("Grupo"))
+    w.analysis.data.setItem(0, 1, QTableWidgetItem("1;2;3"))
+    assert w.observation_pending is not None
+    if sys.platform != "win32":
+        old = w.history.directory
+        moved = tmp_path / "dados-organizados"
+        old.rename(moved)
+        old.symlink_to(moved, target_is_directory=True)
+    w.navigate(0)
+    new = next(
+        b for b in w.findChildren(QPushButton) if b.text() == "Novo planejamento"
+    )
+    new.click()
+    assert w.stack.currentIndex() == 1 and w.plan is None
+    assert w.protocol.currentIndex() == -1 and w.title.text() == ""
+    assert not w.steps[2].isEnabled() and not w.steps[3].isEnabled()
+    stored = w.history.list()
+    assert len(stored) == 1 and stored[0]["id"] == record
+    saved = json.loads(stored[0]["conteudo"])
+    assert saved["resultados_observados"]["linhas_informadas"][0]["valores"] == "1;2;3"
+    w.protocol.setCurrentIndex(w.protocol.findData("PREP-004"))
+    w.complete_protocol()
+    assert w.stack.currentIndex() == 2 and w.percent_form.concentracao.value() == 0
+    w.close()
+
+
+def test_history_error_is_short_with_retry_and_collapsed_details(app, monkeypatch):
+    import sqlite3
+
+    from sqlalchemy.exc import OperationalError
+
+    w = PlannerWindow()
+    w.show()
+    w.protocol.setCurrentIndex(w.protocol.findData("PREP-001"))
+    w.complete_protocol()
+    w.percent_form.set_values(
+        {"base": "m/v", "concentracao": 1, "quantidade_final": 100, "pureza": 100}
+    )
+    real = w.history.save
+
+    def fail(*args):
+        raise OperationalError(
+            "INSERT INTO historico",
+            {"conteudo": "privado"},
+            sqlite3.OperationalError("attempt to write a readonly database"),
+        )
+
+    monkeypatch.setattr(w.history, "save", fail)
+    w.generate()
+    w.navigate(0)
+    assert len(w.history_status.text()) < 180
+    assert (
+        "INSERT" not in w.history_status.text()
+        and "privado" not in w.history_status.text()
+    )
+    assert not w.history_details.isChecked() and w.history_error_text.isHidden()
+    assert w.history_retry.isVisible() and w.pending_export.isVisible()
+    w.history_details.setChecked(True)
+    assert "readonly" in w.history_error_text.toPlainText()
+    assert "INSERT" not in w.history_error_text.toPlainText()
+    monkeypatch.setattr(w.history, "save", real)
+    w.history_retry.click()
+    assert w.observation_pending is None and len(w.history.list()) == 1
+    assert w.history_details.isHidden() and not w.pending_export.isVisible()
+    w.new_planning()
+    assert w.stack.currentIndex() == 1
+    w.close()
+
+
+def test_protocol_summary_keeps_sources_under_disclosure(app):
+    w = PlannerWindow()
+    w.show()
+    w.navigate(1)
+    w.protocol.setCurrentIndex(w.protocol.findData("PREP-004"))
+    assert "PREP-004" in w.description.text() and "http" not in w.description.text()
+    assert "diluição" in w.protocol_purpose.text().lower()
+    assert w.protocol_source_text.isHidden() and not w.protocol_sources.isChecked()
+    w.protocol_sources.setChecked(True)
+    assert w.protocol_source_text.isVisible()
+    assert "08/11/2026" in w.protocol_source_text.toPlainText()
+    assert "arca.fiocruz.br" in w.protocol_source_text.toHtml()
+    assert "Consultar catálogo" in w.protocol_source_text.toPlainText()
+    w.protocol.lineEdit().clear()
+    assert w.protocol_sources.isHidden() and not w.protocol_purpose.text()
+    w.close()

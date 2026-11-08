@@ -8,6 +8,8 @@ import os
 import stat
 import sys
 import unicodedata
+from datetime import datetime
+from html import escape
 from pathlib import Path
 
 from PyQt6.QtCore import QEvent, QLibraryInfo, QLockFile, QStandardPaths, Qt, QTimer
@@ -36,6 +38,7 @@ from PyQt6.QtWidgets import (
     QStyle,
     QTableWidget,
     QTableWidgetItem,
+    QTextBrowser,
     QTextEdit,
     QVBoxLayout,
     QWidget,
@@ -368,7 +371,10 @@ class PlannerWindow(QMainWindow):
         if self.observation_pending is None:
             return
         path, _ = QFileDialog.getSaveFileName(
-            self, "Salvar dados pendentes", "experimento-pendente.json", "JSON (*.json)"
+            self,
+            "Salvar dados pendentes",
+            str(self.history.archive_dir / "experimento-pendente.json"),
+            "JSON (*.json)",
         )
         if not path:
             return
@@ -539,6 +545,8 @@ class PlannerWindow(QMainWindow):
         self.history_table.verticalHeader().hide()
         self.history_table.setMaximumHeight(330)
         body.addWidget(self.history_table)
+        self.history_empty = label("Nenhum experimento salvo ainda.")
+        body.addWidget(self.history_empty)
         self.history_status = label("")
         body.addWidget(self.history_status)
         self.pending_export = button(
@@ -546,6 +554,25 @@ class PlannerWindow(QMainWindow):
         )
         self.pending_export.hide()
         body.addWidget(self.pending_export)
+        self.history_retry = button("Tentar salvar novamente", self.retry_history)
+        self.history_retry.hide()
+        body.addWidget(self.history_retry)
+        self.history_details = QGroupBox("Detalhes técnicos")
+        self.history_details.setCheckable(True)
+        self.history_details.setStyleSheet(
+            "QGroupBox { background: palette(window); border: none; padding: 0; margin-top: 20px; } QGroupBox::title { left: 0; }"
+        )
+        self.history_details.setChecked(False)
+        self.history_error_text = QTextEdit()
+        self.history_error_text.setReadOnly(True)
+        self.history_error_text.setMaximumHeight(120)
+        history_details_layout = QVBoxLayout(self.history_details)
+        history_details_layout.setContentsMargins(0, 4, 0, 0)
+        history_details_layout.addWidget(self.history_error_text)
+        self.history_error_text.hide()
+        self.history_details.toggled.connect(self.history_error_text.setVisible)
+        self.history_details.hide()
+        body.addWidget(self.history_details)
         body.addWidget(
             button("Consultar registros arquivados", self.open_archived_record)
         )
@@ -566,6 +593,9 @@ class PlannerWindow(QMainWindow):
 
     def refresh_history(self):
         records = self.history.list()
+        self.history_table.setVisible(bool(records))
+        self.history_empty.setVisible(not records)
+        self.history_table.setMaximumHeight(min(330, 36 + 46 * len(records)))
         self.history_table.setRowCount(len(records))
         for row, record in enumerate(records):
             payload = json.loads(record["conteudo"])
@@ -596,8 +626,8 @@ class PlannerWindow(QMainWindow):
         try:
             target = self.history.archive(record_id)
         except (OSError, ValueError, SQLAlchemyError) as exc:
-            self.history_status.setText(
-                f"Não foi possível arquivar. O registro foi preservado: {exc}"
+            self.show_history_error(
+                "Não foi possível arquivar. O registro foi preservado.", exc
             )
             return
         if record_id == self.history_id:
@@ -701,6 +731,20 @@ class PlannerWindow(QMainWindow):
             return
         self.view_record(payload)
 
+    def retry_history(self):
+        if self.flush_observations():
+            self.history_status.setText("Planejamento salvo no histórico.")
+
+    def show_history_error(self, message, exc):
+        self.history_status.setText(message)
+        self.history_error_text.setPlainText(
+            f"{type(exc).__name__}: {getattr(exc, 'orig', exc)}"
+        )
+        self.history_details.setChecked(False)
+        self.history_error_text.hide()
+        self.history_details.show()
+        self.history_retry.setVisible(self.observation_pending is not None)
+
     def save_history(self, snapshot=None):
         payload, record_id = (
             snapshot
@@ -712,19 +756,22 @@ class PlannerWindow(QMainWindow):
         except (OSError, ValueError, SQLAlchemyError) as exc:
             self.observation_pending = (copy.deepcopy(payload), record_id)
             self.pending_export.show()
-            self.history_status.setText(
-                f"O histórico não pôde ser salvo: {exc}. Os dados continuam em memória. Tente novamente ou, em Início, exporte os dados ainda não salvos antes de fechar."
+            self.show_history_error(
+                "Não foi possível salvar. Os dados continuam em memória. Em Início, tente novamente ou salve uma cópia antes de fechar.",
+                exc,
             )
             self.export_status.setText(self.history_status.text())
             if self.analysis is not None and self.analysis.context is not None:
                 self.analysis.status.setText(self.history_status.text())
             return False
         self.history_status.clear()
+        self.history_details.hide()
+        self.history_retry.hide()
         try:
             self.refresh_history()
         except (OSError, ValueError, SQLAlchemyError) as exc:
-            self.history_status.setText(
-                f"Dados salvos. A lista do histórico não pôde ser atualizada: {exc}"
+            self.show_history_error(
+                "Dados salvos. Não foi possível atualizar a lista do histórico.", exc
             )
         return True
 
@@ -770,17 +817,29 @@ class PlannerWindow(QMainWindow):
         self.protocol.setCompleter(completer)
         body.addWidget(label("Protocolo · pesquise neste campo", 12, True))
         body.addWidget(self.protocol)
-        self.description = label("")
-        box = QGroupBox("Sobre o protocolo selecionado")
+        self.description = label("", 16, True)
+        self.protocol_purpose = label("")
+        box = QGroupBox("Sobre este protocolo")
         inside = QVBoxLayout(box)
+        inside.setSpacing(8)
         inside.addWidget(self.description)
-        inside.addWidget(
-            label(
-                "Consulte as fontes e a situação do protocolo antes de utilizá-lo no seu experimento.",
-                12,
-            )
-        )
+        inside.addWidget(self.protocol_purpose)
         body.addWidget(box)
+        self.protocol_sources = QGroupBox("Fontes e rastreabilidade")
+        self.protocol_sources.setCheckable(True)
+        self.protocol_sources.setStyleSheet(
+            "QGroupBox { background: palette(window); border: none; padding: 0; margin-top: 20px; } QGroupBox::title { left: 0; }"
+        )
+        self.protocol_sources.setChecked(False)
+        self.protocol_source_text = QTextBrowser()
+        self.protocol_source_text.setOpenExternalLinks(True)
+        self.protocol_source_text.setMaximumHeight(230)
+        protocol_sources_layout = QVBoxLayout(self.protocol_sources)
+        protocol_sources_layout.setContentsMargins(0, 4, 0, 0)
+        protocol_sources_layout.addWidget(self.protocol_source_text)
+        self.protocol_source_text.hide()
+        self.protocol_sources.toggled.connect(self.protocol_source_text.setVisible)
+        body.addWidget(self.protocol_sources)
         self.preview_button = button("Ver POP", self.preview_pop)
         self.docx_button = button("Gerar DOCX do POP", self.export_pop)
         body.addWidget(self.preview_button, alignment=Qt.AlignmentFlag.AlignLeft)
@@ -819,11 +878,48 @@ class PlannerWindow(QMainWindow):
         self.docx_button.setEnabled(available)
         self.pop_status.clear()
         item = next((x for x in self.protocols if x["id"] == selected_id), None)
-        self.description.setText(
-            (item.get("descricao") or item["nome"])
-            if item
-            else "Pesquise e selecione um item da lista para continuar."
-        )
+        protocol = self.selected_pop()
+        self.protocol_sources.setVisible(protocol is not None)
+        self.protocol_sources.setChecked(False)
+        self.protocol_source_text.hide()
+        self.protocol_purpose.clear()
+        self.protocol_source_text.clear()
+        if protocol:
+            from frontend.pop import pop_sections
+
+            self.description.setText(f"{protocol['id']} · {protocol['name']}")
+            self.protocol_purpose.setText(
+                next(
+                    (
+                        text
+                        for title, text in pop_sections(protocol)
+                        if title == "Finalidade"
+                    ),
+                    "",
+                )
+            )
+            references = []
+            for source in protocol.get("fontes", []):
+                consulted = datetime.fromisoformat(source["consultado_em"])
+                pages = ", ".join(str(page) for page in source.get("paginas", []))
+                references.append(
+                    f"<p><b>{escape(source['title'])}</b><br>"
+                    f"{escape(source['organization'])}, {source['year']} · páginas {pages}<br>"
+                    f"Consulta: {consulted.strftime('%d/%m/%Y às %H:%M:%S (UTC%z)')}<br>"
+                    f'<a href="{escape(source["url"], quote=True)}">Consultar fonte original</a></p>'
+                )
+            references.append(
+                f"<p><b>Origem no catálogo</b><br>{escape(protocol['origem'])}<br>"
+                f"Consulta: {escape(protocol['consultado_em'])}<br>"
+                f'<a href="{escape(protocol["url"], quote=True)}">Consultar catálogo</a></p>'
+            )
+            self.protocol_source_text.setHtml("".join(references))
+        else:
+            self.description.setText(
+                (item.get("descricao") or item["nome"])
+                if item
+                else "Pesquise e selecione um item da lista para continuar."
+            )
 
     def selected_pop(self):
         index = self.protocol.findText(

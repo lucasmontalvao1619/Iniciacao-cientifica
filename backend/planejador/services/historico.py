@@ -1,12 +1,14 @@
 """Histórico local de dez planejamentos; itens retirados viram arquivos de consulta."""
 
 import json
+import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
 from sqlalchemy import Column, MetaData, String, Table, Text, create_engine, select
 from sqlalchemy.engine import URL, Connection
+from sqlalchemy.exc import OperationalError
 
 
 class Historico:
@@ -47,6 +49,19 @@ class Historico:
 
     def save(self, payload: dict, record_id: str | None = None) -> str:
         record_id = record_id or uuid4().hex
+        try:
+            return self._save(payload, record_id)
+        except OperationalError as exc:
+            if (
+                getattr(exc.orig, "sqlite_errorcode", None)
+                != sqlite3.SQLITE_READONLY_DBMOVED
+            ):
+                raise
+            # SQLite mantém o caminho resolvido na conexão após mover a pasta.
+            self.engine.dispose()
+            return self._save(payload, record_id)
+
+    def _save(self, payload: dict, record_id: str) -> str:
         now = datetime.now(UTC).isoformat()
         content = json.dumps(payload, ensure_ascii=False, allow_nan=False)
         with self.engine.begin() as conn:

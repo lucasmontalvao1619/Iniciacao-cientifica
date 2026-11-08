@@ -47,3 +47,44 @@ def test_archive_failure_keeps_record(tmp_path, monkeypatch):
     with pytest.raises(OSError):
         store.archive(record_id)
     assert store.list()[0]["id"] == record_id
+
+
+def test_save_reconnects_when_sqlite_directory_was_moved(tmp_path):
+    import sys
+
+    if sys.platform == "win32":
+        pytest.skip("Windows impede mover diretório com SQLite aberto")
+    original = tmp_path / "original"
+    link = tmp_path / "dados"
+    original.mkdir()
+    link.symlink_to(original, target_is_directory=True)
+    store = Historico(link)
+    record = store.save({"titulo": "Preservar"})
+    moved = tmp_path / "organizado"
+    original.rename(moved)
+    link.unlink()
+    link.symlink_to(moved, target_is_directory=True)
+    assert store.save({"titulo": "Atualizado"}, record) == record
+    assert json.loads(store.list()[0]["conteudo"])["titulo"] == "Atualizado"
+    store.engine.dispose()
+
+
+def test_real_readonly_error_is_not_retried(tmp_path, monkeypatch):
+    import sqlite3
+
+    from sqlalchemy.exc import OperationalError
+
+    store = Historico(tmp_path)
+    error = sqlite3.OperationalError("attempt to write a readonly database")
+    error.sqlite_errorcode = sqlite3.SQLITE_READONLY
+    calls = []
+
+    def fail(*args):
+        calls.append(args)
+        raise OperationalError("INSERT", {}, error)
+
+    monkeypatch.setattr(store, "_save", fail)
+    with pytest.raises(OperationalError):
+        store.save({"titulo": "Preservar"})
+    assert len(calls) == 1 and store.list() == []
+    store.engine.dispose()
