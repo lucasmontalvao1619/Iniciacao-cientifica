@@ -1,0 +1,27 @@
+{
+  "id": "ANVISA-2020-M10",
+  "title": "Microbiologia Clínica para o Controle de Infecção Relacionada à Assistência à Saúde Módulo 10 Detecção dos Principais Mecanismos de Resistência Bacteriana aos Antimicrobianos pelo Laboratório de Microbiologia Clínica",
+  "organization": "Agência Nacional de Vigilância Sanitária",
+  "year": 2020,
+  "edition": "1ª edição",
+  "isbn": "978-65-89701-01-9",
+  "url": "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/modulo-10_manual-de-microbiologia.pdf/@@download/file",
+  "obtido_em": "2026-11-08T05:34:55.508307-03:00",
+  "consultado_em": "2026-11-08T05:37:29.953373-03:00",
+  "sha256": "0c131e9699c2652525df9af8ed3aadf2574c393ffd6f103872204be4b4d36e5e",
+  "paginas": [
+    110,
+    111
+  ],
+  "paginas_pdf": [
+    110,
+    111
+  ],
+  "papel": "Manual federal em português, desde 2000, consultado diretamente no portal Anvisa. Elegibilidade candidata; inclusão formal e verificação de edição mais recente ainda dependem da revisão.",
+  "conteudo": {
+    "110": "Peso de antimicrobiano em mg = volume final mL × concentração µg/mL / potência µg/mg; solvente e diluente distinguíveis",
+    "111": "Exemplo de potência e identificação de alíquotas. Condições específicas não são generalizadas para todos os estoques."
+  },
+  "nota_conversao": "Não generalizar a equivalência entre U e µg do exemplo de um composto. U/mL com U/mg usa pareamento direto. Para alvo em massa/volume e certificado em U/mg, perguntar equivalência específica em U/µg; potência µg/mg = atividade U/mg / equivalência U/µg. Adaptação dimensional explícita.",
+  "nota_exemplo": "O manual imprime 12,88 mg; 10000/776 = 12,8865979… mg. Preservar a fórmula sem forçar o truncamento impresso; a diferença não é tolerância de equipamento."
+}

@@ -137,3 +137,14 @@ Selecionados em 30/10/2026 por serem preparações e cálculos básicos reutiliz
 | PREP-008 | Preparo de meio a partir de formulação | [PREP-008](PREP-008.md) |
 | PREP-009 | Preparo de meio comercial desidratado | [PREP-009](PREP-009.md) |
 | PREP-010 | Cálculo de meio necessário por número de placas/tubos | [PREP-010](PREP-010.md) |
+
+## Restrição dos portais das fontes técnicas (08/11/2026)
+
+Lucas esclareceu: não é necessário utilizar todos os portais, mas toda fonte técnica usada para fundamentar os protocolos deve ser obtida ou ter seu registro confirmado em pelo menos um destes: Arca/Fiocruz, BVS MS, Central de Conteúdo/Publicações da Anvisa, Manuais SDA, Alice, Infoteca-e, eduCAPES ou Oasisbr. Ser uma instituição federal, isoladamente, não substitui esse requisito de procedência. Manter português, publicação desde 2000 e demais critérios da metodologia.
+
+Os livros Fiocruz v. 1 e v. 4 foram obtidos diretamente na EPSJV/IOC, fora desses portais. Seus registros/cópias/extrações são preservados, mas a adequação da procedência permanece pendente: localizar registro/cópia em portal permitido ou substituir a fundamentação por fonte elegível, conferindo novamente as regras afetadas. Não trocar apenas a URL nem inventar acesso ao Arca. Esta decisão supera a orientação anterior de apenas priorizar os portais.
+
+
+## Regularização confirmada — 2026-11-08T10:43:13.707165-03:00
+
+Pendência de procedência dos PREP-001 a PREP-006 resolvida: downloads efetivos dos volumes 1 e 4 no Arca, comparados byte a byte com as cópias anteriores. Catálogo identifica novos acessos sem apagar os antigos. Ver [evidências e limites](../referencias/REGULARIZACAO_FONTES.md). A inclusão formal e a edição mais recente continuam sem comprovação; divergência bibliográfica do volume 4 preservada.

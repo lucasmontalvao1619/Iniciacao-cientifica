@@ -1,7 +1,6 @@
 # Análise estatística
 
-**Estado: implementado** (backend), exceto a geração de gráficos, que depende da
-interface.
+**Estado em 08/11/2026:** backend e interface integrados aos dez PREP. Resultados reúne dimensionamento editável e uma seção recolhível de medições observadas, sem preencher medições a partir do planejamento.
 
 Código: `backend/planejador/core/estatistica.py`, `core/tabelas.py` e
 `backend/planejador/services/estatistica_service.py`. Usa NumPy, SciPy e Pandas.
@@ -86,11 +85,19 @@ arquivos (`_medicoes.csv` e `_resumo.csv`) de uma vez.
 usado volta no resultado, para que o relatório registre sob qual critério a
 decisão foi tomada.
 
-## Pendente
+## Interface e persistência dos dez PREP em 08/11/2026
 
-Geração de gráficos (RF16). Os dados que a alimentam já estão prontos; falta a
-camada de apresentação — ver [frontend](../arquitetura/frontend.md).
+Em Resultados, expandir “Medições observadas e análise estatística”. O pesquisador informa nomes de grupos, valores separados por ponto e vírgula e grandeza/unidade. O caminho padrão calcula média, desvio padrão e variância amostrais, com pelo menos dois valores por grupo, e desenha os pontos observados. A comparação é opcional, nas opções avançadas; os pressupostos e a independência continuam sob avaliação do pesquisador. Não há teste pareado, pós-teste ou verificação automática de pressupostos.
+
+O plano permanece separado das observações. Navegar entre Plano e Resultados preserva as medições; editar parâmetros do planejamento limpa o contexto e a análise anteriores. Valores não numéricos/não finitos são recusados na análise. Resultados estatísticos indefinidos ou fora da faixa não são exportados como NaN/Infinity; o rascunho continua disponível para correção.
+
+O histórico SQLite guarda no mesmo registro o planejamento e `resultados_observados`: linhas digitadas, unidade, opções, estado `rascunho` ou `analisado` e, quando válida, análise e medições numéricas. As edições são gravadas após 400 ms; fechar, trocar protocolo ou arquivar descarrega a gravação pendente. Falha de gravação conserva uma cópia independente em memória; essas ações ficam bloqueadas até salvar ou exportar uma cópia de consulta pelo Início. A cópia preserva o plano e as medições mesmo se os parâmetros da tela forem invalidados depois da falha. Cancelar ou falhar na exportação mantém os dados pendentes; exportar com sucesso preserva o arquivo escolhido sem afirmar atualização do histórico. Encerramento forçado do processo continua sem garantia para dados mantidos apenas em memória. Rascunhos incompletos são preservados como texto, sem serem apresentados como resultados analisados. Arquivos excedentes/retirados e a consulta do histórico preservam observações para consulta e exportação, sem reabrir sessões. O JSON do experimento agrega plano e observações; o PNG contém o gráfico dos dados observados.
+
+Verificação: 292 testes passaram na suíte completa; 12 testes de integração repetidos após ampliar as verificações de gravação temporizada e arquivamento imediato. Casos incluem todos os dez protocolos, média 4/desvio 2/variância 4 para [2,4,6], vínculo de protocolo, edição e invalidação, histórico, fechamento/reinício, rascunho inválido, consulta/arquivo e estatística indefinida. Ruff aprovado. Um aviso preexistente Starlette/httpx e um aviso SciPy esperado no caso degenerado; a interface recusa a análise indefinida. Capturas Qt e gráfico inspecionados em 880 px, corrigindo rolagem horizontal e cabeçalhos cortados. Não houve leitor de tela, cliques no novo bundle ou teste Windows. Gráficos futuros continuam fora desta entrega; RF16 agora tem o gráfico de pontos observado e gráficos de dimensionamento.
 
 ## Primeira interface (30/10/2026)
 
 `frontend/analysis.py` apresenta resumos e comparação opcional dos services, além de gráfico de pontos Matplotlib e exportação PNG. A primeira entrega cobre gráfico de pontos por grupo, não todas as visualizações futuras. Entrada em memória, sem gravação automática das medições no banco.
+
+
+Verificação da proteção de gravação: defeito reproduzido antes da correção (fechamento permitido após falha simulada); 295 testes passaram na suíte completa. Três testes de falha/recuperação repetidos após o ajuste que torna o botão de exportação visível. Cobrem tentativa automática, bloqueios, recuperação do histórico, cópia após invalidação do plano, cancelamento/erro de exportação e falha de atualização da lista depois da gravação efetiva. Captura `falha-gravacao-recuperacao-880.png` inspecionada, ação visível sem rolagem horizontal.

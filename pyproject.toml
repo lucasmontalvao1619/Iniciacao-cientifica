@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "planejador-experimentos"
-version = "0.1.0"
+version = "0.2.0"
 description = "Backend e banco de dados do aplicativo de planejamento automatizado de experimentos laboratoriais."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -18,7 +18,7 @@ dependencies = [
 
 [project.optional-dependencies]
 bundle = ["pyinstaller>=6.22,<7"]
-ui = ["PyQt6>=6.7,<7", "matplotlib>=3.9,<4"]
+ui = ["PyQt6>=6.7,<7", "matplotlib>=3.9,<4", "python-docx>=1.2,<2"]
 # Motores de banco alternativos (opcionais). SQLite já vem com o Python.
 postgres = ["psycopg[binary]>=3.1"]
 mysql = ["PyMySQL>=1.1"]

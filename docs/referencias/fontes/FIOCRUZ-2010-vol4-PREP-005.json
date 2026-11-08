@@ -1,0 +1,26 @@
+{
+  "id": "FIOCRUZ-2010-V4",
+  "title": "Conceitos e métodos para a formação de técnicos em laboratórios de saúde volume 4",
+  "organization": "EPSJV/IOC Fundação Oswaldo Cruz",
+  "year": 2010,
+  "edition": "Edição não indicada; copyright 2010",
+  "isbn": "não confirmado nesta cópia",
+  "url": "https://www.ioc.fiocruz.br/sites/default/files/ConceitosMetodos_volume4.pdf",
+  "obtido_em": "2026-11-08T06:14:11.240645-03:00",
+  "consultado_em": "2026-11-08T06:14:11.240645-03:00",
+  "sha256": "7d86374dd3be6d0e5196874cd510423f35fa96deb33e9fce2c08f4f39e6d0f8c",
+  "paginas": [
+    441,
+    442
+  ],
+  "conteudo": {
+    "441-442": "Transferências sucessivas com homogeneização e pipeta para cada transferência. Exemplo de 1 mL em 9 mL; não generalizar condições de cultivo a todo experimento."
+  },
+  "nota_bibliografica": "Capa/folha de rosto identificam volume 4 e copyright 2010; a ficha catalográfica da p. 4 reproduz volume 1/2009 e seu ISBN. Não atribuir esse ISBN ao volume 4. Metadados bibliográficos completos ainda precisam de reconciliação.",
+  "papel": "Livro federal em português, copyright 2010, candidato ao recorte. Acesso direto IOC; não implica inclusão formal nem confirmação de edição mais recente.",
+  "registro_institucional_complementar": {
+    "url": "https://www.rets.epsjv.fiocruz.br/es/node/1849",
+    "consultado_em": "2026-11-08T06:19:04.124562-03:00",
+    "nota": "Registro da coleção apresenta ano 2012 e postagem 23/06/2016, sem resolver a data/edição desta cópia v. 4. Link Parte IV retornou 502 na ferramenta web. Não substituir copyright 2010 ou atribuir uma edição posterior sem confronto documental."
+  }
+}

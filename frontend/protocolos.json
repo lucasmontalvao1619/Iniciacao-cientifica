@@ -4,159 +4,944 @@
     "name": "Preparo de soluções percentuais (% m/v, v/v e variações aplicáveis)",
     "priority": "P1",
     "application": "Geral",
-    "source_codes": "A1 — ANVISA Mód. 5; B2 — UniFatecie; B5 — Microbiology Society",
-    "document_status": "Fonte identificada",
+    "source_codes": "EPSJV/IOC Fiocruz, Conceitos e métodos, volume 1, 2009, p. 227–232",
+    "document_status": "Fonte integral consultada e regras extraídas",
     "consultado_em": "2026-10-30T04:56:36-03:00",
     "incluido_em": "2026-10-30T04:56:36-03:00",
     "fuso": "America/Maceio",
     "origem": "F03 — Catálogo e priorização de protocolos microbiológicos, v1.0, agosto/2026",
     "url": "https://docs.google.com/document/d/1n9e8ClML7KyyJG15ZkhF8hbG9_zWbPzu/edit",
     "localizacao": "Tabela de preparações, identificador PREP-001",
-    "status": "Candidato P1; regra específica ainda não implementada",
-    "consulta_fontes_primarias": "não registrada; referências citadas pelo catálogo ainda devem ser conferidas"
+    "status": "Cálculo percentual implementado; parâmetros e condições do experimento definidos pelo pesquisador",
+    "consulta_fontes_primarias": "2026-11-08T05:02:54.967221-03:00",
+    "tipo_calculo": "percentual",
+    "fontes": [
+      {
+        "id": "FIOCRUZ-2009-V1",
+        "title": "Conceitos e métodos para a formação de profissionais em laboratórios de saúde volume 1",
+        "organization": "EPSJV/IOC Fundação Oswaldo Cruz",
+        "year": 2009,
+        "organizers": [
+          "Etelcia Moraes Molinaro",
+          "Luzia Fátima Gonçalves Caputo",
+          "Maria Regina Reis Amendoeira"
+        ],
+        "isbn": "978-85-98768-41-0",
+        "url": "https://www.arca.fiocruz.br/bitstreams/dc35a81b-72c5-420f-9ff5-b3fe01f0c006/download",
+        "obtido_em": "2026-11-08T10:41:59.414205-03:00",
+        "consultado_em": "2026-11-08T10:43:13.707165-03:00",
+        "sha256": "35206a3d5079758e26eaa6fcb343ead6aa7dac4674cbc6ec71d8015437e46b1c",
+        "paginas": [
+          227,
+          228,
+          229,
+          230,
+          231,
+          232
+        ],
+        "papel": "Procedência confirmada no Arca; cópia idêntica ao PDF da consulta original. Registro: https://www.arca.fiocruz.br/handle/icict/8658. Livro federal em português; inclusão formal e edição mais recente não comprovadas.",
+        "conteudo": {
+          "227": "Concentrações % m/v, m/m e v/v, e exemplo NaCl 0,9% m/v",
+          "228-230": "Cuidados com solvente, reagente, pureza e vidraria",
+          "231-232": "Técnica de preparo, transferência quantitativa, ajuste ao volume final e homogeneização"
+        },
+        "obtencao_anterior": {
+          "url": "https://www.epsjv.fiocruz.br/sites/default/files/l140.pdf",
+          "obtido_em": "2026-11-08T05:00:24.136688-03:00",
+          "consultado_em": "2026-11-08T05:02:54.967221-03:00",
+          "papel": "Candidato elegível: livro federal em português de 2009. Descoberto por busca web dirigida ao domínio Fiocruz; acesso direto à EPSJV. Registro Arca ainda não localizado; não equivale a inclusão formal na revisão."
+        },
+        "portal": "Arca/Fiocruz",
+        "registro_url": "https://www.arca.fiocruz.br/handle/icict/8658",
+        "fuso": "America/Maceio",
+        "regularizacao_ficha": "docs/referencias/fontes/ARCA-icict-8658-regularizacao.json",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "Volume 1: 2009; número de edição não explicitado na cópia consultada.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        }
+      }
+    ],
+    "equipamentos": [
+      "Balança analítica para solutos pesados",
+      "Pipeta para solutos líquidos",
+      "Recipiente graduado adequado à quantidade final"
+    ],
+    "images": [
+      {
+        "file": "equipment/balanca-analitica.jpg",
+        "caption": "Balança analítica ilustrativa. O modelo não constitui recomendação de marca.",
+        "author": "US DEA",
+        "source": "https://commons.wikimedia.org/wiki/File:Analytical_balance_mettler_ae-260.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Analytical_balance_mettler_ae-260.jpg",
+        "license": "Domínio público — obra do governo federal dos Estados Unidos, conforme ficha do Wikimedia Commons",
+        "obtido_em": "2026-11-08T05:03:37.389821-03:00",
+        "sha256": "2ce25d728801e09c66482589d7988ed9bf94d3730c43adab6b34c6854e1f083f",
+        "changes": "Nenhuma alteração; apenas dimensionamento na exibição e no DOCX.",
+        "role": "Ilustração complementar; não é fonte técnica nem obra incluída na revisão."
+      }
+    ],
+    "referencias_catalogo": "A1 — ANVISA Mód. 5; B2 — UniFatecie; B5 — Microbiology Society",
+    "situacao_fontes": "Procedência regularizada: cópias integrais conferidas no Arca, idênticas às fontes originais. Inclusão formal e edição mais recente permanecem sujeitas à revisão.",
+    "regularizado_em": "2026-11-08T10:43:13.707165-03:00"
   },
   {
     "id": "PREP-002",
     "name": "Preparo de soluções molares",
     "priority": "P1",
     "application": "Geral",
-    "source_codes": "A1 — ANVISA Mód. 5; B2 — UniFatecie",
-    "document_status": "Fonte identificada",
+    "source_codes": "EPSJV/IOC Fiocruz, volume 1, 2009, p. 226, 229–232 e 249–250",
+    "document_status": "Fonte integral consultada e regras extraídas",
     "consultado_em": "2026-10-30T04:56:36-03:00",
     "incluido_em": "2026-10-30T04:56:36-03:00",
     "fuso": "America/Maceio",
     "origem": "F03 — Catálogo e priorização de protocolos microbiológicos, v1.0, agosto/2026",
     "url": "https://docs.google.com/document/d/1n9e8ClML7KyyJG15ZkhF8hbG9_zWbPzu/edit",
     "localizacao": "Tabela de preparações, identificador PREP-002",
-    "status": "Candidato P1; regra específica ainda não implementada",
-    "consulta_fontes_primarias": "não registrada; referências citadas pelo catálogo ainda devem ser conferidas"
+    "status": "Cálculo molar implementado; massa molar e teor correspondem ao reagente identificado pelo pesquisador",
+    "consulta_fontes_primarias": "2026-11-08T05:22:45.047138-03:00",
+    "referencias_catalogo": "A1 — ANVISA Mód. 5; B2 — UniFatecie",
+    "tipo_calculo": "molar",
+    "fontes": [
+      {
+        "id": "FIOCRUZ-2009-V1",
+        "title": "Conceitos e métodos para a formação de profissionais em laboratórios de saúde volume 1",
+        "organization": "EPSJV/IOC Fundação Oswaldo Cruz",
+        "year": 2009,
+        "organizers": [
+          "Etelcia Moraes Molinaro",
+          "Luzia Fátima Gonçalves Caputo",
+          "Maria Regina Reis Amendoeira"
+        ],
+        "isbn": "978-85-98768-41-0",
+        "url": "https://www.arca.fiocruz.br/bitstreams/dc35a81b-72c5-420f-9ff5-b3fe01f0c006/download",
+        "obtido_em": "2026-11-08T10:41:59.414205-03:00",
+        "consultado_em": "2026-11-08T10:43:13.707165-03:00",
+        "sha256": "35206a3d5079758e26eaa6fcb343ead6aa7dac4674cbc6ec71d8015437e46b1c",
+        "paginas": [
+          226,
+          229,
+          230,
+          231,
+          232,
+          249,
+          250
+        ],
+        "papel": "Procedência confirmada no Arca; cópia idêntica ao PDF da consulta original. Registro: https://www.arca.fiocruz.br/handle/icict/8658. Livro federal em português; inclusão formal e edição mais recente não comprovadas.",
+        "conteudo": {
+          "226": "Molaridade n/V em mol/L e massa molar",
+          "229-232": "Pureza m/m, vidraria e preparo",
+          "249-250": "Correção do teor m/m e conversão de massa comercial em volume usando densidade; exemplo HCl 0,1 mol/L"
+        },
+        "obtencao_anterior": {
+          "url": "https://www.epsjv.fiocruz.br/sites/default/files/l140.pdf",
+          "obtido_em": "2026-11-08T05:00:24.136688-03:00",
+          "consultado_em": "2026-11-08T05:22:45.047138-03:00",
+          "papel": "Candidato elegível: livro federal em português de 2009. Descoberto por busca web dirigida ao domínio Fiocruz; acesso direto à EPSJV. Registro Arca ainda não localizado; não equivale a inclusão formal na revisão."
+        },
+        "portal": "Arca/Fiocruz",
+        "registro_url": "https://www.arca.fiocruz.br/handle/icict/8658",
+        "fuso": "America/Maceio",
+        "regularizacao_ficha": "docs/referencias/fontes/ARCA-icict-8658-regularizacao.json",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "Volume 1: 2009; número de edição não explicitado na cópia consultada.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        }
+      }
+    ],
+    "equipamentos": [
+      "Balança e material de pesagem para reagente pesado",
+      "Pipeta adequada para líquido medido por volume",
+      "Balão volumétrico de capacidade e precisão adequadas"
+    ],
+    "images": [
+      {
+        "file": "equipment/balao-volumetrico.jpg",
+        "caption": "Balão volumétrico ilustrativo; capacidade e especificação devem corresponder ao preparo.",
+        "author": "Hannes Grobe",
+        "source": "https://commons.wikimedia.org/wiki/File:Volumetric_flask_hg.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/67/Volumetric_flask_hg.jpg",
+        "license": "CC BY-SA 2.5 — https://creativecommons.org/licenses/by-sa/2.5/",
+        "obtido_em": "2026-11-08T05:22:45.047138-03:00",
+        "sha256": "6c57ade5d99e14e4cfb2f20470631732759694caf2073a723fa9a4565b372122",
+        "changes": "Imagem original, apenas dimensionada na exibição e no DOCX. Licença mantida na imagem.",
+        "role": "Ilustração complementar; não é fonte técnica nem obra do corpus da revisão."
+      }
+    ],
+    "situacao_fontes": "Procedência regularizada: cópias integrais conferidas no Arca, idênticas às fontes originais. Inclusão formal e edição mais recente permanecem sujeitas à revisão.",
+    "regularizado_em": "2026-11-08T10:43:13.707165-03:00"
   },
   {
     "id": "PREP-003",
     "name": "Preparo de solução-estoque",
     "priority": "P1",
     "application": "Geral",
-    "source_codes": "C2 — CLSI M07; C4 — CLSI M27; C5 — CLSI M38",
-    "document_status": "Fonte identificada",
+    "source_codes": "Anvisa, módulo 10, 2020, p. 110–111; Fiocruz, volume 1, 2009, p. 226–234",
+    "document_status": "Fontes integrais consultadas e regras extraídas",
     "consultado_em": "2026-10-30T04:56:36-03:00",
     "incluido_em": "2026-10-30T04:56:36-03:00",
     "fuso": "America/Maceio",
     "origem": "F03 — Catálogo e priorização de protocolos microbiológicos, v1.0, agosto/2026",
     "url": "https://docs.google.com/document/d/1n9e8ClML7KyyJG15ZkhF8hbG9_zWbPzu/edit",
     "localizacao": "Tabela de preparações, identificador PREP-003",
-    "status": "Candidato P1; regra específica ainda não implementada",
-    "consulta_fontes_primarias": "não registrada; referências citadas pelo catálogo ainda devem ser conferidas"
+    "status": "Preparo de estoque implementado; teor/potência e conservação definidos conforme certificado e método do experimento",
+    "consulta_fontes_primarias": "2026-11-08T05:37:29.953373-03:00",
+    "referencias_catalogo": "C2 — CLSI M07; C4 — CLSI M27; C5 — CLSI M38",
+    "tipo_calculo": "estoque",
+    "fontes": [
+      {
+        "id": "FIOCRUZ-2009-V1",
+        "title": "Conceitos e métodos para a formação de profissionais em laboratórios de saúde volume 1",
+        "organization": "EPSJV/IOC Fundação Oswaldo Cruz",
+        "year": 2009,
+        "organizers": [
+          "Etelcia Moraes Molinaro",
+          "Luzia Fátima Gonçalves Caputo",
+          "Maria Regina Reis Amendoeira"
+        ],
+        "isbn": "978-85-98768-41-0",
+        "url": "https://www.arca.fiocruz.br/bitstreams/dc35a81b-72c5-420f-9ff5-b3fe01f0c006/download",
+        "obtido_em": "2026-11-08T10:41:59.414205-03:00",
+        "consultado_em": "2026-11-08T10:43:13.707165-03:00",
+        "sha256": "35206a3d5079758e26eaa6fcb343ead6aa7dac4674cbc6ec71d8015437e46b1c",
+        "paginas": [
+          226,
+          227,
+          229,
+          230,
+          231,
+          232,
+          233,
+          234
+        ],
+        "papel": "Procedência confirmada no Arca; cópia idêntica ao PDF da consulta original. Registro: https://www.arca.fiocruz.br/handle/icict/8658. Livro federal em português; inclusão formal e edição mais recente não comprovadas.",
+        "conteudo": {
+          "226-227": "Concentrações molar e massa por volume",
+          "229-232": "Pureza, técnica e solução-estoque como origem de diluição",
+          "233-234": "Modelo de identificação e armazenamento dependente da substância"
+        },
+        "obtencao_anterior": {
+          "url": "https://www.epsjv.fiocruz.br/sites/default/files/l140.pdf",
+          "obtido_em": "2026-11-08T05:00:24.136688-03:00",
+          "consultado_em": "2026-11-08T05:37:29.953373-03:00",
+          "papel": "Candidato elegível: livro federal em português de 2009. Descoberto por busca web dirigida ao domínio Fiocruz; acesso direto à EPSJV. Registro Arca ainda não localizado; não equivale a inclusão formal na revisão."
+        },
+        "portal": "Arca/Fiocruz",
+        "registro_url": "https://www.arca.fiocruz.br/handle/icict/8658",
+        "fuso": "America/Maceio",
+        "regularizacao_ficha": "docs/referencias/fontes/ARCA-icict-8658-regularizacao.json",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "Volume 1: 2009; número de edição não explicitado na cópia consultada.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        }
+      },
+      {
+        "id": "ANVISA-2020-M10",
+        "title": "Microbiologia Clínica para o Controle de Infecção Relacionada à Assistência à Saúde Módulo 10 Detecção dos Principais Mecanismos de Resistência Bacteriana aos Antimicrobianos pelo Laboratório de Microbiologia Clínica",
+        "organization": "Agência Nacional de Vigilância Sanitária",
+        "year": 2020,
+        "edition": "1ª edição",
+        "isbn": "978-65-89701-01-9",
+        "url": "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/modulo-10_manual-de-microbiologia.pdf/@@download/file",
+        "obtido_em": "2026-11-08T05:34:55.508307-03:00",
+        "consultado_em": "2026-11-08T05:37:29.953373-03:00",
+        "sha256": "0c131e9699c2652525df9af8ed3aadf2574c393ffd6f103872204be4b4d36e5e",
+        "paginas": [
+          110,
+          111
+        ],
+        "paginas_pdf": [
+          110,
+          111
+        ],
+        "papel": "Manual federal em português, desde 2000, consultado diretamente no portal Anvisa. Elegibilidade candidata; inclusão formal e verificação de edição mais recente ainda dependem da revisão.",
+        "conteudo": {
+          "110": "Peso de antimicrobiano em mg = volume final mL × concentração µg/mL / potência µg/mg; solvente e diluente distinguíveis",
+          "111": "Exemplo de potência e identificação de alíquotas. Condições específicas não são generalizadas para todos os estoques."
+        },
+        "nota_conversao": "Não generalizar a equivalência entre U e µg do exemplo de um composto. U/mL com U/mg usa pareamento direto. Para alvo em massa/volume e certificado em U/mg, perguntar equivalência específica em U/µg; potência µg/mg = atividade U/mg / equivalência U/µg. Adaptação dimensional explícita.",
+        "nota_exemplo": "O manual imprime 12,88 mg; 10000/776 = 12,8865979… mg. Preservar a fórmula sem forçar o truncamento impresso; a diferença não é tolerância de equipamento.",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "1ª edição, 2020; item atual apontado no índice oficial da Anvisa.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        }
+      }
+    ],
+    "images": [
+      {
+        "file": "equipment/balanca-analitica.jpg",
+        "caption": "Balança analítica ilustrativa. O modelo não constitui recomendação de marca.",
+        "author": "US DEA",
+        "source": "https://commons.wikimedia.org/wiki/File:Analytical_balance_mettler_ae-260.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Analytical_balance_mettler_ae-260.jpg",
+        "license": "Domínio público — obra do governo federal dos Estados Unidos, conforme ficha do Wikimedia Commons",
+        "obtido_em": "2026-11-08T05:03:37.389821-03:00",
+        "sha256": "2ce25d728801e09c66482589d7988ed9bf94d3730c43adab6b34c6854e1f083f",
+        "changes": "Nenhuma alteração; apenas dimensionamento na exibição e no DOCX.",
+        "role": "Ilustração complementar; não é fonte técnica nem obra incluída na revisão."
+      }
+    ],
+    "equipamentos": [
+      "Balança adequada à massa calculada",
+      "Vidraria de capacidade e precisão compatíveis com o estoque",
+      "Frasco de material compatível, fechado e identificado conforme a substância"
+    ],
+    "situacao_fontes": "Procedência regularizada: cópias integrais conferidas no Arca, idênticas às fontes originais. Inclusão formal e edição mais recente permanecem sujeitas à revisão.",
+    "regularizado_em": "2026-11-08T10:43:13.707165-03:00"
   },
   {
     "id": "PREP-004",
     "name": "Diluição de solução-estoque",
     "priority": "P1",
     "application": "Geral",
-    "source_codes": "C2 — CLSI M07; C4 — CLSI M27; C5 — CLSI M38; B5 — Microbiology Society",
-    "document_status": "Fonte identificada",
+    "source_codes": "Fiocruz, volume 1, 2009, p. 230–232",
+    "document_status": "Fonte integral consultada e regra de diluição extraída",
     "consultado_em": "2026-10-30T04:56:36-03:00",
     "incluido_em": "2026-10-30T04:56:36-03:00",
     "fuso": "America/Maceio",
     "origem": "F03 — Catálogo e priorização de protocolos microbiológicos, v1.0, agosto/2026",
     "url": "https://docs.google.com/document/d/1n9e8ClML7KyyJG15ZkhF8hbG9_zWbPzu/edit",
     "localizacao": "Tabela de preparações, identificador PREP-004",
-    "status": "Candidato P1; regra específica ainda não implementada",
-    "consulta_fontes_primarias": "não registrada; referências citadas pelo catálogo ainda devem ser conferidas"
+    "status": "Diluição volumétrica de solução-estoque implementada; mesma base de concentração nas duas entradas",
+    "consulta_fontes_primarias": "2026-11-08T06:06:38.793144-03:00",
+    "referencias_catalogo": "C2 — CLSI M07; C4 — CLSI M27; C5 — CLSI M38; B5 — Microbiology Society",
+    "tipo_calculo": "diluicao",
+    "fontes": [
+      {
+        "id": "FIOCRUZ-2009-V1",
+        "title": "Conceitos e métodos para a formação de profissionais em laboratórios de saúde volume 1",
+        "organization": "EPSJV/IOC Fundação Oswaldo Cruz",
+        "year": 2009,
+        "organizers": [
+          "Etelcia Moraes Molinaro",
+          "Luzia Fátima Gonçalves Caputo",
+          "Maria Regina Reis Amendoeira"
+        ],
+        "isbn": "978-85-98768-41-0",
+        "url": "https://www.arca.fiocruz.br/bitstreams/dc35a81b-72c5-420f-9ff5-b3fe01f0c006/download",
+        "obtido_em": "2026-11-08T10:41:59.414205-03:00",
+        "consultado_em": "2026-11-08T10:43:13.707165-03:00",
+        "sha256": "35206a3d5079758e26eaa6fcb343ead6aa7dac4674cbc6ec71d8015437e46b1c",
+        "paginas": [
+          230,
+          231,
+          232
+        ],
+        "papel": "Procedência confirmada no Arca; cópia idêntica ao PDF da consulta original. Registro: https://www.arca.fiocruz.br/handle/icict/8658. Livro federal em português; inclusão formal e edição mais recente não comprovadas.",
+        "conteudo": {
+          "230-231": "Materiais e técnica geral de transferência, aferição e q.s.p.",
+          "232": "Diluição mantém quantidade de soluto e usa C1 V1 = C2 V2. As concentrações devem ter base por volume coerente; exclusão de % m/m da rotina volumétrica é uma restrição dimensional explícita."
+        },
+        "paginas_pdf": [
+          230,
+          231,
+          232
+        ],
+        "obtencao_anterior": {
+          "url": "https://www.epsjv.fiocruz.br/sites/default/files/l140.pdf",
+          "obtido_em": "2026-11-08T05:00:24.136688-03:00",
+          "consultado_em": "2026-11-08T06:06:38.793144-03:00",
+          "papel": "Candidato elegível: livro federal em português de 2009. Descoberto por busca web dirigida ao domínio Fiocruz; acesso direto à EPSJV. Registro Arca ainda não localizado; não equivale a inclusão formal na revisão."
+        },
+        "portal": "Arca/Fiocruz",
+        "registro_url": "https://www.arca.fiocruz.br/handle/icict/8658",
+        "fuso": "America/Maceio",
+        "regularizacao_ficha": "docs/referencias/fontes/ARCA-icict-8658-regularizacao.json",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "Volume 1: 2009; número de edição não explicitado na cópia consultada.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        }
+      }
+    ],
+    "equipamentos": [
+      "Pipeta ou instrumento volumétrico adequado à alíquota calculada",
+      "Balão volumétrico com capacidade e precisão adequadas ao volume final"
+    ],
+    "images": [
+      {
+        "file": "equipment/balao-volumetrico.jpg",
+        "caption": "Balão volumétrico ilustrativo; capacidade e especificação devem corresponder ao preparo.",
+        "author": "Hannes Grobe",
+        "source": "https://commons.wikimedia.org/wiki/File:Volumetric_flask_hg.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/67/Volumetric_flask_hg.jpg",
+        "license": "CC BY-SA 2.5 — https://creativecommons.org/licenses/by-sa/2.5/",
+        "obtido_em": "2026-11-08T05:22:45.047138-03:00",
+        "sha256": "6c57ade5d99e14e4cfb2f20470631732759694caf2073a723fa9a4565b372122",
+        "changes": "Imagem original, apenas dimensionada na exibição e no DOCX. Licença mantida na imagem.",
+        "role": "Ilustração complementar; não é fonte técnica nem obra do corpus da revisão."
+      }
+    ],
+    "situacao_fontes": "Procedência regularizada: cópias integrais conferidas no Arca, idênticas às fontes originais. Inclusão formal e edição mais recente permanecem sujeitas à revisão.",
+    "regularizado_em": "2026-11-08T10:43:13.707165-03:00"
   },
   {
     "id": "PREP-005",
     "name": "Diluição seriada / sucessiva",
     "priority": "P1",
     "application": "Geral",
-    "source_codes": "B1 — Vermelho et al.; B4 — Microbiologia Aplicada; B5 — Microbiology Society",
-    "document_status": "Fonte identificada",
+    "source_codes": "Fiocruz v. 1, 2009, p. 232; v. 4, copyright 2010, p. 441–442",
+    "document_status": "Fontes integrais consultadas; inconsistência bibliográfica do volume 4 identificada",
     "consultado_em": "2026-10-30T04:56:36-03:00",
     "incluido_em": "2026-10-30T04:56:36-03:00",
     "fuso": "America/Maceio",
     "origem": "F03 — Catálogo e priorização de protocolos microbiológicos, v1.0, agosto/2026",
     "url": "https://docs.google.com/document/d/1n9e8ClML7KyyJG15ZkhF8hbG9_zWbPzu/edit",
     "localizacao": "Tabela de preparações, identificador PREP-005",
-    "status": "Candidato P1; regra específica ainda não implementada",
-    "consulta_fontes_primarias": "não registrada; referências citadas pelo catálogo ainda devem ser conferidas"
+    "status": "Série volumétrica implementada; fator constante e volumes nominais por etapa definidos pelo pesquisador",
+    "consulta_fontes_primarias": "2026-11-08T06:14:11.240645-03:00",
+    "referencias_catalogo": "B1 — Vermelho et al.; B4 — Microbiologia Aplicada; B5 — Microbiology Society",
+    "tipo_calculo": "seriada",
+    "fontes": [
+      {
+        "id": "FIOCRUZ-2009-V1",
+        "title": "Conceitos e métodos para a formação de profissionais em laboratórios de saúde volume 1",
+        "organization": "EPSJV/IOC Fundação Oswaldo Cruz",
+        "year": 2009,
+        "organizers": [
+          "Etelcia Moraes Molinaro",
+          "Luzia Fátima Gonçalves Caputo",
+          "Maria Regina Reis Amendoeira"
+        ],
+        "isbn": "978-85-98768-41-0",
+        "url": "https://www.arca.fiocruz.br/bitstreams/dc35a81b-72c5-420f-9ff5-b3fe01f0c006/download",
+        "obtido_em": "2026-11-08T10:41:59.414205-03:00",
+        "consultado_em": "2026-11-08T10:43:13.707165-03:00",
+        "sha256": "35206a3d5079758e26eaa6fcb343ead6aa7dac4674cbc6ec71d8015437e46b1c",
+        "paginas": [
+          232
+        ],
+        "papel": "Procedência confirmada no Arca; cópia idêntica ao PDF da consulta original. Registro: https://www.arca.fiocruz.br/handle/icict/8658. Livro federal em português; inclusão formal e edição mais recente não comprovadas.",
+        "conteudo": {
+          "232": "C1 V1 = C2 V2 e figura de diluições sucessivas 1, 0.1, 0.01, 0.001 mol/L."
+        },
+        "paginas_pdf": [
+          232
+        ],
+        "obtencao_anterior": {
+          "url": "https://www.epsjv.fiocruz.br/sites/default/files/l140.pdf",
+          "obtido_em": "2026-11-08T05:00:24.136688-03:00",
+          "consultado_em": "2026-11-08T06:14:11.240645-03:00",
+          "papel": "Candidato elegível: livro federal em português de 2009. Descoberto por busca web dirigida ao domínio Fiocruz; acesso direto à EPSJV. Registro Arca ainda não localizado; não equivale a inclusão formal na revisão."
+        },
+        "portal": "Arca/Fiocruz",
+        "registro_url": "https://www.arca.fiocruz.br/handle/icict/8658",
+        "fuso": "America/Maceio",
+        "regularizacao_ficha": "docs/referencias/fontes/ARCA-icict-8658-regularizacao.json",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "Volume 1: 2009; número de edição não explicitado na cópia consultada.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        }
+      },
+      {
+        "id": "FIOCRUZ-2010-V4",
+        "title": "Conceitos e métodos para a formação de técnicos em laboratórios de saúde volume 4",
+        "organization": "EPSJV/IOC Fundação Oswaldo Cruz",
+        "year": 2010,
+        "edition": "Edição não indicada; copyright 2010",
+        "isbn": "não confirmado nesta cópia",
+        "url": "https://www.arca.fiocruz.br/bitstreams/62042256-afb7-4b93-b157-2cd5cc0a93d3/download",
+        "obtido_em": "2026-11-08T10:41:31.192083-03:00",
+        "consultado_em": "2026-11-08T10:43:13.707165-03:00",
+        "sha256": "7d86374dd3be6d0e5196874cd510423f35fa96deb33e9fce2c08f4f39e6d0f8c",
+        "paginas": [
+          441,
+          442
+        ],
+        "conteudo": {
+          "441-442": "Transferências sucessivas com homogeneização e pipeta para cada transferência. Exemplo de 1 mL em 9 mL; não generalizar condições de cultivo a todo experimento."
+        },
+        "nota_bibliografica": "Capa/folha de rosto identificam volume 4 e copyright 2010; a ficha catalográfica da p. 4 reproduz volume 1/2009 e seu ISBN. Não atribuir esse ISBN ao volume 4. Metadados bibliográficos completos ainda precisam de reconciliação. Arca informa 2009 e ISBN do volume 1; PDF idêntico tem copyright 2010 e ficha catalográfica reproduzida do volume 1. Preservados 2010 como copyright da cópia e ISBN não confirmado, sem resolver por suposição.",
+        "papel": "Procedência confirmada no Arca; cópia idêntica ao PDF da consulta original. Registro: https://www.arca.fiocruz.br/handle/icict/8661. Livro federal em português; inclusão formal e edição mais recente não comprovadas.",
+        "registro_institucional_complementar": {
+          "url": "https://www.rets.epsjv.fiocruz.br/es/node/1849",
+          "consultado_em": "2026-11-08T06:19:04.124562-03:00",
+          "nota": "Registro da coleção apresenta ano 2012 e postagem 23/06/2016, sem resolver a data/edição desta cópia v. 4. Link Parte IV retornou 502 na ferramenta web. Não substituir copyright 2010 ou atribuir uma edição posterior sem confronto documental."
+        },
+        "obtencao_anterior": {
+          "url": "https://www.ioc.fiocruz.br/sites/default/files/ConceitosMetodos_volume4.pdf",
+          "obtido_em": "2026-11-08T06:14:11.240645-03:00",
+          "consultado_em": "2026-11-08T06:14:11.240645-03:00",
+          "papel": "Livro federal em português, copyright 2010, candidato ao recorte. Acesso direto IOC; não implica inclusão formal nem confirmação de edição mais recente."
+        },
+        "portal": "Arca/Fiocruz",
+        "registro_url": "https://www.arca.fiocruz.br/handle/icict/8661",
+        "fuso": "America/Maceio",
+        "regularizacao_ficha": "docs/referencias/fontes/ARCA-icict-8661-regularizacao.json",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "Volume 4: copyright 2010 na cópia; Arca/catálogo informam 2009. Folha de rosto usa técnicos; registro Arca usa profissionais. ISBN da cópia pertence à ficha reproduzida do volume 1; não confirmado para v. 4. Divergências preservadas, sem correção por suposição.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        }
+      }
+    ],
+    "equipamentos": [
+      "Pipeta adequada à alíquota e à tolerância requerida",
+      "Recipientes compatíveis com o volume preparado e o método"
+    ],
+    "images": [
+      {
+        "file": "equipment/balao-volumetrico.jpg",
+        "caption": "Balão volumétrico ilustrativo; capacidade e especificação devem corresponder ao preparo.",
+        "author": "Hannes Grobe",
+        "source": "https://commons.wikimedia.org/wiki/File:Volumetric_flask_hg.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/67/Volumetric_flask_hg.jpg",
+        "license": "CC BY-SA 2.5 — https://creativecommons.org/licenses/by-sa/2.5/",
+        "obtido_em": "2026-11-08T05:22:45.047138-03:00",
+        "sha256": "6c57ade5d99e14e4cfb2f20470631732759694caf2073a723fa9a4565b372122",
+        "changes": "Imagem original, apenas dimensionada na exibição e no DOCX. Licença mantida na imagem.",
+        "role": "Ilustração complementar; não é fonte técnica nem obra do corpus da revisão."
+      }
+    ],
+    "situacao_fontes": "Procedência regularizada: cópias integrais conferidas no Arca, idênticas às fontes originais. Inclusão formal e edição mais recente permanecem sujeitas à revisão.",
+    "regularizado_em": "2026-11-08T10:43:13.707165-03:00"
   },
   {
     "id": "PREP-006",
     "name": "Cálculo de fator de diluição e concentração final",
     "priority": "P1",
     "application": "Geral",
-    "source_codes": "B4 — Microbiologia Aplicada; B5 — Microbiology Society",
-    "document_status": "Fonte identificada",
+    "source_codes": "Fiocruz, volume 1, 2009, p. 230–232",
+    "document_status": "Fonte integral consultada, equação e rearranjos identificados",
     "consultado_em": "2026-10-30T04:56:36-03:00",
     "incluido_em": "2026-10-30T04:56:36-03:00",
     "fuso": "America/Maceio",
     "origem": "F03 — Catálogo e priorização de protocolos microbiológicos, v1.0, agosto/2026",
     "url": "https://docs.google.com/document/d/1n9e8ClML7KyyJG15ZkhF8hbG9_zWbPzu/edit",
     "localizacao": "Tabela de preparações, identificador PREP-006",
-    "status": "Candidato P1; regra específica ainda não implementada",
-    "consulta_fontes_primarias": "não registrada; referências citadas pelo catálogo ainda devem ser conferidas"
+    "status": "Fator e concentração final implementados a partir de concentração inicial, alíquota e volume final",
+    "consulta_fontes_primarias": "2026-11-08T06:27:07.978322-03:00",
+    "referencias_catalogo": "B4 — Microbiologia Aplicada; B5 — Microbiology Society",
+    "tipo_calculo": "fator",
+    "fontes": [
+      {
+        "id": "FIOCRUZ-2009-V1",
+        "title": "Conceitos e métodos para a formação de profissionais em laboratórios de saúde volume 1",
+        "organization": "EPSJV/IOC Fundação Oswaldo Cruz",
+        "year": 2009,
+        "organizers": [
+          "Etelcia Moraes Molinaro",
+          "Luzia Fátima Gonçalves Caputo",
+          "Maria Regina Reis Amendoeira"
+        ],
+        "isbn": "978-85-98768-41-0",
+        "url": "https://www.arca.fiocruz.br/bitstreams/dc35a81b-72c5-420f-9ff5-b3fe01f0c006/download",
+        "obtido_em": "2026-11-08T10:41:59.414205-03:00",
+        "consultado_em": "2026-11-08T10:43:13.707165-03:00",
+        "sha256": "35206a3d5079758e26eaa6fcb343ead6aa7dac4674cbc6ec71d8015437e46b1c",
+        "paginas": [
+          230,
+          231,
+          232
+        ],
+        "papel": "Procedência confirmada no Arca; cópia idêntica ao PDF da consulta original. Registro: https://www.arca.fiocruz.br/handle/icict/8658. Livro federal em português; inclusão formal e edição mais recente não comprovadas.",
+        "conteudo": {
+          "232": "Conservação do soluto e C1 V1 = C2 V2; derivação explícita de C2=C1 V1/V2 e fator V2/V1.",
+          "230-231": "Materiais e técnica de transferência/aferição do volume final."
+        },
+        "paginas_pdf": [
+          230,
+          231,
+          232
+        ],
+        "obtencao_anterior": {
+          "url": "https://www.epsjv.fiocruz.br/sites/default/files/l140.pdf",
+          "obtido_em": "2026-11-08T05:00:24.136688-03:00",
+          "consultado_em": "2026-11-08T06:27:07.978322-03:00",
+          "papel": "Candidato elegível: livro federal em português de 2009. Descoberto por busca web dirigida ao domínio Fiocruz; acesso direto à EPSJV. Registro Arca ainda não localizado; não equivale a inclusão formal na revisão."
+        },
+        "portal": "Arca/Fiocruz",
+        "registro_url": "https://www.arca.fiocruz.br/handle/icict/8658",
+        "fuso": "America/Maceio",
+        "regularizacao_ficha": "docs/referencias/fontes/ARCA-icict-8658-regularizacao.json",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "Volume 1: 2009; número de edição não explicitado na cópia consultada.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        }
+      }
+    ],
+    "equipamentos": [
+      "Instrumento volumétrico adequado à alíquota",
+      "Balão ou vidraria de capacidade e precisão compatíveis com o volume final"
+    ],
+    "images": [
+      {
+        "file": "equipment/balao-volumetrico.jpg",
+        "caption": "Balão volumétrico ilustrativo; capacidade e especificação devem corresponder ao preparo.",
+        "author": "Hannes Grobe",
+        "source": "https://commons.wikimedia.org/wiki/File:Volumetric_flask_hg.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/67/Volumetric_flask_hg.jpg",
+        "license": "CC BY-SA 2.5 — https://creativecommons.org/licenses/by-sa/2.5/",
+        "obtido_em": "2026-11-08T05:22:45.047138-03:00",
+        "sha256": "6c57ade5d99e14e4cfb2f20470631732759694caf2073a723fa9a4565b372122",
+        "changes": "Imagem original, apenas dimensionada na exibição e no DOCX. Licença mantida na imagem.",
+        "role": "Ilustração complementar; não é fonte técnica nem obra do corpus da revisão."
+      }
+    ],
+    "situacao_fontes": "Procedência regularizada: cópias integrais conferidas no Arca, idênticas às fontes originais. Inclusão formal e edição mais recente permanecem sujeitas à revisão.",
+    "regularizado_em": "2026-11-08T10:43:13.707165-03:00"
   },
   {
     "id": "PREP-007",
     "name": "Cálculo de volume total e percentual excedente",
     "priority": "P1",
     "application": "Geral",
-    "source_codes": "B5 — Microbiology Society",
-    "document_status": "Regra computacional; fonte operacional identificada",
+    "source_codes": "Ministério da Saúde, Guia da Rede Laboratorial de Influenza, 2016, p. 48",
+    "document_status": "Fonte integral consultada na BVS MS; generalização percentual explícita",
     "consultado_em": "2026-10-30T04:56:36-03:00",
     "incluido_em": "2026-10-30T04:56:36-03:00",
     "fuso": "America/Maceio",
     "origem": "F03 — Catálogo e priorização de protocolos microbiológicos, v1.0, agosto/2026",
     "url": "https://docs.google.com/document/d/1n9e8ClML7KyyJG15ZkhF8hbG9_zWbPzu/edit",
     "localizacao": "Tabela de preparações, identificador PREP-007",
-    "status": "Candidato P1; regra específica ainda não implementada",
-    "consulta_fontes_primarias": "não registrada; referências citadas pelo catálogo ainda devem ser conferidas"
+    "status": "Dimensionamento de volume total e excedente implementado; margem escolhida pelo pesquisador",
+    "consulta_fontes_primarias": "2026-11-08T09:51:59.642721-03:00",
+    "referencias_catalogo": "B5 — Microbiology Society",
+    "tipo_calculo": "volume",
+    "fontes": [
+      {
+        "id": "MS-2016-INFLUENZA",
+        "title": "Guia para a Rede Laboratorial de Vigilância de Influenza no Brasil",
+        "organization": "Ministério da Saúde, Secretaria de Vigilância em Saúde",
+        "year": 2016,
+        "edition": "1ª edição, versão eletrônica",
+        "isbn": "978-85-334-2402-9",
+        "url": "https://bvsms.saude.gov.br/bvs/publicacoes/guia_laboratorial_influenza_vigilancia_influenza_brasil.pdf",
+        "obtido_em": "2026-11-08T06:32:40.915588-03:00",
+        "consultado_em": "2026-11-08T09:51:59.642721-03:00",
+        "sha256": "0338bdad575528844378dc3fbc94533677e9a18458dffe281c3f791e0bcb0fb1",
+        "paginas": [
+          48
+        ],
+        "paginas_pdf": [
+          49
+        ],
+        "conteudo": {
+          "48": "Dimensionar volume por número de reações e reservar material para perdas. Regra específica do método: +1 reação até 14, +2 acima disso; não é percentual universal."
+        },
+        "papel": "Guia técnico federal em português, publicado em 2016, obtido da BVS MS. Candidato ao recorte; não equivale a inclusão formal nem comprova edição mais recente.",
+        "adaptacao": "Vbase=v×N e Vtotal=Vbase×(1+E/100), E escolhido pelo pesquisador. N já inclui todas as unidades, controles e repetições. O percentual é acréscimo sobre a base, não fração perdida do total.",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "1ª edição, 2016, versão eletrônica. Não localizada outra edição do mesmo título na busca dirigida; obras de vigilância/tratamento de influenza com outros títulos não são tratadas como novas edições desta obra.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        }
+      }
+    ],
+    "equipamentos": [
+      "Instrumento volumétrico com faixa e tolerância adequadas ao volume por unidade",
+      "Recipiente compatível com o volume total e a composição"
+    ],
+    "images": [
+      {
+        "file": "equipment/micropipeta.png",
+        "caption": "Micropipeta ilustrativa. Escolher instrumento com faixa e tolerância compatíveis com o volume; modelo e marca não são obrigatórios.",
+        "author": "Emicropipette",
+        "source": "https://commons.wikimedia.org/wiki/File:Micropipette_Dr_pipette.png",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/09/Micropipette_Dr_pipette.png",
+        "license": "CC BY-SA 4.0 — https://creativecommons.org/licenses/by-sa/4.0/",
+        "obtido_em": "2026-11-08T09:49:17.088101-03:00",
+        "sha256": "381ca2c867862adc0dbc960aef7f2a5485c3cd791a52d34b4770b273f90b3761",
+        "changes": "Imagem original, apenas dimensionada na exibição e no DOCX. Licença da imagem preservada.",
+        "role": "Ilustração complementar; não é fonte técnica nem obra do corpus da revisão."
+      }
+    ]
   },
   {
     "id": "PREP-008",
     "name": "Preparo de meio a partir de formulação",
     "priority": "P1",
     "application": "Geral",
-    "source_codes": "A1 — ANVISA Mód. 5; B2 — UniFatecie; B4 — Microbiologia Aplicada; B5 — Microbiology Society",
-    "document_status": "Fonte identificada",
+    "source_codes": "Anvisa, módulo 5, 2013, p. 14–15",
+    "document_status": "Fonte integral consultada; fórmula e limites identificados",
     "consultado_em": "2026-10-30T04:56:36-03:00",
     "incluido_em": "2026-10-30T04:56:36-03:00",
     "fuso": "America/Maceio",
     "origem": "F03 — Catálogo e priorização de protocolos microbiológicos, v1.0, agosto/2026",
     "url": "https://docs.google.com/document/d/1n9e8ClML7KyyJG15ZkhF8hbG9_zWbPzu/edit",
     "localizacao": "Tabela de preparações, identificador PREP-008",
-    "status": "Candidato P1; regra específica ainda não implementada",
-    "consulta_fontes_primarias": "não registrada; referências citadas pelo catálogo ainda devem ser conferidas"
+    "status": "Escalonamento de formulação implementado, com receita da fonte e opção identificada do pesquisador",
+    "consulta_fontes_primarias": "2026-11-08T10:01:15.935751-03:00",
+    "referencias_catalogo": "A1 — ANVISA Mód. 5; B2 — UniFatecie; B4 — Microbiologia Aplicada; B5 — Microbiology Society",
+    "tipo_calculo": "formula",
+    "fontes": [
+      {
+        "id": "ANVISA-2013-M5",
+        "title": "Microbiologia Clínica para o Controle de Infecção Relacionada à Assistência à Saúde Módulo 5 Tecnologias em Serviços de Saúde Descrição dos Meios de Cultura Empregados nos Exames Microbiológicos",
+        "organization": "Agência Nacional de Vigilância Sanitária",
+        "year": 2013,
+        "edition": "Expediente: 1ª edição – 2010; copyright e ficha catalográfica: 2013. A numeração de eventual edição de 2013 não está explicitada; não inferir segunda edição.",
+        "isbn": "não informado nesta cópia",
+        "url": "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/modulo-5-tecnologias-em-servicos-de-saude-descricao-dos-meios-de-cultura-empregados-nos-exames-microbiologicos/@@download/file",
+        "obtido_em": "2026-11-08T09:57:05.171864-03:00",
+        "consultado_em": "2026-11-08T10:01:15.935751-03:00",
+        "sha256": "99821377c62d1d23f8598551e6c0d560c17869735fe482529cb34ab851363cee",
+        "paginas": [
+          14,
+          15
+        ],
+        "papel": "Manual federal em português de 2013, portal Anvisa. Candidato ao recorte, sem inclusão formal na revisão nem comprovação de edição mais recente. Expediente: 1ª edição – 2010; copyright e ficha catalográfica de 2013. Não inferir segunda edição. Conferência bibliográfica: 2026-11-08T11:28:23.275101-03:00 (America/Maceio).",
+        "conteudo": {
+          "15": "Ágar nutriente: extrato de carne 3 g, peptona 5 g, ágar 15 g, água destilada 1000 mL; pH 6,8 ± 0,2 a 25 °C. Pesar/hidratar, fundir, distribuir e autoclavar, sem ciclo de tempo/temperatura especificado nesse trecho. Conservação da receita específica: embalada de 4 a 8 °C por até 3 meses, sem cálculo automático de data de validade."
+        },
+        "adaptacao": "Escala proporcional de ingredientes para volume nominal de referência. Água mantida como componente da receita, sem reinterpretar automaticamente como q.s.p. Formulação livre do pesquisador é identificada separadamente e não atribuída como validada pela Anvisa.",
+        "paginas_pdf": [
+          16,
+          17
+        ],
+        "consulta_complementar_em": "2026-11-08T10:10:50.353545-03:00",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "Expediente: 1ª edição – 2010; copyright e ficha catalográfica: 2013. A numeração de eventual edição de 2013 não está explicitada; não inferir segunda edição.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        },
+        "edicao_registrada_anteriormente": "2013; sem numeração de edição indicada"
+      }
+    ],
+    "formulacoes": [
+      {
+        "id": "anvisa_agar_nutriente",
+        "nome": "Ágar nutriente — Anvisa 2013, p. 15",
+        "volume_base_mL": 1000,
+        "componentes": [
+          {
+            "nome": "Extrato de carne",
+            "quantidade": 3,
+            "unidade": "g"
+          },
+          {
+            "nome": "Peptona",
+            "quantidade": 5,
+            "unidade": "g"
+          },
+          {
+            "nome": "Ágar",
+            "quantidade": 15,
+            "unidade": "g"
+          },
+          {
+            "nome": "Água destilada",
+            "quantidade": 1000,
+            "unidade": "mL"
+          }
+        ],
+        "ph": "6,8 ± 0,2 a 25 °C",
+        "procedimento": "Pesar e hidratar os componentes; fundir; distribuir 3–5 mL por tubo; esterilizar em autoclave. Para tubos inclinados, inclinar ainda quentes conforme o método. O trecho não especifica ciclo de tempo/temperatura.",
+        "fonte_id": "ANVISA-2013-M5",
+        "conservacao": "Embalado de 4 a 8 °C por até 3 meses (Anvisa 2013, p. 15). Conferir método e condições locais; sem data de validade calculada."
+      }
+    ],
+    "equipamentos": [
+      "Balança adequada às massas calculadas",
+      "Instrumentos volumétricos e recipientes compatíveis com a receita",
+      "Equipamento de esterilização conforme método e ciclo definidos"
+    ],
+    "images": [
+      {
+        "file": "equipment/balanca-analitica.jpg",
+        "caption": "Balança analítica ilustrativa. O modelo não constitui recomendação de marca.",
+        "author": "US DEA",
+        "source": "https://commons.wikimedia.org/wiki/File:Analytical_balance_mettler_ae-260.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Analytical_balance_mettler_ae-260.jpg",
+        "license": "Domínio público — obra do governo federal dos Estados Unidos, conforme ficha do Wikimedia Commons",
+        "obtido_em": "2026-11-08T05:03:37.389821-03:00",
+        "sha256": "2ce25d728801e09c66482589d7988ed9bf94d3730c43adab6b34c6854e1f083f",
+        "changes": "Nenhuma alteração; apenas dimensionamento na exibição e no DOCX.",
+        "role": "Ilustração complementar; não é fonte técnica nem obra incluída na revisão.",
+        "docx_width_cm": 6
+      }
+    ]
   },
   {
     "id": "PREP-009",
     "name": "Preparo de meio comercial desidratado",
     "priority": "P1",
     "application": "Geral",
-    "source_codes": "A1 — ANVISA Mód. 5; B5 — Microbiology Society",
-    "document_status": "Fonte identificada",
+    "source_codes": "Anvisa, módulo 5, 2013, p. 7–8 e 11",
+    "document_status": "Fonte integral consultada; instrução do fabricante deve ser declarada pelo pesquisador",
     "consultado_em": "2026-10-30T04:56:36-03:00",
     "incluido_em": "2026-10-30T04:56:36-03:00",
     "fuso": "America/Maceio",
     "origem": "F03 — Catálogo e priorização de protocolos microbiológicos, v1.0, agosto/2026",
     "url": "https://docs.google.com/document/d/1n9e8ClML7KyyJG15ZkhF8hbG9_zWbPzu/edit",
     "localizacao": "Tabela de preparações, identificador PREP-009",
-    "status": "Candidato P1; regra específica ainda não implementada",
-    "consulta_fontes_primarias": "não registrada; referências citadas pelo catálogo ainda devem ser conferidas"
+    "status": "Massa de meio comercial calculada pela proporção e convenção de volume informadas",
+    "consulta_fontes_primarias": "2026-11-08T10:24:55.493522-03:00",
+    "referencias_catalogo": "A1 — ANVISA Mód. 5; B5 — Microbiology Society",
+    "tipo_calculo": "desidratado",
+    "fontes": [
+      {
+        "id": "ANVISA-2013-M5",
+        "title": "Microbiologia Clínica para o Controle de Infecção Relacionada à Assistência à Saúde Módulo 5 Tecnologias em Serviços de Saúde Descrição dos Meios de Cultura Empregados nos Exames Microbiológicos",
+        "organization": "Agência Nacional de Vigilância Sanitária",
+        "year": 2013,
+        "edition": "Expediente: 1ª edição – 2010; copyright e ficha catalográfica: 2013. A numeração de eventual edição de 2013 não está explicitada; não inferir segunda edição.",
+        "isbn": "não informado nesta cópia",
+        "url": "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/modulo-5-tecnologias-em-servicos-de-saude-descricao-dos-meios-de-cultura-empregados-nos-exames-microbiologicos/@@download/file",
+        "obtido_em": "2026-11-08T09:57:05.171864-03:00",
+        "consultado_em": "2026-11-08T10:24:55.493522-03:00",
+        "sha256": "99821377c62d1d23f8598551e6c0d560c17869735fe482529cb34ab851363cee",
+        "paginas": [
+          7,
+          8,
+          11
+        ],
+        "papel": "Manual federal em português de 2013, portal Anvisa. Candidato ao recorte, sem inclusão formal na revisão nem comprovação de edição mais recente. Expediente: 1ª edição – 2010; copyright e ficha catalográfica de 2013. Não inferir segunda edição. Conferência bibliográfica: 2026-11-08T11:28:23.275101-03:00 (America/Maceio).",
+        "conteudo": {
+          "7": "Procedimentos gerais: hidratação de meios comerciais e pesagem.",
+          "8": "A orientação geral menciona ciclo normalmente 121 °C/15 min, mas manda observar rótulo/manual do fabricante; não tornar universal.",
+          "11": "Exemplo orienta pesar e hidratar conforme instruções do fabricante."
+        },
+        "adaptacao": "Escala da massa de pó pela razão entre volume alvo e volume de referência declarados. Distinguir água de volume final conforme instrução; dados do fabricante são informados pelo pesquisador, não consultados automaticamente.",
+        "paginas_pdf": [
+          9,
+          10,
+          13
+        ],
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "Expediente: 1ª edição – 2010; copyright e ficha catalográfica: 2013. A numeração de eventual edição de 2013 não está explicitada; não inferir segunda edição.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        },
+        "edicao_registrada_anteriormente": "2013; sem numeração de edição indicada"
+      }
+    ],
+    "equipamentos": [
+      "Balança adequada à massa calculada",
+      "Instrumentos volumétricos e recipientes compatíveis com a instrução",
+      "Equipamento de preparo/esterilização conforme fabricante e método"
+    ],
+    "images": [
+      {
+        "file": "equipment/balanca-analitica.jpg",
+        "caption": "Balança analítica ilustrativa. O modelo não constitui recomendação de marca.",
+        "author": "US DEA",
+        "source": "https://commons.wikimedia.org/wiki/File:Analytical_balance_mettler_ae-260.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Analytical_balance_mettler_ae-260.jpg",
+        "license": "Domínio público — obra do governo federal dos Estados Unidos, conforme ficha do Wikimedia Commons",
+        "obtido_em": "2026-11-08T05:03:37.389821-03:00",
+        "sha256": "2ce25d728801e09c66482589d7988ed9bf94d3730c43adab6b34c6854e1f083f",
+        "changes": "Nenhuma alteração; apenas dimensionamento na exibição e no DOCX.",
+        "role": "Ilustração complementar; não é fonte técnica nem obra incluída na revisão.",
+        "docx_width_cm": 6
+      }
+    ]
   },
   {
     "id": "PREP-010",
     "name": "Cálculo de meio necessário por número de placas/tubos",
     "priority": "P1",
     "application": "Geral",
-    "source_codes": "B5 — Microbiology Society",
-    "document_status": "Fonte identificada",
+    "source_codes": "Anvisa, módulo 5, 2013, p. 18; Ministério da Saúde, Guia Influenza, 2016, p. 48",
+    "document_status": "Fontes integrais consultadas na Anvisa e BVS MS; derivações explícitas",
     "consultado_em": "2026-10-30T04:56:36-03:00",
     "incluido_em": "2026-10-30T04:56:36-03:00",
     "fuso": "America/Maceio",
     "origem": "F03 — Catálogo e priorização de protocolos microbiológicos, v1.0, agosto/2026",
     "url": "https://docs.google.com/document/d/1n9e8ClML7KyyJG15ZkhF8hbG9_zWbPzu/edit",
     "localizacao": "Tabela de preparações, identificador PREP-010",
-    "status": "Candidato P1; regra específica ainda não implementada",
-    "consulta_fontes_primarias": "não registrada; referências citadas pelo catálogo ainda devem ser conferidas"
+    "status": "Dimensionamento de meio por placas/tubos implementado; dose e condições definidas pelo pesquisador",
+    "consulta_fontes_primarias": "2026-11-08T10:51:07.891495-03:00",
+    "tipo_calculo": "recipientes",
+    "referencias_catalogo": "B5 — Microbiology Society",
+    "fontes": [
+      {
+        "id": "ANVISA-2013-M5",
+        "title": "Microbiologia Clínica para o Controle de Infecção Relacionada à Assistência à Saúde Módulo 5 Tecnologias em Serviços de Saúde Descrição dos Meios de Cultura Empregados nos Exames Microbiológicos",
+        "organization": "Agência Nacional de Vigilância Sanitária",
+        "year": 2013,
+        "edition": "Expediente: 1ª edição – 2010; copyright e ficha catalográfica: 2013. A numeração de eventual edição de 2013 não está explicitada; não inferir segunda edição.",
+        "isbn": "não informado nesta cópia",
+        "url": "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/modulo-5-tecnologias-em-servicos-de-saude-descricao-dos-meios-de-cultura-empregados-nos-exames-microbiologicos/@@download/file",
+        "obtido_em": "2026-11-08T09:57:05.171864-03:00",
+        "consultado_em": "2026-11-08T10:51:07.891495-03:00",
+        "sha256": "99821377c62d1d23f8598551e6c0d560c17869735fe482529cb34ab851363cee",
+        "paginas": [
+          18
+        ],
+        "papel": "Manual federal em português de 2013, portal Anvisa. Candidato ao recorte, sem inclusão formal na revisão nem comprovação de edição mais recente. Expediente: 1ª edição – 2010; copyright e ficha catalográfica de 2013. Não inferir segunda edição. Conferência bibliográfica: 2026-11-08T11:28:23.275101-03:00 (America/Maceio).",
+        "conteudo": {
+          "18": "Distribuição específica do ágar chocolate: aproximadamente 20 mL/placa de 90 mm ou 6 mL/tubo 16×160 mm. Doses e demais condições não são universais."
+        },
+        "adaptacao": "Vbase=N×v e Vtotal=Vbase×(1+E/100). Dose, recipiente e reserva escolhidos pelo pesquisador, sem dose ou margem positivas automáticas.",
+        "paginas_pdf": [
+          20
+        ],
+        "portal": "Publicações Anvisa",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "Expediente: 1ª edição – 2010; copyright e ficha catalográfica: 2013. A numeração de eventual edição de 2013 não está explicitada; não inferir segunda edição.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        },
+        "edicao_registrada_anteriormente": "2013; sem numeração de edição indicada"
+      },
+      {
+        "id": "MS-2016-INFLUENZA",
+        "title": "Guia para a Rede Laboratorial de Vigilância de Influenza no Brasil",
+        "organization": "Ministério da Saúde, Secretaria de Vigilância em Saúde",
+        "year": 2016,
+        "edition": "1ª edição, versão eletrônica",
+        "isbn": "978-85-334-2402-9",
+        "url": "https://bvsms.saude.gov.br/bvs/publicacoes/guia_laboratorial_influenza_vigilancia_influenza_brasil.pdf",
+        "obtido_em": "2026-11-08T06:32:40.915588-03:00",
+        "consultado_em": "2026-11-08T10:51:07.891495-03:00",
+        "sha256": "0338bdad575528844378dc3fbc94533677e9a18458dffe281c3f791e0bcb0fb1",
+        "paginas": [
+          48
+        ],
+        "paginas_pdf": [
+          49
+        ],
+        "conteudo": {
+          "48": "Dimensionar volume por número de reações e reservar material para perdas. Regra específica do método: +1 reação até 14, +2 acima disso; não é percentual universal."
+        },
+        "papel": "Guia técnico federal em português, publicado em 2016, obtido da BVS MS. Candidato ao recorte; não equivale a inclusão formal nem comprova edição mais recente.",
+        "adaptacao": "Vbase=v×N e Vtotal=Vbase×(1+E/100), E escolhido pelo pesquisador. N já inclui todas as unidades, controles e repetições. O percentual é acréscimo sobre a base, não fração perdida do total.",
+        "portal": "BVS MS",
+        "conferencia_bibliografica": {
+          "em": "2026-11-08T11:28:23.275101-03:00",
+          "registro": "docs/referencias/fontes/CONFERENCIA-EDICOES-20261108.json",
+          "resultado": "1ª edição, 2016, versão eletrônica. Não localizada outra edição do mesmo título na busca dirigida; obras de vigilância/tratamento de influenza com outros títulos não são tratadas como novas edições desta obra.",
+          "limite": "Nenhuma edição posterior do mesmo título/volume localizada nesta busca dirigida; não equivale a inclusão formal ou prova de ausência de outras edições."
+        }
+      }
+    ],
+    "equipamentos": [
+      "Placas ou tubos com formato/capacidade adequados ao método",
+      "Instrumento volumétrico adequado à dose e tolerância requerida",
+      "Recipiente compatível com o meio e o volume total"
+    ],
+    "images": [
+      {
+        "file": "equipment/balao-volumetrico.jpg",
+        "caption": "Balão volumétrico ilustrativo; capacidade e especificação devem corresponder ao preparo.",
+        "author": "Hannes Grobe",
+        "source": "https://commons.wikimedia.org/wiki/File:Volumetric_flask_hg.jpg",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/67/Volumetric_flask_hg.jpg",
+        "license": "CC BY-SA 2.5 — https://creativecommons.org/licenses/by-sa/2.5/",
+        "obtido_em": "2026-11-08T05:22:45.047138-03:00",
+        "sha256": "6c57ade5d99e14e4cfb2f20470631732759694caf2073a723fa9a4565b372122",
+        "changes": "Imagem original, apenas dimensionada na exibição e no DOCX. Licença mantida na imagem.",
+        "role": "Ilustração complementar; não é fonte técnica nem obra do corpus da revisão.",
+        "docx_width_cm": 6
+      }
+    ]
   }
 ]

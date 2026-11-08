@@ -1,3 +1,23 @@
+# PREP-010 — Meio necessário para placas ou tubos
+
+## Conferência bibliográfica em 08/11/2026
+
+Módulo 5: expediente indica 1ª edição de 2010; copyright/ficha de 2013. Não inferir nova edição nem usar a postagem de 2020 como ano editorial. Conferência e limites em [regularização das fontes](../referencias/REGULARIZACAO_FONTES.md).
+
+## Implementação de 08/11/2026
+
+Parâmetros: placas ou tubos (escolha obrigatória), volume por recipiente e unidade (µL/mL/L), quantidade inteira de recipientes já incluindo controles/repetições e excedente percentual escolhido pelo pesquisador (0 = sem reserva). Identificação do meio, formato/capacidade e método de distribuição são textos opcionais; ausências de formato/método ficam pendentes para conferência antes de executar. Um tipo e uma dose por planejamento; grupos diferentes exigem planejamentos separados.
+
+Vbase=N×v; reserva=Vbase×E/100; Vtotal=Vbase×(1+E/100). Não aumentar a dose individual para consumir reserva. Capacidade nominal não é dose recomendada. Não calcula composição/massa de pó, ciclo ou validade. A distribuição e o preparo dependem do método; não são validados automaticamente.
+
+Consulta 2026-11-08T10:51:07.891495-03:00 (America/Maceio). Anvisa módulo 5, 2013, p. 18 (PDF 20): distribuição específica de ágar chocolate com doses distintas para placas/tubos; não generalizar 20 mL/placa ou 6 mL/tubo. BVS MS, Guia Influenza, 2016, p. 48 (PDF 49): dimensionamento e reserva de reações em método específico. Produto N×v e reserva percentual são derivações explícitas do aplicativo, sem margem universal. Fontes completas, horários de obtenção, hashes e páginas em `docs/referencias/fontes/ANVISA-2013-M5-PREP-010.json` e `MS-2016-INFLUENZA-PREP-010.json`. Não equivale a inclusão formal na revisão ou confirmação de última edição.
+
+POP individual e DOCX com balão volumétrico ilustrativo reutilizado, autor Hannes Grobe, CC BY-SA 2.5, URL/hash/data originais preservados. A imagem não impõe equipamento, marca ou capacidade. Dados calculados permanecem distintos de observações; sem validação em bancada.
+
+Verificações: casos independentes (12 placas × 20 mL + 10% = 264 mL; 10 tubos × 6 mL sem reserva = 60 mL), limites/entradas inválidas, edição ao vivo, histórico, JSON, DOCX ilustrado e troca/reinício. Suíte completa: 280 testes aprovados. POP de três páginas e capturas Qt inspecionados.
+
+## Registro anterior preservado
+
 # PREP-010 — Cálculo de meio necessário por número de placas/tubos
 
 **Estado:** candidato P1 selecionado para a lista da interface; não é ficha operacional validada nem cálculo específico implementado.

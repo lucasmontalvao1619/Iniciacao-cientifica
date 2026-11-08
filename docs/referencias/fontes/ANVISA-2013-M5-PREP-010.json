@@ -1,0 +1,24 @@
+{
+  "id": "ANVISA-2013-M5",
+  "title": "Microbiologia Clínica para o Controle de Infecção Relacionada à Assistência à Saúde Módulo 5 Tecnologias em Serviços de Saúde Descrição dos Meios de Cultura Empregados nos Exames Microbiológicos",
+  "organization": "Agência Nacional de Vigilância Sanitária",
+  "year": 2013,
+  "edition": "2013; sem numeração de edição indicada",
+  "isbn": "não informado nesta cópia",
+  "url": "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/modulo-5-tecnologias-em-servicos-de-saude-descricao-dos-meios-de-cultura-empregados-nos-exames-microbiologicos/@@download/file",
+  "obtido_em": "2026-11-08T09:57:05.171864-03:00",
+  "consultado_em": "2026-11-08T10:51:07.891495-03:00",
+  "sha256": "99821377c62d1d23f8598551e6c0d560c17869735fe482529cb34ab851363cee",
+  "paginas": [
+    18
+  ],
+  "papel": "Manual federal em português de 2013, portal Anvisa. Candidato ao recorte, sem inclusão formal na revisão nem comprovação de edição mais recente.",
+  "conteudo": {
+    "18": "Distribuição específica do ágar chocolate: aproximadamente 20 mL/placa de 90 mm ou 6 mL/tubo 16×160 mm. Doses e demais condições não são universais."
+  },
+  "adaptacao": "Vbase=N×v e Vtotal=Vbase×(1+E/100). Dose, recipiente e reserva escolhidos pelo pesquisador, sem dose ou margem positivas automáticas.",
+  "paginas_pdf": [
+    20
+  ],
+  "portal": "Publicações Anvisa"
+}

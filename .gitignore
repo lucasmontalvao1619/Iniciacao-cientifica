@@ -20,3 +20,17 @@ dist/
 *.sqlite3
 .obsidian/
 .smart-env/
+
+# Cópias científicas consultadas permanecem locais; ficha, hash e URL são versionados.
+docs/referencias/fontes/*.pdf
+docs/referencias/fontes/*.txt
+docs/referencias/fontes/*.html
+# Registros experimentais e artefatos gerados não são código-fonte.
+Registros de Experimentos/
+output/
+
+# Respostas integrais de buscas são evidências locais, não código.
+docs/referencias/fontes/ARCA-busca-*.json
+docs/referencias/fontes/ARCA-busca-*.json.gz
+*-smoke.json
+test-results.xml

@@ -1,33 +1,53 @@
-# Interface — fluxo único
+# Interface do planejamento experimental
 
-Aplicação desktop PyQt6 em `~/Desktop/INICIACAO CIENTIFICA`, baseada nos requisitos e nos services existentes. Abra na raiz com `.venv/bin/python -m frontend.app` (instalação: `pip install -e ".[ui]"`). Apenas uma instância é permitida.
+Código ativo: `~/Desktop/INICIACAO CIENTIFICA`. Executar com `.venv/bin/python -m frontend.app`; dependências de UI: `pip install -e ".[ui]"`.
 
-## Jornada
+## Estado em 08/11/2026
 
-1. **Início:** iniciar um novo planejamento.
-2. **Protocolo:** clicar no próprio campo para abrir sugestões e digitar nome/código, com ou sem acentos. Selecionar e confirmar para avançar.
-3. **Parâmetros:** informar os dados e gerar o plano. Plano fica bloqueado até uma geração válida.
-a4. **Plano:** conferir cálculo, insumos e organização; continuar para registrar medições.
-5. **Resultados:** preencher grupos e valores observados na tabela, informar a grandeza/unidade, ver resumo e gráfico. Nome do experimento, protocolo e organização planejada acompanham esta etapa.
+- Dez itens no catálogo: PREP-001 a PREP-010. PREP-001 tem cálculo percentual e PREP-002 tem cálculo molar; PREP-003 tem cálculo de estoque; PREP-004 tem diluição de solução-estoque; PREP-005 tem diluição seriada; PREP-006 calcula fator/concentração final; PREP-007 calcula volume total e excedente; PREP-008 escala formulações; PREP-009 calcula meio comercial pela instrução declarada; PREP-010 está em implantação e não geram resultados fictícios.
+- Protocolo: pesquisa integrada ao dropdown; X limpa seleção, descrição e estado dependente. Ver POP e gerar DOCX usam dados do item selecionado. PREP-001 a PREP-003 incluem fontes integrais consultadas e foto ilustrativa creditada. Fichas dos demais mostram suas pendências.
+- Parâmetros: PREP-001 usa base percentual, concentração, quantidade final, teor/pureza, soluto e solvente. Sem amostras/replicatas/controles genéricos que não se aplicam ao preparo.
+- Parâmetros de PREP-002: mol/L, volume final em mL, massa molar, teor % m/m, soluto/solvente e forma de medir. Densidade do reagente comercial é solicitada somente para líquido medido por volume.
+- Plano: quantidade calculada de reagente comercial, solvente q.s.p. ou massa de solvente, procedimento geral, fonte e limites de aplicação.
+- Resultados: os mesmos parâmetros podem ser editados com recálculo e gráfico ao vivo. O gráfico é de dimensionamento, sem representar medições ou teste estatístico. Entradas inválidas removem o resultado exportável até correção.
+- Início: histórico persistente de até dez experimentos. Itens excedentes ou retirados são arquivados em `Registros de Experimentos`, para consulta e exportação somente, conforme escolha de Lucas. A consulta não reabre a sessão.
 
-Na tabela de resultados, cada linha representa um grupo; separar seus valores com ponto e vírgula (`1,2; 1,4; 1,3`). Nenhuma medição é inferida a partir do planejamento. Média e desvio padrão recebem explicação simples. Comparação t/ANOVA é opcional nas opções avançadas, sem verificar automaticamente pressupostos ou independência das repetições.
+## Persistência e distribuição
 
-## Coerência e salvamento
+O histórico fica em SQLite nos dados locais do usuário; `PLANEJADOR_DATA_DIR` permite isolamento de teste. No aplicativo portátil empacotado, os arquivos arquivados usam a pasta ao lado do executável/bundle. Se não houver permissão de escrita, o app usa os dados do usuário e exibe o caminho real na tela inicial. O ZIP Windows preparado inclui a pasta.
 
-Mudar o protocolo ou iniciar outro planejamento limpa parâmetros, plano e resultados. Editar parâmetros invalida o plano e suas observações/análises; editar só medições mantém o planejamento e limpa apenas análise/gráfico. É possível voltar ao mesmo plano.
+Planejamentos calculados e ajustes válidos em Resultados atualizam o mesmo registro. Um novo planejamento/protocolo gera outro registro. A remoção grava o arquivo antes de retirar a linha do histórico; falha de gravação preserva a linha. JSON guarda parâmetros, plano e fontes; dados observados só aparecem quando efetivamente registrados pelo módulo estatístico existente.
 
-Salvar tudo em JSON reúne parâmetros, plano, medições, unidade e análise do mesmo experimento. O gráfico pode ser salvo em PNG. Os dados da interface ficam em memória; não há autosave ou reimportação nesta prévia. Exporte antes de iniciar outro fluxo.
+## Limites e verificações
 
-## Catálogo e limites
+As definições e técnica geral vêm da Fiocruz, 2009, p. 226–232 e 249–250. A obra é candidata compatível com o recorte confirmado; o registro Arca ainda não foi localizado e a fonte não foi contabilizada como incluída na revisão. Não há validação em bancada.
 
-Há dez candidatos P1 (PREP-001 a PREP-010) com fichas de proveniência em `docs/protocolos/`, além dos dois exemplos do backend. Candidatos ainda sem regras científicas verificadas não geram planos operacionais fictícios. As fontes/versões científicas dos exemplos continuam pendentes. SQLite em memória isola a prévia do banco real.
+Abertura mantém estatística/gráficos carregados sob demanda. Windows é prioridade; a receita de compilação foi preparada, mas Lucas informou não ter Windows disponível agora para teste. Ver `../distribuicao/README.md` e `../modulos/IMPLEMENTACAO_PREP.md`.
 
-A UI chama services diretamente, sem HTTP e sem duplicar fórmulas. Matplotlib apresenta os pontos observados por grupo. Persistência das medições no banco e outros gráficos são próximos ciclos.
+## Perguntas variáveis em 08/11/2026
 
-## Verificação
+PREP-001 a PREP-003 apresentam os parâmetros como perguntas condicionais. Campos numéricos começam sem resposta; identidade de substância/solvente é opcional para o cálculo. No estoque, identificação e conservação ficam em grupo opcional e pendências são preservadas. Conversão entre atividade e massa exige equivalência específica fornecida pelo pesquisador. 165 testes passaram na suíte completa; Ruff sem erros. Capturas Qt dos parâmetros e do gráfico conferidas; janela de 880 px com identificação expandida sem rolagem horizontal ou corte do texto explicativo. POP de PREP-003 conferido em três páginas. Pacote Mac PREP-001-a-003 gerado; Windows ainda não testado.
 
-50 testes direcionados, inspeção Qt em 1180 e 880 px e conferência da janela nativa. Capturas em `capturas/`; evidências e limitações em [AUDIT.md](AUDIT.md). Acessibilidade usa widgets/foco/labels nativos e rolagem; não foi feita auditoria completa com leitores de tela nem teste de usabilidade com participantes.
+## PREP-004 em 08/11/2026
 
-## Abertura otimizada
+Perguntas: concentração do estoque, concentração desejada, unidade comum por volume e volume final em mL. Identificação do estoque/diluente é opcional. Sem teor, massa molar, dados de frasco ou replicatas desnecessários. O plano mostra alíquota e fator; diluente q.s.p., sem apresentar a diferença de volumes como dosagem exata. Resultados permite editar as perguntas com recálculo e gráfico de dimensionamento. 181 testes da suíte completa passaram; fonte Fiocruz p. 232, consulta e imagem registradas, DOCX conferido em duas páginas.
 
-A tela inicial e o planejamento não carregam o motor estatístico nem os gráficos. Essas bibliotecas e a tela são inicializadas na primeira entrada em Resultados e reutilizadas nas seguintes. O fluxo e as regras de invalidação permanecem iguais. A medição de desenvolvimento está no relatório de auditoria; os tempos do executável e do Windows precisam de medição própria.
+## PREP-005 em 08/11/2026
+
+Série com perguntas de C0/unidade, fator, número de diluições excluindo estoque, volume preparado antes da próxima transferência e retirada opcional no último recipiente. Plano e Resultados mostram tabela de concentrações, fator acumulado, alíquota, diluente nominal e volume restante. Gráfico logarítmico inclui estoque na etapa 0, com etapas inteiras; edição atualiza tabela, gráfico e mesmo registro de histórico. Valores inválidos removem resultado/gráfico exportável. 202 testes passaram e DOCX de três páginas/capturas Qt foram conferidos. Fontes e discrepância bibliográfica em REGISTRO.md.
+
+## PREP-006 em 08/11/2026
+
+Perguntas de concentração inicial, unidade por volume, alíquota e volume final. Fator e concentração final são saídas. Nomes opcionais; sem campos de pureza/massa molar. Resultados edita as três grandezas e recalcula curva de concentração final por volume final, mantendo estoque e alíquota fixos; ponto marca o preparo. Histórico/JSON preservam dados e fontes. 219 testes passaram; capturas Qt e duas páginas do POP ilustrado conferidas, página de 880 px sem rolagem horizontal. Fonte e data/hora em REGISTRO.md.
+
+## PREP-007 em 08/11/2026
+
+Volume por unidade, contagem total de unidades, percentual a acrescentar e unidade (µL/mL/L) perguntados. Identificação do material opcional, sem concentração/pureza/solvente desnecessários. Plano e Resultados mostram base, reserva e total, com gráfico comparativo editável; zero representa sem reserva. Histórico e JSON atualizados. 237 testes passaram; POP ilustrado de duas páginas e capturas Qt conferidos. BVS MS, Guia 2016 p. 48, obtenção/consulta e nova imagem registrados em REGISTRO.md.
+
+## PREP-008 em 08/11/2026
+
+Formulação em painel próprio carregado ao selecionar o protocolo: referência Anvisa protegida e receita do pesquisador separada. Volume nominal, ingredientes/unidades e condições variáveis são perguntas; ciclo desconhecido fica pendente. A referência mostra pH/conservação da fonte e não calcula validade. Resultados mostra quantidades de todos os componentes e permite escolher um no gráfico; edição atualiza cálculo, tabela e mesmo registro de histórico. Receita livre preserva fonte/autoria declarada, sem validar automaticamente a composição. 251 testes passaram; capturas e DOCX de duas páginas conferidos, fonte e consultas em REGISTRO.md.
+
+## PREP-009 em 08/11/2026
+
+Painel de meio comercial carregado ao selecionar o protocolo. Perguntas para massa/volume de referência, volume alvo e convenção água/final, sem presumir respostas. Rótulo/documento/versão declarados pelo pesquisador; produto opcional, condições desconhecidas pendentes. Resultados recalcula massa e gráfico, com eixo de volume coerente com a escolha. Histórico/JSON preservam a fonte declarada e a fonte técnica separadas. 265 testes passaram; capturas Qt e POP ilustrado de duas páginas conferidos.

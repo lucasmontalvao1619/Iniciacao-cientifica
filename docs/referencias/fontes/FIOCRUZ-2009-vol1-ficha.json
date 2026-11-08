@@ -1,0 +1,30 @@
+{
+  "id": "FIOCRUZ-2009-V1",
+  "title": "Conceitos e métodos para a formação de profissionais em laboratórios de saúde volume 1",
+  "organization": "EPSJV/IOC Fundação Oswaldo Cruz",
+  "year": 2009,
+  "organizers": [
+    "Etelcia Moraes Molinaro",
+    "Luzia Fátima Gonçalves Caputo",
+    "Maria Regina Reis Amendoeira"
+  ],
+  "isbn": "978-85-98768-41-0",
+  "url": "https://www.epsjv.fiocruz.br/sites/default/files/l140.pdf",
+  "obtido_em": "2026-11-08T05:00:24.136688-03:00",
+  "consultado_em": "2026-11-08T05:02:54.967221-03:00",
+  "sha256": "35206a3d5079758e26eaa6fcb343ead6aa7dac4674cbc6ec71d8015437e46b1c",
+  "paginas": [
+    227,
+    228,
+    229,
+    230,
+    231,
+    232
+  ],
+  "papel": "Candidato elegível: livro federal em português de 2009. Descoberto por busca web dirigida ao domínio Fiocruz; acesso direto à EPSJV. Registro Arca ainda não localizado; não equivale a inclusão formal na revisão.",
+  "conteudo": {
+    "227": "Concentrações % m/v, m/m e v/v, e exemplo NaCl 0,9% m/v",
+    "228-230": "Cuidados com solvente, reagente, pureza e vidraria",
+    "231-232": "Técnica de preparo, transferência quantitativa, ajuste ao volume final e homogeneização"
+  }
+}

@@ -1,5 +1,27 @@
 # PREP-004 — Diluição de solução-estoque
 
+## Procedência regularizada em 08/11/2026
+
+Cópia integral obtida efetivamente no Arca e idêntica byte a byte à fonte anterior. Consulta 2026-11-08T10:43:13.707165-03:00 (America/Maceio). Volume 1: https://www.arca.fiocruz.br/handle/icict/8658. Datas de obtenção, hashes e comparação em [regularização das fontes](../referencias/REGULARIZACAO_FONTES.md). Regras e páginas não mudaram; não equivale a inclusão formal na revisão nem confirmação de edição mais recente.
+
+## Implementação de 08/11/2026
+
+Perguntar concentração do estoque C1, concentração desejada C2, unidade comum de concentração e volume final V2 em mL. Identificação do estoque e do diluente são livres e opcionais no cálculo. Não presumir valores físicos.
+
+Fonte: Fiocruz 2009, p. 230–232, principalmente equação de diluição na p. 232. Edição, URL, consulta com fuso e hash em [REGISTRO.md](../../REGISTRO.md) e FIOCRUZ-2009-vol1-PREP-004.json. Fonte candidata ao recorte federal em português desde 2000, sem inclusão formal na revisão.
+
+V1 = V2 × C2/C1. Concentrações devem usar a mesma base por volume. Unidades disponíveis: mg/mL, µg/mL, g/L, mol/L, mmol/L, U/mL, % m/v e % v/v. Não converter % m/m por esta fórmula volumétrica. O fator C1/C2 é adimensional. C2 maior que C1 não é diluição; igualdade significa ausência de diluição. Todos os valores devem ser positivos e finitos; rejeitar resultados fora da faixa numérica.
+
+Transferir alíquota calculada e completar com diluente q.s.p. ao volume final, conforme método, compatibilidade e condições térmicas. Diferença V2−V1 é nominal e não deve ser apresentada como volume exato a adicionar. Instrumento e tolerância devem ser compatíveis com o volume de alíquota. Não substitui checagem de solubilidade, estabilidade, atividade ou padronização exigida pelo método. Gráfico é dimensionamento, sem simular medições.
+
+Verificação: 181 testes passaram na suíte completa, incluindo conservação de soluto, exemplo 1 mol/L para 0,1 mol/L em 10 mL (alíquota de 1 mL), fator 1, unidades incompatíveis, entradas inválidas, gráfico ao vivo, histórico e exportações. Capturas Qt de parâmetros e resultados conferidas e janela de 880 px sem rolagem horizontal. DOCX ilustrado renderizado e conferido em duas páginas. Não há validação em bancada.
+
+Pacote Mac PREP-001-a-004 gerado com os quatro POPs e pasta de registros; assinatura, catálogo e integridade do ZIP conferidos. Windows ainda não executado.
+
+## Registro anterior preservado
+
+# PREP-004 — Diluição de solução-estoque
+
 **Estado:** candidato P1 selecionado para a lista da interface; não é ficha operacional validada nem cálculo específico implementado.
 
 ## Origem e datas

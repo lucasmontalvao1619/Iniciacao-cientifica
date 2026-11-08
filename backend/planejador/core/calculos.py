@@ -18,6 +18,12 @@ from .exceptions import EntradaInvalida
 
 def _exigir_positivo(nome: str, valor: float) -> None:
     """Valida que ``valor`` é estritamente positivo."""
+    if (
+        isinstance(valor, bool)
+        or not isinstance(valor, (int, float))
+        or not math.isfinite(valor)
+    ):
+        raise EntradaInvalida(f"O valor de '{nome}' deve ser um número finito.")
     if valor <= 0:
         raise EntradaInvalida(
             f"O valor de '{nome}' deve ser positivo (recebido: {valor}).",
@@ -69,23 +75,50 @@ def preparar_diluicao(
     _exigir_positivo("volume_final", volume_final)
     if conc_final > conc_inicial:
         raise EntradaInvalida(
-            f"Concentração final ({conc_final}) maior que a inicial "
-            f"({conc_inicial}).",
+            f"Concentração final ({conc_final}) maior que a inicial ({conc_inicial}).",
             dica="Diluir só reduz a concentração; verifique se inverteu os valores.",
         )
-    volume_alicota = conc_final * volume_final / conc_inicial
+    volume_alicota = (conc_final / conc_inicial) * volume_final
+    fator = conc_inicial / conc_final
+    if (
+        not math.isfinite(fator)
+        or volume_alicota <= 0
+        or not math.isfinite(volume_alicota)
+    ):
+        raise EntradaInvalida("A diluição excede a faixa numérica suportada.")
     volume_diluente = volume_final - volume_alicota
     return ResultadoDiluicao(
         volume_alicota=volume_alicota,
         volume_diluente=volume_diluente,
         volume_final=volume_final,
-        fator_diluicao=conc_inicial / conc_final,
+        fator_diluicao=fator,
     )
 
 
-def diluicao_seriada(
-    conc_inicial: float, fator: float, n_pontos: int
-) -> list[float]:
+def diluicao_por_volumes(
+    conc_inicial: float, volume_alicota: float, volume_final: float
+) -> tuple[float, ResultadoDiluicao]:
+    """Calcula C2 e o fator, a partir de C1 e volumes na mesma unidade."""
+    for nome, valor in (
+        ("conc_inicial", conc_inicial),
+        ("volume_alicota", volume_alicota),
+        ("volume_final", volume_final),
+    ):
+        _exigir_positivo(nome, valor)
+    if volume_alicota > volume_final:
+        raise EntradaInvalida(
+            "A alíquota não pode superar o volume final de uma diluição."
+        )
+    fator = volume_final / volume_alicota
+    concentracao = conc_inicial * (volume_alicota / volume_final)
+    if not math.isfinite(fator) or not math.isfinite(concentracao) or concentracao <= 0:
+        raise EntradaInvalida("O cálculo excede a faixa numérica suportada.")
+    return concentracao, ResultadoDiluicao(
+        volume_alicota, volume_final - volume_alicota, volume_final, fator
+    )
+
+
+def diluicao_seriada(conc_inicial: float, fator: float, n_pontos: int) -> list[float]:
     """Gera as concentrações de uma diluição seriada.
 
     Args:
@@ -105,14 +138,25 @@ def diluicao_seriada(
         [100.0, 10.0, 1.0, 0.1]
     """
     _exigir_positivo("conc_inicial", conc_inicial)
+    _exigir_positivo("fator", fator)
     if fator <= 1:
         raise EntradaInvalida(
             f"O fator de diluição deve ser maior que 1 (recebido: {fator}).",
             dica="Um fator 10 significa diluir 1:10 a cada ponto.",
         )
-    if n_pontos < 1:
-        raise EntradaInvalida("O número de pontos deve ser ao menos 1.")
-    return [conc_inicial / (fator**i) for i in range(n_pontos)]
+    if (
+        isinstance(n_pontos, bool)
+        or not isinstance(n_pontos, int)
+        or not 1 <= n_pontos <= 10001
+    ):
+        raise EntradaInvalida("O número de pontos deve ser inteiro, de 1 a 10001.")
+    valores = [conc_inicial]
+    for _ in range(n_pontos - 1):
+        proximo = valores[-1] / fator
+        if proximo <= 0 or proximo >= valores[-1]:
+            raise EntradaInvalida("A série excede a faixa numérica suportada.")
+        valores.append(proximo)
+    return valores
 
 
 def massa_de_soluto(concentracao: float, volume: float) -> float:
@@ -165,11 +209,19 @@ def escalonar_quantidade(
         22.0
     """
     _exigir_positivo("quantidade_base", quantidade_base)
-    if n_reacoes < 1:
-        raise EntradaInvalida("O número de reações deve ser ao menos 1.")
-    if excesso_percentual < 0:
-        raise EntradaInvalida("O excesso percentual não pode ser negativo.")
-    return quantidade_base * n_reacoes * (1 + excesso_percentual / 100)
+    if isinstance(n_reacoes, bool) or not isinstance(n_reacoes, int) or n_reacoes < 1:
+        raise EntradaInvalida("O número de reações deve ser um inteiro positivo.")
+    if (
+        isinstance(excesso_percentual, bool)
+        or not isinstance(excesso_percentual, (int, float))
+        or not math.isfinite(excesso_percentual)
+        or excesso_percentual < 0
+    ):
+        raise EntradaInvalida("O excesso percentual deve ser um número finito não negativo.")
+    total = quantidade_base * n_reacoes * (1 + excesso_percentual / 100)
+    if not math.isfinite(total) or total <= 0:
+        raise EntradaInvalida("O volume total excede a faixa numérica suportada.")
+    return total
 
 
 @dataclass(frozen=True)

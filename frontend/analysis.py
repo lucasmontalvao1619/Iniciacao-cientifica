@@ -2,12 +2,14 @@
 
 import csv
 import io
+import json
 import math
 import textwrap
 from pathlib import Path
 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
+from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import (
     QCheckBox,
     QDoubleSpinBox,
@@ -50,6 +52,8 @@ def parse_measurements(text):
 
 
 class AnalysisWidget(QWidget):
+    changed = pyqtSignal()
+
     def __init__(self):
         super().__init__()
         self.report = None
@@ -75,7 +79,7 @@ class AnalysisWidget(QWidget):
         layout.addWidget(explanation)
         self.data = QTableWidget(2, 2)
         self.data.setHorizontalHeaderLabels(
-            ["Nome do grupo", "Valores medidos (separe com ;)"]
+            ["Nome do grupo", "Valores medidos\nsepare com ;"]
         )
         self.data.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Stretch
@@ -98,6 +102,7 @@ class AnalysisWidget(QWidget):
         unit_label = QLabel(
             "O que foi medido? Informe a unidade ou grandeza do gráfico"
         )
+        unit_label.setWordWrap(True)
         unit_label.setBuddy(self.unit)
         layout.addWidget(unit_label)
         layout.addWidget(self.unit)
@@ -105,9 +110,7 @@ class AnalysisWidget(QWidget):
         run.setMinimumHeight(42)
         run.clicked.connect(self.analyze)
         layout.addWidget(run)
-        advanced_toggle = QCheckBox(
-            "Mostrar opções avançadas de comparação entre grupos"
-        )
+        advanced_toggle = QCheckBox("Comparar grupos (opções avançadas)")
         layout.addWidget(advanced_toggle)
         self.advanced = QWidget()
         advanced_layout = QVBoxLayout(self.advanced)
@@ -138,7 +141,7 @@ class AnalysisWidget(QWidget):
         layout.addWidget(self.status)
         self.table = QTableWidget(0, 5)
         self.table.setHorizontalHeaderLabels(
-            ["Grupo", "Medições", "Média", "Variação (desvio padrão)", "Variância"]
+            ["Grupo", "Medições", "Média", "Desvio padrão", "Variância"]
         )
         self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.table.horizontalHeader().setSectionResizeMode(
@@ -184,19 +187,54 @@ class AnalysisWidget(QWidget):
 
     def set_experiment(self, title, plan):
         self.clear_experiment()
-        self.context = {
-            "titulo": title,
-            "protocolo": plan["protocolo"],
-            "amostras": plan["n_amostras"],
-            "replicatas": plan["n_replicatas"],
-            "controles": plan["n_controles"],
-        }
+        self.context = {"titulo": title, "protocolo": plan["protocolo"]}
+        if "protocolo_id" in plan:
+            self.context["protocolo_id"] = plan["protocolo_id"]
+        detail = ""
+        if "n_amostras" in plan:
+            self.context.update(
+                amostras=plan["n_amostras"],
+                replicatas=plan["n_replicatas"],
+                controles=plan["n_controles"],
+            )
+            detail = f"Planejado · Amostras: {plan['n_amostras']} · Repetições por amostra: {plan['n_replicatas']} · Controles: {plan['n_controles']}. "
+        heading = (
+            title if title == plan["protocolo"] else f"{title} · {plan['protocolo']}"
+        )
         self.context_label.setText(
-            f"{title} · {plan['protocolo']}\nPlanejado · Amostras: {plan['n_amostras']} · Repetições por amostra: {plan['n_replicatas']} · Controles: {plan['n_controles']}. Os valores observados abaixo serão associados a este planejamento."
+            f"{heading}\n{detail}As medições abaixo pertencem a este planejamento. Alterar seus parâmetros limpa estas medições e a análise."
         )
         self.status.setText(
             "Preencha os grupos e valores obtidos na bancada. Nenhuma medição é preenchida automaticamente."
         )
+
+    def observation_payload(self):
+        if self.context is None:
+            return None
+        rows = [
+            {
+                "grupo": self.data.item(row, 0).text()
+                if self.data.item(row, 0)
+                else "",
+                "valores": self.data.item(row, 1).text()
+                if self.data.item(row, 1)
+                else "",
+            }
+            for row in range(self.data.rowCount())
+        ]
+        rows = [row for row in rows if row["grupo"] or row["valores"]]
+        if not rows and not self.unit.text().strip():
+            return None
+        payload = {
+            "linhas_informadas": rows,
+            "unidade": self.unit.text().strip(),
+            "comparacao_solicitada": self.infer.isChecked(),
+            "alpha": self.alpha.value(),
+            "estado": "analisado" if self.report is not None else "rascunho",
+        }
+        if self.report is not None:
+            payload.update(medicoes=self.read_groups(), analise=self.report)
+        return payload
 
     def read_groups(self):
         stream = io.StringIO()
@@ -237,6 +275,9 @@ class AnalysisWidget(QWidget):
             "Clique em Ver resumo e gráfico após informar ou editar os valores."
         )
 
+        if self.context is not None:
+            self.changed.emit()
+
     def analyze(self):
         self.invalidate()
         try:
@@ -259,7 +300,14 @@ class AnalysisWidget(QWidget):
                     "teste_t": None,
                     "anova": None,
                 }
+            try:
+                json.dumps(self.report, allow_nan=False)
+            except ValueError as exc:
+                raise ValueError(
+                    "Resultado estatístico indefinido ou fora da faixa numérica. Revise os dados e os pressupostos; pode desativar a comparação para consultar o resumo descritivo."
+                ) from exc
         except (ValueError, ErroPlanejamento) as exc:
+            self.report = None
             self.status.setText(f"Não foi possível analisar: {exc}")
             return
         self.table.setRowCount(len(groups))
@@ -306,6 +354,7 @@ class AnalysisWidget(QWidget):
         self.report["unidade"] = self.unit.text().strip()
         self.save.setEnabled(True)
         self.save_experiment.setEnabled(True)
+        self.changed.emit()
         parent = self.parentWidget()
         while parent is not None:
             if isinstance(parent, QScrollArea):

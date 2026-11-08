@@ -82,19 +82,13 @@ Regras:
   caches de plugin (`.smart-env/`) ficam fora do versionamento e são recriados
   pelo próprio aplicativo.
 - Não contradizer decisões registradas em `docs/decisoes/README.md`.
-- Atualizar documentação sempre que uma decisão arquitetural importante for tomada.
+- Registrar decisões arquiteturais importantes em `docs/decisoes/README.md` e atualizar a documentação correspondente.
 - Antes de grandes implementações, revisar a documentação existente.
 
 ## Regras para futuras IAs
 
-- Antes de implementar qualquer coisa, leia `docs/`.
-- Use `docs/` como fonte principal de contexto permanente.
 - Mantenha consistência com a arquitetura modular.
-- Documente decisões em `docs/decisoes/README.md`.
-- Não versionar `.obsidian/` nem `.smart-env/` — são configuração e cache do
-  Obsidian, não conteúdo do projeto.
 - Não apagar notas antigas.
 - Não remover conhecimento sem autorização explícita.
-- Não implementar código sem pedido explícito.
 - Não criar funcionalidades, telas, APIs, banco, cálculos ou estatística sem pedido explícito.
 - Para cada protocolo adicionado ou atualizado, registrar data, horário com fuso e origem das informações, conforme `docs/protocolos/README.md`. Priorizar as fontes previstas na metodologia da revisão sistemática; identificar separadamente fontes técnicas complementares. Não inventar datas nem referências ausentes.

@@ -1,14 +1,28 @@
 # Iniciação Científica
 
+## Baixar o aplicativo
+
+| Plataforma | Download |
+|---|---|
+| **Windows 64 bits** | [**Baixar para Windows — instalador**](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/releases/latest/download/Planejador-Windows-Setup.exe) |
+| **Mac com Apple Silicon** | [**Baixar para Mac**](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/releases/latest/download/Planejador-Mac.zip) |
+
+No Windows, abra o instalador: ele inclui as dependências e cria os atalhos. Não precisa instalar Python nem executar comandos. No Mac, extraia o ZIP e abra o aplicativo. Os dez POPs acompanham a instalação.
+
+[Versão portátil do Windows](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/releases/latest/download/Planejador-Windows-Portatil.zip) · [Todas as versões](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/releases) · [Testes e compilações](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/actions)
+
+Os pacotes só são publicados após os testes automatizados, a compilação nativa e a verificação do executável. O instalador Windows também passa por instalação/desinstalação automatizada, preservando um registro de teste. Isso não substitui avaliação em bancada ou testes manuais de interface.
+
+
 ## Problema
 
 Pesquisadores e estudantes precisam planejar experimentos laboratoriais com cálculos operacionais, reagentes, materiais, volumes, concentrações, diluições, controles, repetições e organização experimental. Esse processo pode ser demorado, repetitivo e sujeito a erros.
 
 ## Visão geral
 
-Este projeto propõe um aplicativo para planejamento automático de experimentos laboratoriais e análise estatística de dados experimentais.
+Aplicativo desktop para planejamento de experimentos laboratoriais e análise estatística de dados experimentais.
 
-O sistema deverá permitir selecionar protocolos, informar variáveis experimentais e gerar um plano operacional para execução do experimento.
+O sistema implementa dez protocolos PREP, com parâmetros próprios, planos calculados, POPs ilustrados, medições, estatística e gráficos.
 
 ## Módulos previstos
 
@@ -24,7 +38,7 @@ O sistema deverá permitir selecionar protocolos, informar variáveis experiment
 ## Tecnologias
 
 - Python (>=3.11).
-- PyQt6 (primeira prévia navegável de planejamento).
+- PyQt6 (interface desktop de planejamento e resultados).
 - SQLite via SQLAlchemy (banco atual; Postgres/MySQL plugáveis por configuração).
 - NumPy, Pandas, SciPy, Matplotlib (cálculos e estatística).
 

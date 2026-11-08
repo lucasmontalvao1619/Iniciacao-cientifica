@@ -1,0 +1,58 @@
+{
+  "portal": "Arca/Fiocruz",
+  "registro_url": "https://www.arca.fiocruz.br/handle/icict/8658",
+  "url": "https://www.arca.fiocruz.br/bitstreams/dc35a81b-72c5-420f-9ff5-b3fe01f0c006/download",
+  "obtido_em": "2026-11-08T10:41:59.414205-03:00",
+  "consultado_em": "2026-11-08T10:43:13.707165-03:00",
+  "fuso": "America/Maceio",
+  "sha256": "35206a3d5079758e26eaa6fcb343ead6aa7dac4674cbc6ec71d8015437e46b1c",
+  "arquivo": "ARCA-icict-8658.pdf",
+  "registro_preservado": "ARCA-icict-8658.html",
+  "registro_sha256": "96aa4212a3f70bb972939319637ce220bab5dfefa377004f011d8c12f664ef97",
+  "metadados_portal": {
+    "citation_title": [
+      "Conceitos e métodos para formação de profissionais em laboratórios de saúde"
+    ],
+    "citation_author": [
+      "Molinaro, Etelcia Moraes",
+      "Caputo, Luzia Fátima Gonçalves",
+      "Amendoeira, Maria Regina Reis"
+    ],
+    "citation_publication_date": [
+      "2009"
+    ],
+    "citation_isbn": [
+      "978-85-98768-41-0"
+    ],
+    "citation_language": [
+      "por"
+    ],
+    "citation_abstract_html_url": [
+      "https://arca.fiocruz.br/handle/icict/8658"
+    ],
+    "citation_publisher": [
+      "Fiocruz/IOC"
+    ],
+    "citation_pdf_url": [
+      "http://localhost:4000/bitstreams/dc35a81b-72c5-420f-9ff5-b3fe01f0c006/download"
+    ]
+  },
+  "comparacao": {
+    "original": "FIOCRUZ-2009-vol1.pdf",
+    "sha256_original": "35206a3d5079758e26eaa6fcb343ead6aa7dac4674cbc6ec71d8015437e46b1c",
+    "resultado": "Cópias idênticas byte a byte; páginas e regras previamente conferidas preservadas."
+  },
+  "paginas_pertinentes": [
+    226,
+    227,
+    229,
+    230,
+    231,
+    232,
+    233,
+    234,
+    249,
+    250
+  ],
+  "situacao": "Procedência confirmada em portal permitido. Não comprova inclusão formal na revisão nem edição mais recente."
+}

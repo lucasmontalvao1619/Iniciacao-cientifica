@@ -1,0 +1,125 @@
+{
+  "consultado_em": "2026-11-08T11:28:23.275101-03:00",
+  "fuso": "America/Maceio",
+  "finalidade": "Conferência dirigida de identidade/edição das cinco obras técnicas usadas no aplicativo; não é execução integral da revisão sistemática nem contagem PRISMA.",
+  "consultas": [
+    {
+      "plataforma": "Arca API busca geral inicial",
+      "url": "https://api.arca.fiocruz.br/api/discover/search/objects?query=%22Conceitos%20e%20m%C3%A9todos%20para%20forma%C3%A7%C3%A3o%22&size=50",
+      "total_retornado": 39,
+      "interpretacao": "Busca geral inclui citações e obras alheias à coleção; não é contagem da revisão. Refinada em seguida para o campo título, com cinco volumes."
+    },
+    {
+      "plataforma": "Arca API",
+      "url": "https://api.arca.fiocruz.br/api/discover/search/objects?query=dc.title%3A%22Conceitos%20e%20m%C3%A9todos%20para%20forma%C3%A7%C3%A3o%20de%20profissionais%20em%20laborat%C3%B3rios%20de%20sa%C3%BAde%22&size=50",
+      "total_retornado": 5,
+      "interpretacao": "Volumes 1–5, anos 2009/2010/2013/2009/2012 nos metadados; volume não equivale a edição."
+    },
+    {
+      "plataforma": "Anvisa índice oficial",
+      "url": "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/manuais/manuais-de-microbiologia-clinica",
+      "interpretacao": "Links atuais dos módulos 5 e 10 levam aos mesmos PDFs; data de postagem não equivale a edição."
+    },
+    {
+      "plataforma": "BVS MS busca nativa",
+      "url": "https://bvsms.saude.gov.br/?s=guia+rede+laboratorial+influenza",
+      "interpretacao": "Página devolvida não apresentou registros bibliográficos do título; essa limitação impede usar a busca nativa como prova de ausência de outra edição."
+    },
+    {
+      "plataforma": "Busca web dirigida aos domínios dos portais",
+      "consultas": [
+        "site.arca.fiocruz.br \"Conceitos e métodos\" \"volume 1\" edição",
+        "site.gov.br/anvisa \"módulo 5\" \"2013\" microbiologia",
+        "site.gov.br/anvisa \"módulo 10\" \"microbiologia\" 2024 2025",
+        "site.bvsms.saude.gov.br \"Guia para a rede laboratorial de vigilância de influenza\"",
+        "site.bvsms.saude.gov.br \"rede laboratorial\" \"influenza\" \"edição\"",
+        "site.gov.br/anvisa \"Descrição dos Meios de Cultura\" edição",
+        "site.arca.fiocruz.br \"Conceitos e métodos\" \"2. ed\"",
+        "site.arca.fiocruz.br \"Conceitos e métodos\" \"2012\"",
+        "\"Conceitos e métodos\" \"profissionais\" \"edição\" (domínio arca.fiocruz.br)",
+        "\"Guia para a Rede Laboratorial de Vigilância de Influenza\" \"edição\" (domínio bvsms.saude.gov.br)"
+      ],
+      "interpretacao": "Nenhuma edição posterior do mesmo título/volume foi identificada nesta busca dirigida. Não prova inexistência de obras não indexadas nem substitui a triagem formal."
+    }
+  ],
+  "evidencias_preservadas": [
+    {
+      "arquivo": "ARCA-busca-titulo-20261108.json",
+      "obtido_em": "2026-11-08T11:24:34.561276-03:00",
+      "sha256": "3eaaa41ace1ec8f72e0c16ba191b281ac2788282a24df396e8b042d821c6c6e0"
+    },
+    {
+      "arquivo": "ANVISA-indice-20261108.html",
+      "obtido_em": "2026-11-08T11:23:48.603704-03:00",
+      "sha256": "0ace2652fc0fa61ab9826352a574371c94eac05968b61be24e55dadb56db7439"
+    },
+    {
+      "arquivo": "ANVISA-M10-registro-20261108.html",
+      "obtido_em": "2026-11-08T11:24:34.471718-03:00",
+      "sha256": "f0e7e349d0cb5f4e300a82eb8939c64c688821d66edf263f7369a8530281e127"
+    },
+    {
+      "arquivo": "BVS-MS-busca-guia-20261108.html",
+      "obtido_em": "2026-11-08T11:24:35.000518-03:00",
+      "sha256": "496a0d814d4813a36a442e8272abccfd3774ba92c67fbe19b3e4c0f5ca30bf00"
+    },
+    {
+      "arquivo": "ARCA-8658-conferencia-20261108.html",
+      "obtido_em": "2026-11-08T11:25:50.209322-03:00",
+      "sha256": "aed499bbdd024d21e101e350b09251901263f9dc828050cd6252e29546b3a886"
+    },
+    {
+      "arquivo": "ARCA-8661-conferencia-20261108.html",
+      "obtido_em": "2026-11-08T11:25:49.850639-03:00",
+      "sha256": "979d3500a782f3b19cce3407d223ceb9d0263a694fc29540a7e68879df240ca9"
+    },
+    {
+      "arquivo": "ARCA-busca-geral-20261108.json.gz",
+      "obtido_em": "2026-11-08T11:23:49.842784-03:00",
+      "sha256_resposta_descomprimida": "83734f8ee1ca4be4e1d20c10a83d248506b45a3c699d76cd4fc89cd2d1041a9c",
+      "sha256_arquivo": "27d76c9fe43876759b113f52d07292dcd8079504b3b55caf063170ceac8bc34b"
+    }
+  ],
+  "obras": {
+    "ANVISA-2013-M5": {
+      "url": "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/modulo-5-tecnologias-em-servicos-de-saude-descricao-dos-meios-de-cultura-empregados-nos-exames-microbiologicos/@@download/file",
+      "nova_obtencao_em": "2026-11-08T11:25:48.434657-03:00",
+      "sha256": "99821377c62d1d23f8598551e6c0d560c17869735fe482529cb34ab851363cee",
+      "arquivo_identico_preservado": "ANVISA-Modulo-5.pdf",
+      "resultado": "PDF atual idêntico à cópia usada nas regras; nenhuma alteração de cálculo/páginas.",
+      "edicao": "Expediente: 1ª edição – 2010; copyright e ficha catalográfica: 2013. A numeração de eventual edição de 2013 não está explicitada; não inferir segunda edição.",
+      "localizacao": "PDF físico p. 4 (expediente/ficha). Publicação do item no portal em 2020 não é a data editorial da obra."
+    },
+    "ANVISA-2020-M10": {
+      "url": "https://www.gov.br/anvisa/pt-br/centraisdeconteudo/publicacoes/servicosdesaude/publicacoes/modulo-10_manual-de-microbiologia.pdf/@@download/file",
+      "nova_obtencao_em": "2026-11-08T11:25:48.454311-03:00",
+      "sha256": "0c131e9699c2652525df9af8ed3aadf2574c393ffd6f103872204be4b4d36e5e",
+      "arquivo_identico_preservado": "ANVISA-Modulo-10.pdf",
+      "resultado": "PDF atual idêntico à cópia usada nas regras; nenhuma alteração de cálculo/páginas.",
+      "edicao": "1ª edição, 2020; item atual apontado no índice oficial da Anvisa."
+    },
+    "MS-2016-INFLUENZA": {
+      "url": "https://bvsms.saude.gov.br/bvs/publicacoes/guia_laboratorial_influenza_vigilancia_influenza_brasil.pdf",
+      "nova_obtencao_em": "2026-11-08T11:25:50.864394-03:00",
+      "sha256": "0338bdad575528844378dc3fbc94533677e9a18458dffe281c3f791e0bcb0fb1",
+      "arquivo_identico_preservado": "MS-2016-Guia-Influenza.pdf",
+      "resultado": "PDF atual idêntico à cópia usada nas regras; nenhuma alteração de cálculo/páginas.",
+      "edicao": "1ª edição, 2016, versão eletrônica. Não localizada outra edição do mesmo título na busca dirigida; obras de vigilância/tratamento de influenza com outros títulos não são tratadas como novas edições desta obra."
+    },
+    "FIOCRUZ-2009-V1": {
+      "registro_url": "https://www.arca.fiocruz.br/handle/icict/8658",
+      "url_bitstream_confirmado": "https://www.arca.fiocruz.br/bitstreams/dc35a81b-72c5-420f-9ff5-b3fe01f0c006/download",
+      "sha256_copia_usada": "35206a3d5079758e26eaa6fcb343ead6aa7dac4674cbc6ec71d8015437e46b1c",
+      "resultado": "Registro atual aponta ao mesmo bitstream da cópia integral anteriormente conferida. Busca pelo título no Arca retornou os cinco volumes, não uma nova edição do volume usado.",
+      "edicao": "Volume 1: 2009; número de edição não explicitado na cópia consultada."
+    },
+    "FIOCRUZ-2010-V4": {
+      "registro_url": "https://www.arca.fiocruz.br/handle/icict/8661",
+      "url_bitstream_confirmado": "https://www.arca.fiocruz.br/bitstreams/62042256-afb7-4b93-b157-2cd5cc0a93d3/download",
+      "sha256_copia_usada": "7d86374dd3be6d0e5196874cd510423f35fa96deb33e9fce2c08f4f39e6d0f8c",
+      "resultado": "Registro atual aponta ao mesmo bitstream da cópia integral anteriormente conferida. Busca pelo título no Arca retornou os cinco volumes, não uma nova edição do volume usado.",
+      "edicao": "Volume 4: copyright 2010 na cópia; Arca/catálogo informam 2009. Folha de rosto usa técnicos; registro Arca usa profissionais. ISBN da cópia pertence à ficha reproduzida do volume 1; não confirmado para v. 4. Divergências preservadas, sem correção por suposição."
+    }
+  },
+  "conclusao": "Versões disponíveis/localizadas na conferência dirigida mantidas para o aplicativo. Correção de metadados do módulo 5 e preservação das divergências do volume 4. Critérios de origem federal, português e data desde 2000 atendidos pelas cópias identificadas. Inclusão no corpus e cobertura integral das buscas dependem da revisão formal."
+}

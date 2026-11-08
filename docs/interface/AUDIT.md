@@ -110,3 +110,146 @@ Medição local no modo de desenvolvimento, com Qt offscreen, neste Mac: antes, 
 Teste em processo Python isolado confirma ausência de SciPy, Pandas, Matplotlib e frontend.analysis ao abrir a janela, e ausência de SciPy durante o planejamento; ao entrar em Resultados, os módulos e a tela são carregados com o experimento correto. Estatística e exportações foram preservadas. A suíte completa passou com 89 testes.
 
 Executável macOS reconstruído e cópia do Desktop atualizada. Verificação na janela nativa: abertura inicial, seleção de protocolo, geração do plano e primeira entrada em Resultados com o experimento correto. A primeira entrada em Resultados ainda teve espera perceptível durante o carregamento das bibliotecas; não foi atribuído tempo instrumentado a essa etapa. Dados de teste removidos pelo fluxo Novo planejamento e aplicativo deixado na tela inicial. A medição de 0,577 s acima se refere ao código de desenvolvimento, não ao bundle ou ao Windows.
+
+## Correção do bloqueio entre Parâmetros e Plano
+
+Causa confirmada: `generate` retornava antecipadamente para qualquer identificador textual (os dez candidatos P1), mantendo o usuário na etapa Parâmetros. A revisão permite gerar uma prévia explicitamente pendente com os parâmetros, sem inventar insumos ou cálculo científico. `pendente` acompanha o plano exportado e bloqueia Resultados, inclusive pelo guard de navegação. Os exemplos numéricos mantêm seus cálculos reais. Nome inicialmente preenchido a partir da seleção elimina o requisito pouco perceptível de preencher um título para avançar.
+
+Testes percorrem os dez candidatos e conferem avanço, marcação pendente, ausência de insumos e bloqueio de análise operacional. Captura Qt `plano-preliminar.png` gerada para PREP-004.
+
+Validação final: 90 testes passaram, Ruff e diff --check sem erros. Bundle macOS reconstruído e verificado em /private/tmp; cópia do Desktop atualizada. Na janela nativa, PREP-004 foi selecionado, confirmado e avançou de Parâmetros para Plano pelo botão Gerar prévia do plano; título automático presente e Resultados desabilitado por pendência científica. Windows não verificado nesta correção.
+
+## Prévia do POP separada do avanço
+
+A pedido de Lucas, Parâmetros passa a ter um botão secundário de largura natural,
+Gerar prévia do POP, e a ação principal Seguir para Plano. A prévia usa diálogo
+Qt de leitura com fechamento por botão/teclado, permanece na etapa atual e não
+invalida o plano/análise existentes. O cálculo compartilhado valida antes de
+abrir a prévia ou avançar. Não foram acrescentados procedimentos científicos nem
+fontes; conteúdo pendente continua indicado explicitamente.
+
+Verificação desta alteração: 93 testes passaram, Ruff e diff --check sem erros.
+Testes cobrem prévia de exemplo/candidato, validação de entradas, permanência em
+Parâmetros, preservação de plano existente e avanço pelo botão principal.
+Capturas Qt inspecionadas: `parametros-acoes.png` e `previa-pop.png`. Bundle macOS
+reconstruído, assinado/verificado em /private/tmp e copiado para o Desktop.
+A janela instalada mostrou os dois botões e o protocolo selecionado; a tentativa
+de conferir os cliques por automação nativa sofreu timeout enquanto a janela
+mudava, portanto não é registrada como verificação completa dos cliques no
+bundle. Windows não foi testado nesta alteração.
+
+## Catálogo restrito a PREP
+
+A pedido de Lucas, removidos da lista pesquisável os dois exemplos sem prefixo.
+A seleção e suas sugestões contêm somente PREP-001 a PREP-010; descrição da tela
+atualizada. Os exemplos de cálculo permanecem apenas no backend e nas fixtures
+de testes. Como os dez PREP ainda estão pendentes, Resultados não é liberado
+por nenhum item atualmente disponível na interface.
+
+Catálogo PREP: 93 testes passaram; lint e diff --check sem erros. Bundle macOS
+reconstruído e cópia do Desktop atualizada. A sessão aberta não foi encerrada;
+reabrir o aplicativo aplica a nova lista. Windows não testado nesta alteração.
+
+## POP na seleção do protocolo e exportação Word
+
+Gerar prévia do POP foi movido de Parâmetros para 2 · Protocolo. Consulta e DOCX
+usam as mesmas seções e os metadados próprios do PREP selecionado; ficam
+indisponíveis para texto sem correspondência no catálogo. A prévia não confirma
+o protocolo nem altera parâmetros/plano. DOCX disponível na página e no diálogo,
+com tratamento de cancelamento/erro. `python-docx` entrou no extra ui e é
+importado somente na exportação. Não houve obtenção de novas informações
+científicas; origem/datas preservam o catálogo e não simulam leitura primária.
+
+Verificação: 10 testes de interface passaram, incluindo os dez PREP distintos,
+preservação do plano, exportação, cancelamento e falha ao salvar; Ruff e
+diff --check passaram. Capturas Qt da seleção e do diálogo inspecionadas. DOCX
+de PREP-001 (maior registro em caracteres) renderizado pelo LibreOffice do
+runtime e sua página conferida, sem cortes. Windows não testado nesta alteração.
+
+Bundle macOS reconstruído e verificado em /private/tmp, cópia do Desktop
+atualizada com template DOCX incluído. Reabrir o aplicativo carrega a alteração;
+a sessão em uso não foi encerrada. Cliques no bundle não foram retestados nesta
+entrega; comportamento verificado pelos testes e capturas Qt de desenvolvimento.
+
+## Entrega incremental PREP-001 em 08/11/2026
+
+O estado demonstrativo foi substituído por cálculo percentual rastreável. Os parâmetros são específicos e Resultados oferece edição com gráfico de dimensionamento, sem simular observações. Histórico SQLite de dez com arquivo de excedentes/retirados foi adicionado e testado, inclusive falha de gravação. Demais PREP permanecem sem liberação operacional.
+
+117 testes da suíte completa passaram; 22 testes de cálculo/histórico repetidos após ajuste numérico. Ruff e diff --check sem erros. Verificação tipada dos três módulos novos com imports omitidos passou; com dependências houve erro em stubs PyQt6/QtGui, sem aprovação de tipagem completa. Capturas finais PREP-001-parametros/resultados/historico.png inspecionadas. POP de PREP-001, com imagem complementar e fontes identificadas, renderizado e conferido em duas páginas.
+
+Bundle Mac reconstruído e assinatura verificada em /private/tmp; cópia Desktop e ZIP com pasta de registros e POP atualizados. A sessão aberta não foi encerrada; reabrir para carregar a nova versão. Windows apenas preparado em script/spec, a pedido de Lucas, que não dispunha do PC para teste. Plano integral e pendências: ../modulos/IMPLEMENTACAO_PREP.md.
+
+## PREP-002 em 08/11/2026
+
+Preparo molar a partir de reagente pesado ou líquido medido por volume. Massa molar e teor m/m correspondem à forma química identificada; densidade do reagente comercial é solicitada somente no modo volumétrico. Core e service utilizam Fiocruz 2009, p. 226, 229–232 e 249–250, com consulta e imagem complementar registradas. Os parâmetros/resultados percentuais e molares compartilham frontend/preparos.py e permanecem distintos na exportação.
+
+139 testes da suíte completa passaram, incluindo casos independentes, exemplo arredondado de HCl da fonte, entradas inválidas, troca de tipo de protocolo, resultado/gráfico ao vivo, histórico e DOCX ilustrado. Testes de comparação de números fracionários usam tolerância explícita onde necessário para representação binária; não se trata de tolerância de equipamento. Ruff e diff --check sem erros; core/service alterados passaram em mypy com imports omitidos (não é verificação tipada completa das dependências).
+
+Capturas PREP-002-parametros/resultados.png e as duas páginas do DOCX inspecionadas. Bundle Mac reconstruído, assinatura verificada em diretório temporário. ZIP PREP-001-002 inclui ambos os POPs, recursos e Registros de Experimentos, com conteúdo e CRC conferidos. A cópia aberta do Desktop não foi substituída: instalar o ZIP após fechar a versão em uso. Windows permanece preparado para execução posterior, conforme escolha de Lucas. Demais oito PREP não foram liberados.
+
+## Perguntas variáveis e PREP-003 em 08/11/2026
+
+Perguntas condicionais e valores físicos inicialmente não respondidos nos três preparos. Identidade livre opcional e informações de rótulo pendentes sem impedir o cálculo. PREP-003 exige equivalência específica quando as unidades certificadas precisam de conversão entre atividade e massa. Testes de formulário, cálculo, recálculo/gráfico, histórico, JSON e DOCX passaram: 163 testes na suíte completa; Ruff aprovado. Aviso existente Starlette/httpx. Ainda sem nova inspeção visual ou novo pacote nesta alteração; Windows não executado.
+
+
+Conferência final PREP-003: 165 testes passaram, Ruff e diff --check sem erros. A inspeção revelou perguntas muito estreitas, largura mínima excessiva nos campos de atividade e corte do texto explicativo ao redimensionar. Corrigidos em frontend/preparos.py e cobertos por teste de janela mínima com diferentes unidades e identificação expandida. Capturas PREP-003-parametros/resultados.png conferidas; gráfico de dimensionamento, dose corrigida por potência e fonte exportável preservados. POP individual renderizado e inspecionado nas três páginas, com crédito da imagem. Build Mac final com assinatura local verificada e ZIP íntegro com três POPs e pasta de registros. Catálogo empacotado idêntico ao código. Sessão Desktop em uso não substituída; Windows ainda não executado.
+
+## PREP-004 em 08/11/2026
+
+Perguntas de diluição específicas; sem perguntas de pureza, massa molar ou frasco que não entram no cálculo. Alíquota e fator explícitos, C1/C2 na mesma base, q.s.p. sem afirmar aditividade de volumes. Fonte Fiocruz p. 230–232 registrada. Reutilização do cálculo existente com validação de finitude/tipo, conservação verificada independentemente, unidade incompatível rejeitada. 181 testes passaram na suíte completa; Ruff aprovado e mypy com imports omitidos nos módulos alterados, sem alegar tipagem completa. Capturas PREP-004-parametros/resultados.png e duas páginas do DOCX inspecionadas; janela mínima de 880 px sem rolagem horizontal, texto explicativo sem corte. Resultados recalcula gráfico e atualiza o mesmo registro do histórico, inválidos retiram plano/gráfico exportável. Windows e bancada não testados.
+
+Pacote Mac PREP-001-a-004 gerado; assinatura local verificada, catálogo empacotado idêntico ao código, quatro DOCX e pasta de registros incluídos, CRC aprovado. Sessão aberta do Desktop preservada, sem novos cliques no pacote.
+
+## PREP-005 em 08/11/2026
+
+Perguntas específicas para série, excluindo estoque da contagem, distinguindo volume preparado de remanescente e retirada opcional do último. Tabela nativa Qt compartilhada entre Plano/Resultados; gráfico em escala logarítmica, com estoque na etapa 0 e eixo inteiro. Entradas numéricas não presumidas, identidade opcional; sem perguntas de teor ou massa molar. 202 testes passaram na suíte completa, Ruff e diff --check aprovados, mypy core/service com imports omitidos aprovado. Balanços de volume/soluto e desenho do gráfico em faixa extrema testados. Capturas PREP-005-parametros/plano/resultados.png e três páginas do DOCX inspecionadas; página de 880 px sem rolagem horizontal, texto explicativo sem corte. Windows e bancada não testados.
+
+
+Pacote Mac PREP-001 a PREP-005: `output/distribuicao/Planejador-Mac-PREP-001-a-005.zip`, com aplicativo, cinco POPs e Registros de Experimentos. Assinatura local, catálogo empacotado idêntico ao código, imagens e CRC conferidos. Ajuste final de margens do gráfico seguido por 19 testes de interface aprovados. Sessão Desktop preservada; fluxo conferido em Qt de desenvolvimento, sem novos cliques no pacote. Windows permanece preparado para execução posterior, conforme escolha de Lucas.
+
+## PREP-006 em 08/11/2026
+
+Cálculo inverso de diluição, com C1/V1/V2 perguntados e F/C2 como saídas. Campos físicos sem resposta inicial, identificação opcional, demais parâmetros de preparo ocultos e excluídos da exportação. Gráfico explicita C1/alíquota fixos, V2 variável e ponto do preparo. Fonte Fiocruz p. 230–232 consultada localmente, data/hora/hash registrados. 219 testes passaram, incluindo preservação dos volumes informados, valores extremos sem estouro intermediário, limites, mudanças de protocolo, gráfico, histórico e DOCX. Ruff e diff --check aprovados, mypy core/service com imports omitidos aprovado; sem tipagem completa. Capturas PREP-006-parametros/resultados.png e duas páginas do DOCX inspecionadas; página de 880 px sem rolagem horizontal e texto explicativo sem corte. Windows e bancada não executados.
+
+
+Pacote Mac PREP-001 a PREP-006: `output/distribuicao/Planejador-Mac-PREP-001-a-006.zip`, com aplicativo, seis POPs e pasta Registros de Experimentos. Assinatura local, catálogo empacotado idêntico ao código, imagens e CRC conferidos. Sessão Desktop preservada; fluxo inspecionado em Qt de desenvolvimento, sem novos cliques no bundle. Windows continua com compilação/teste preparado para execução posterior no PC, conforme escolha de Lucas.
+
+## PREP-007 em 08/11/2026
+
+Perguntas específicas para v, N e E, com unidade explícita e zero excedente permitido; nenhuma margem positiva presumida. N inclui controles/repetições já contados. Saídas separadas base/reserva/total e gráfico comparativo por número de unidades. Nomes opcionais; sem campos de concentração/pureza ou solvente. 237 testes passaram na suíte completa, incluindo limite de um milhão com gráfico limitado a 21 pontos, entradas inválidas e recálculo/histórico/JSON/DOCX. Ruff e diff --check aprovados, mypy core/service com imports omitidos aprovado. Capturas PREP-007-parametros/resultados.png e duas páginas do DOCX inspecionadas; página de 880 px sem rolagem horizontal. Nova fonte BVS e imagem original creditada registradas; sem aplicar regra +1/+2 reações a todo laboratório. Windows e bancada não executados.
+
+
+Pacote Mac PREP-001 a PREP-007: `output/distribuicao/Planejador-Mac-PREP-001-a-007.zip`, com aplicativo, sete POPs e Registros de Experimentos. Assinatura local, catálogo empacotado idêntico ao código, três imagens de equipamentos e CRC conferidos. Após o ajuste final do texto explicativo, 153 testes de cálculo/interface passaram novamente. Sessão Desktop preservada; fluxo inspecionado em Qt de desenvolvimento, sem novos cliques no bundle. Windows permanece preparado para compilação/teste posterior no PC, conforme escolha de Lucas.
+
+## PREP-008 em 08/11/2026
+
+Painel de formulação sob demanda, referência identificada/protegida e receita livre com autoria separada. Quantidades nominais não são convertidas em q.s.p.; fonte Anvisa p. 15 (PDF 17) conferida visualmente. pH e conservação dessa receita preservados; ciclo ausente perguntado, sem valores universais. Ciclo anterior limpo ao trocar a formulação. Tabela de entradas com linhas ajustadas ao tamanho real dos controles; cabeçalho antes cortado foi corrigido. Resultados exibe quantidades escaladas e gráfico por componente, sem somar unidades incompatíveis. 251 testes passaram, Ruff/diff --check aprovados, mypy core/service com imports omitidos aprovado. Capturas PREP-008-parametros/resultados.png e duas páginas finais do POP inspecionadas; imagem reduzida nesse documento para manter créditos completos na mesma página. Página de 880 px sem rolagem horizontal e rótulos sem corte. Windows e bancada não executados.
+
+
+Pacote Mac PREP-001 a PREP-008: `output/distribuicao/Planejador-Mac-PREP-001-a-008.zip`, com aplicativo, oito POPs e Registros de Experimentos. Assinatura local, catálogo empacotado idêntico ao código, imagens e CRC conferidos. Módulo frontend.formulacao confirmado no arquivo PYZ; teste do fluxo de formulação passou novamente após ajuste final da altura das linhas. Sessão Desktop preservada; fluxo inspecionado em Qt de desenvolvimento, sem novos cliques no bundle. Windows permanece preparado para compilação/teste posterior no PC, conforme escolha de Lucas.
+
+## PREP-009 em 08/11/2026
+
+Painel comercial sob demanda, reutilizando núcleo de escala. Três números inicialmente sem resposta e convenção de volume escolhida explicitamente. Sem proporção/ciclo universais. Referência do fabricante declarada, não confundida com consulta da fonte Anvisa. Preparo, pH, suplementos, ciclo e conservação perguntados; faltantes pendentes. 265 testes passaram, Ruff/diff --check aprovados, mypy service com imports omitidos aprovado. Capturas PREP-009-parametros/resultados.png e duas páginas do DOCX inspecionadas; página de 880 px sem rolagem horizontal e rótulos sem corte. Caso numérico sintético está identificado como teste, sem prescrição atribuída a um fabricante. Windows e bancada não executados.
+
+
+Pacote Mac PREP-001 a PREP-009: `output/distribuicao/Planejador-Mac-PREP-001-a-009.zip`, com aplicativo, nove POPs e Registros de Experimentos. Assinatura local, catálogo empacotado idêntico ao código, imagens e CRC conferidos. Módulo frontend.meio_comercial confirmado no PYZ. Sessão Desktop preservada; fluxo inspecionado em Qt de desenvolvimento, sem novos cliques no bundle. Windows permanece preparado para compilação/teste posterior no PC, conforme escolha de Lucas.
+
+
+## PREP-010 implementado — 08/11/2026
+
+Dimensionamento de meio para placas ou tubos, dose, unidade, contagem já incluindo controles/repetições e excedente escolhido. Formato/capacidade e método declarados separadamente, ausências pendentes. Um tipo de recipiente e uma dose por planejamento; sem dose universal, massa de pó ou condições automáticas. Fontes Anvisa p. 18 (PDF 20) e BVS MS p. 48 (PDF 49), horários/hashes e adaptação registrados. Gráfico por número de recipientes com edição ao vivo, mesmo histórico e exportação JSON com proveniência.
+
+280 testes passaram, Ruff aprovado e mypy do service com imports omitidos aprovado (não equivale a tipagem completa das dependências). Capturas Qt a 880 px e gráfico inspecionados; sem rolagem horizontal da página. POP ilustrado renderizado em três páginas e integralmente inspecionado; corrigida no exportador comum a separação entre imagem e créditos. Não houve teste de leitor de tela ou validação em bancada.
+
+Os dez PREP têm dimensionamento, perguntas e POP individuais. A integração final de medições observadas/estatística ao fluxo desses protocolos ainda falta; não confundir seus gráficos de dimensionamento com análise de observações. Windows continua preparado para compilação/teste posterior no PC, conforme decisão de Lucas.
+
+
+## Integração de medições — 2026-11-08T11:07:39.590797-03:00
+
+Integração de medições aos dez PREP inspecionada em Qt de desenvolvimento, a 880 px. Corrigidas margem duplicada que causava 16 px de rolagem horizontal, cabeçalho de entrada cortado e largura excessiva do resumo. A seção observada fica recolhida até o pesquisador abri-la. 292 testes completos passaram; 12 de integração repetidos após ampliar a cobertura de gravação e arquivo. Não atribuído score ou aprovação de gates upstream; leitor de tela e bundle/Windows não testados nesta atualização.
+
+
+## Preservação de gravação — 2026-11-08T11:21:55.089869-03:00
+
+Falha de gravação simulada: o fechamento antes permitido foi bloqueado, assim como arquivo e troca de protocolo, com exportação de recuperação explícita. Inspeção a 880 px confirmou ação visível sem rolagem horizontal. 295 testes completos e três de recuperação repetidos passaram; sem score/gates web ou alegação de teste nativo.
