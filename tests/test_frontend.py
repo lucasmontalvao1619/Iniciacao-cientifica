@@ -1639,5 +1639,6 @@ def test_packaged_app_check_checks_catalog_pop_and_observations(
         env={**os.environ, "PYTHONPATH": os.pathsep.join([".", "backend"])},
     )
     data = json.loads(report.read_text(encoding="utf-8"))
+    assert "erro" not in data
     assert data["ok"] and data["protocolos"] == data["pops_exportados"] == 10
     assert data["massa_percentual_g"] == 9 and data["media_observada"] == 4

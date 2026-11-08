@@ -50,6 +50,8 @@ def verify(report_path):
                 assert path.stat().st_size > 1000
             window.close()
             app.processEvents()
+            window.history.engine.dispose()
+            window.engine.dispose()
             report.update(
                 ok=True,
                 protocolos=10,
@@ -58,6 +60,7 @@ def verify(report_path):
                 pops_exportados=10,
             )
     except Exception:
+        report["ok"] = False
         report["erro"] = traceback.format_exc()
     Path(report_path).write_text(
         json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
