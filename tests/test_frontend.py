@@ -1858,3 +1858,44 @@ w.close()
             "PLANEJADOR_DATA_DIR": str(tmp_path / "dados"),
         },
     )
+
+
+def test_neutral_buttons_preserve_disabled_text_color(app):
+    from PyQt6.QtGui import QPalette
+
+    w = PlannerWindow()
+    w.show()
+    app.processEvents()
+    disabled = w.steps[3]
+    assert not disabled.isEnabled()
+    assert disabled.palette().color(
+        QPalette.ColorGroup.Disabled, QPalette.ColorRole.ButtonText
+    ) == app.palette().color(
+        QPalette.ColorGroup.Disabled, QPalette.ColorRole.ButtonText
+    )
+    w.close()
+
+
+def test_typed_number_commits_when_clicking_an_action(app):
+    from PyQt6.QtWidgets import QPushButton, QVBoxLayout, QWidget
+
+    from frontend.numeric import DecimalSpinBox
+
+    box = QWidget()
+    layout = QVBoxLayout(box)
+    field = DecimalSpinBox()
+    field.setDecimals(6)
+    field.setRange(0, 1000)
+    field.setSpecialValueText("Informe o valor")
+    action = QPushButton("Continuar")
+    captured = []
+    action.clicked.connect(lambda: captured.append(field.value()))
+    layout.addWidget(field)
+    layout.addWidget(action)
+    box.show()
+    app.processEvents()
+    QTest.mouseClick(field.lineEdit(), Qt.MouseButton.LeftButton)
+    QTest.keyClicks(field.lineEdit(), "12,5")
+    QTest.mouseClick(action, Qt.MouseButton.LeftButton)
+    assert captured == [12.5]
+    box.close()

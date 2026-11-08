@@ -1339,7 +1339,7 @@ def create_app():
         QFrame#sidebar { background: palette(base); border-right: 1px solid palette(mid); }
         QGroupBox { background: palette(base); border: 1px solid palette(mid); border-radius: 8px; margin-top: 16px; padding: 24px; }
         QGroupBox::title { subcontrol-origin: margin; left: 16px; }
-        QPushButton { background: palette(button); color: palette(button-text); padding: 8px 16px; border: 1px solid palette(mid); border-radius: 6px; }
+        QPushButton { background: palette(button); padding: 8px 16px; border: 1px solid palette(mid); border-radius: 6px; }
         QPushButton[primary="true"] { background: palette(highlight); color: palette(highlighted-text); }
         QPushButton:checked { background: palette(highlight); color: palette(highlighted-text); }
         QPushButton:focus, QLineEdit:focus, QComboBox:focus { border: 2px solid palette(highlight); }
