@@ -5,6 +5,7 @@ import json
 import shutil
 import subprocess
 import sys
+import tomllib
 import zipfile
 from pathlib import Path
 
@@ -16,6 +17,9 @@ parser.add_argument("--platform", choices=["mac", "windows"], required=True)
 args = parser.parse_args()
 root = Path(__file__).resolve().parents[1]
 name = "Planejador de Experimentos"
+version = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))[
+    "project"
+]["version"]
 output = root / "dist"
 source = (
     Path("/private/tmp/planejador-build") / (name + ".app")
@@ -44,7 +48,7 @@ archive.mkdir(exist_ok=True)
     encoding="utf-8",
 )
 (stage / "LEIA-ME.txt").write_text(
-    "Planejador de Experimentos 0.2.0\nDez protocolos PREP com planejamento, POPs, medições, estatística e gráficos. Fontes e limites constam nos POPs. Valores planejados não substituem medições ou conferência do método.\n",
+    f"Planejador de Experimentos {version}\nDez protocolos PREP com planejamento, POPs, medições, estatística e gráficos. Fontes e limites constam nos POPs. Valores planejados não substituem medições ou conferência do método.\n",
     encoding="utf-8",
 )
 if args.platform == "mac":

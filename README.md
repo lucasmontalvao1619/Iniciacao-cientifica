@@ -14,6 +14,10 @@ No Windows, abra o instalador: ele inclui as dependências e cria os atalhos. N�
 Os pacotes só são publicados após os testes automatizados, a compilação nativa e a verificação do executável. O instalador Windows também passa por instalação/desinstalação automatizada, preservando um registro de teste. Isso não substitui avaliação em bancada ou testes manuais de interface.
 
 
+## Organização local no Mac
+
+A pasta `~/Desktop/INICIACAO CIENTIFICA` é a entrada do pesquisador: aplicativo, POPs, registros, pesquisa e instaladores. O código-fonte fica em `Desenvolvimento/` (este repositório). Ver [mapa e conferência da organização](docs/distribuicao/ORGANIZACAO_LOCAL.md).
+
 ## Problema
 
 Pesquisadores e estudantes precisam planejar experimentos laboratoriais com cálculos operacionais, reagentes, materiais, volumes, concentrações, diluições, controles, repetições e organização experimental. Esse processo pode ser demorado, repetitivo e sujeito a erros.

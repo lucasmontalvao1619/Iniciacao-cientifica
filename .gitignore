@@ -34,3 +34,10 @@ docs/referencias/fontes/ARCA-busca-*.json
 docs/referencias/fontes/ARCA-busca-*.json.gz
 *-smoke.json
 test-results.xml
+
+# Organização local: acervo privado, instalação e dados fora do código.
+/acervo/
+/Dados/
+/POPs/
+/Aplicativo.nosync/
+/entregas/
