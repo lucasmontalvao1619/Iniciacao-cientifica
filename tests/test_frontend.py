@@ -17,6 +17,19 @@ from frontend.app import PlannerWindow, create_app  # noqa: E402
 @pytest.fixture(autouse=True)
 def isolate_history(monkeypatch, tmp_path):
     monkeypatch.setenv("PLANEJADOR_DATA_DIR", str(tmp_path / "dados"))
+    yield
+    # Falhas de largura precisam identificar a peça que impõe o mínimo no SO.
+    from PyQt6.QtWidgets import QApplication, QScrollArea, QWidget
+
+    for window in QApplication.topLevelWidgets():
+        for area in window.findChildren(QScrollArea):
+            if not area.isVisible() or area.horizontalScrollBar().maximum() == 0:
+                continue
+            print("OVERFLOW", area.viewport().width(), area.widget().width())
+            for widget in area.widget().findChildren(QWidget):
+                if widget.isVisible() and widget.minimumSizeHint().width() > 350:
+                    text = widget.text() if hasattr(widget, "text") else ""
+                    print(type(widget).__name__, widget.minimumSizeHint().width(), text)
 
 
 @pytest.fixture(scope="module")
