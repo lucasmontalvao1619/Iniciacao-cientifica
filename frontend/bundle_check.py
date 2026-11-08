@@ -10,7 +10,7 @@ from pathlib import Path
 def verify(report_path):
     report = {"ok": False}
     try:
-        os.environ["QT_QPA_PLATFORM"] = "offscreen"
+        os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
         with tempfile.TemporaryDirectory(prefix="planejador-check-") as directory:
             os.environ["PLANEJADOR_DATA_DIR"] = directory
             from PyQt6.QtWidgets import QTableWidgetItem

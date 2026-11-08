@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 35
     env:
-      QT_QPA_PLATFORM: offscreen
+      QT_QPA_PLATFORM: ${{ matrix.platform == 'windows' && 'windows' || 'offscreen' }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
