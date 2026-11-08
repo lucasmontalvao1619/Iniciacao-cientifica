@@ -25,7 +25,14 @@ def isolate_history(monkeypatch, tmp_path):
         for area in window.findChildren(QScrollArea):
             if not area.isVisible() or area.horizontalScrollBar().maximum() == 0:
                 continue
-            print("OVERFLOW", area.viewport().width(), area.widget().width())
+            print(
+                "OVERFLOW",
+                area.viewport().width(),
+                area.widget().width(),
+                QApplication.font().family(),
+                QApplication.font().pointSize(),
+                window.logicalDpiX(),
+            )
             for widget in area.widget().findChildren(QWidget):
                 if widget.isVisible() and widget.minimumSizeHint().width() > 350:
                     text = widget.text() if hasattr(widget, "text") else ""

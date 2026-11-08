@@ -59,7 +59,7 @@ def label(text: str, size: int = 13, bold: bool = False) -> QLabel:
     widget.setSizePolicy(QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred)
     widget.setFont(
         QFont(
-            "Helvetica Neue",
+            "Segoe UI" if sys.platform == "win32" else "Helvetica Neue",
             size,
             QFont.Weight.DemiBold if bold else QFont.Weight.Normal,
         )
@@ -311,7 +311,7 @@ class PlannerWindow(QMainWindow):
             item.setChecked(i == index)
             item.setFont(
                 QFont(
-                    "Helvetica Neue",
+                    "Segoe UI" if sys.platform == "win32" else "Helvetica Neue",
                     13,
                     QFont.Weight.Bold if i == index else QFont.Weight.Normal,
                 )
@@ -1237,7 +1237,7 @@ def create_app():
         QPalette.ColorGroup.Disabled, QPalette.ColorRole.ButtonText, QColor("gray")
     )
     app.setPalette(palette)
-    app.setFont(QFont("Helvetica Neue", 13))
+    app.setFont(QFont("Segoe UI" if sys.platform == "win32" else "Helvetica Neue", 13))
     app.setStyleSheet("""
         QFrame#sidebar { background: palette(base); border-right: 1px solid palette(mid); }
         QGroupBox { background: palette(base); border: 1px solid palette(mid); border-radius: 8px; margin-top: 16px; padding: 24px; }
