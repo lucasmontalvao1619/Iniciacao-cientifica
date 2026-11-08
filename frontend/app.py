@@ -20,7 +20,6 @@ from PyQt6.QtWidgets import (
     QComboBox,
     QCompleter,
     QDialog,
-    QDoubleSpinBox,
     QFileDialog,
     QFormLayout,
     QFrame,
@@ -33,7 +32,6 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QSizePolicy,
-    QSpinBox,
     QStackedWidget,
     QStyle,
     QTableWidget,
@@ -46,6 +44,9 @@ from PyQt6.QtWidgets import (
 from sqlalchemy import create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
+
+from frontend.numeric import DecimalSpinBox as QDoubleSpinBox
+from frontend.numeric import IntegerSpinBox as QSpinBox
 
 # Running from the source checkout does not require an editable installation.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "backend"))
@@ -1338,7 +1339,7 @@ def create_app():
         QFrame#sidebar { background: palette(base); border-right: 1px solid palette(mid); }
         QGroupBox { background: palette(base); border: 1px solid palette(mid); border-radius: 8px; margin-top: 16px; padding: 24px; }
         QGroupBox::title { subcontrol-origin: margin; left: 16px; }
-        QPushButton { padding: 8px 16px; border: 1px solid palette(mid); border-radius: 6px; }
+        QPushButton { background: palette(button); color: palette(button-text); padding: 8px 16px; border: 1px solid palette(mid); border-radius: 6px; }
         QPushButton[primary="true"] { background: palette(highlight); color: palette(highlighted-text); }
         QPushButton:checked { background: palette(highlight); color: palette(highlighted-text); }
         QPushButton:focus, QLineEdit:focus, QComboBox:focus { border: 2px solid palette(highlight); }

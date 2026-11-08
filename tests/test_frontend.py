@@ -264,7 +264,7 @@ def test_accessibility_sidebar_state_activates_page(app):
     w.close()
 
 
-def test_startup_defers_scientific_stack_until_results():
+def test_startup_defers_plotting_until_results():
     import subprocess
     import sys
     from pathlib import Path
@@ -288,7 +288,7 @@ assert 'scipy' not in sys.modules
 w.navigate(4)
 assert w.analysis is not None
 assert w.analysis.context['titulo'] == 'Carregamento'
-assert 'matplotlib' in sys.modules and 'scipy' in sys.modules
+assert 'matplotlib' in sys.modules and 'scipy' not in sys.modules
 w.close()
 """
     env = dict(os.environ, QT_QPA_PLATFORM="offscreen")
@@ -1748,3 +1748,113 @@ def test_protocol_summary_keeps_sources_under_disclosure(app):
     w.protocol.lineEdit().clear()
     assert w.protocol_sources.isHidden() and not w.protocol_purpose.text()
     w.close()
+
+
+@pytest.mark.parametrize(
+    "typed, expected", [("12.5", 12.5), ("12,5", 12.5), ("0.25", 0.25)]
+)
+def test_numeric_fields_accept_direct_typing_without_arrows(app, typed, expected):
+    from PyQt6.QtTest import QSignalSpy
+
+    w = PlannerWindow()
+    w.show()
+    w.protocol.setCurrentIndex(w.protocol.findData("PREP-003"))
+    w.complete_protocol()
+    field = w.percent_form.concentracao
+    app.processEvents()
+    changed = QSignalSpy(field.valueChanged)
+    QTest.mouseClick(field.lineEdit(), Qt.MouseButton.LeftButton)
+    QTest.keyClicks(field.lineEdit(), typed)
+    assert len(changed) == 0
+    QTest.keyClick(field, Qt.Key.Key_Return)
+    assert field.value() == pytest.approx(expected)
+    assert len(changed) == 1 and "mg/mL" in field.text()
+    field.setValue(0)
+    QTest.mouseClick(field.lineEdit(), Qt.MouseButton.LeftButton)
+    QTest.keyClicks(field.lineEdit(), "abc")
+    QTest.keyClick(field, Qt.Key.Key_Return)
+    assert field.value() == 0
+    w.close()
+
+
+def test_integer_fields_accept_typing_and_keep_arrows(app):
+    w = PlannerWindow()
+    w.show()
+    w.protocol.setCurrentIndex(w.protocol.findData("PREP-007"))
+    w.complete_protocol()
+    field = w.percent_form.n_unidades
+    app.processEvents()
+    QTest.mouseClick(field.lineEdit(), Qt.MouseButton.LeftButton)
+    QTest.keyClicks(field.lineEdit(), "24")
+    QTest.keyClick(field, Qt.Key.Key_Return)
+    assert field.value() == 24
+    field.stepUp()
+    assert field.value() == 25
+    w.close()
+
+
+@pytest.mark.parametrize("close_method", ["accept", "close"])
+def test_consult_button_returns_to_neutral_after_dialog(app, close_method):
+    from PyQt6.QtGui import QPalette
+    from PyQt6.QtWidgets import QDialog
+
+    w = PlannerWindow()
+    w.show()
+    w.protocol.setCurrentIndex(w.protocol.findData("PREP-001"))
+    w.complete_protocol()
+    w.percent_form.set_values(
+        {"base": "m/v", "concentracao": 1, "quantidade_final": 100, "pureza": 100}
+    )
+    w.generate()
+    w.navigate(0)
+    app.processEvents()
+    w.history_table.setCurrentCell(0, 1)
+    consult = w.history_table.cellWidget(0, 1)
+    consult.click()
+    dialog = next(d for d in w.findChildren(QDialog) if d.isVisible())
+    getattr(dialog, close_method)()
+    app.processEvents()
+    assert not consult.isDown() and not consult.isChecked()
+    assert consult.grab().toImage().pixelColor(
+        8, consult.height() // 2
+    ) == app.palette().color(QPalette.ColorRole.Button)
+    assert w.stack.currentIndex() == 0 and len(w.history.list()) == 1
+    w.close()
+
+
+def test_open_results_defers_statistics_until_analysis(tmp_path):
+    import subprocess
+
+    code = """
+import sys
+from PyQt6.QtWidgets import QTableWidgetItem
+from frontend.app import create_app, PlannerWindow
+app = create_app()
+w = PlannerWindow()
+w.protocol.setCurrentIndex(w.protocol.findData("PREP-003"))
+w.complete_protocol()
+w.percent_form.set_values({"unidade_concentracao":"mg/mL", "concentracao":1, "quantidade_final":100, "pureza":100, "correcao":"pureza", "forma":"pesagem"})
+w.generate()
+w.navigate(4)
+assert w.percent_results.figure.axes
+assert "planejador.services.estatistica_service" not in sys.modules
+assert "scipy.stats" not in sys.modules
+panel = w.analysis
+panel.unit.setText("mg/mL")
+panel.data.setItem(0, 0, QTableWidgetItem("Grupo"))
+panel.data.setItem(0, 1, QTableWidgetItem("2;4;6"))
+panel.analyze()
+assert panel.report["resumos"]["Grupo"]["media"] == 4
+assert "planejador.services.estatistica_service" in sys.modules
+w.close()
+"""
+    subprocess.run(
+        [sys.executable, "-c", code],
+        check=True,
+        timeout=45,
+        env={
+            **os.environ,
+            "PYTHONPATH": os.pathsep.join([".", "backend"]),
+            "PLANEJADOR_DATA_DIR": str(tmp_path / "dados"),
+        },
+    )

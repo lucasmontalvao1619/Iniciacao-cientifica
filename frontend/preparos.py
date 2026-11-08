@@ -5,19 +5,20 @@ from PyQt6.QtWidgets import (
     QAbstractItemView,
     QCheckBox,
     QComboBox,
-    QDoubleSpinBox,
     QFormLayout,
     QGroupBox,
     QHeaderView,
     QLabel,
     QLineEdit,
     QPushButton,
-    QSpinBox,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
     QWidget,
 )
+
+from frontend.numeric import DecimalSpinBox as QDoubleSpinBox
+from frontend.numeric import IntegerSpinBox as QSpinBox
 
 
 def preencher_serie(table, plan):
@@ -705,7 +706,7 @@ class PreparoResults(QWidget):
         title.setWordWrap(True)
         layout.addWidget(title)
         instruction = QLabel(
-            "Edite os parâmetros abaixo para recalcular o dimensionamento e o gráfico."
+            "Edite os parâmetros abaixo para recalcular o dimensionamento e o gráfico. Confirme com Enter ou ao sair do campo."
         )
         instruction.setWordWrap(True)
         layout.addWidget(instruction)

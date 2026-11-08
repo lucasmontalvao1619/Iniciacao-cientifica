@@ -25,7 +25,7 @@ app = BUNDLE(coll, name=name + '.app',
              bundle_identifier='br.lucasmontalvao.planejador',
              info_plist={'CFBundleDisplayName': name,
                          'CFBundleName': name,
-                         'CFBundleShortVersionString': '0.2.2',
+                         'CFBundleShortVersionString': '0.2.3',
                          'NSHighResolutionCapable': True})
 
 # Finder/resource-fork metadata can prevent signing copied build resources.

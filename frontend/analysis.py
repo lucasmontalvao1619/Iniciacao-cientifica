@@ -12,7 +12,6 @@ from matplotlib.figure import Figure
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import (
     QCheckBox,
-    QDoubleSpinBox,
     QFileDialog,
     QHBoxLayout,
     QHeaderView,
@@ -26,8 +25,8 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from frontend.numeric import DecimalSpinBox as QDoubleSpinBox
 from planejador.core.exceptions import ErroPlanejamento
-from planejador.services import analisar_grupos
 
 
 def parse_measurements(text):
@@ -289,6 +288,8 @@ class AnalysisWidget(QWidget):
                     "Informe o que foi medido ou a unidade para identificar o gráfico."
                 )
             groups = self.read_groups()
+            from planejador.services import analisar_grupos
+
             if self.infer.isChecked():
                 self.report = analisar_grupos(groups, alpha=self.alpha.value())
             else:

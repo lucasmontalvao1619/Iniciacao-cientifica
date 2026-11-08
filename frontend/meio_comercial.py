@@ -3,13 +3,14 @@
 from PyQt6.QtCore import pyqtSignal
 from PyQt6.QtWidgets import (
     QComboBox,
-    QDoubleSpinBox,
     QFormLayout,
     QLabel,
     QLineEdit,
     QPlainTextEdit,
     QWidget,
 )
+
+from frontend.numeric import DecimalSpinBox as QDoubleSpinBox
 
 
 class MeioComercialForm(QWidget):
