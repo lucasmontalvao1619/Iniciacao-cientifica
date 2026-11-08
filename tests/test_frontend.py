@@ -1603,11 +1603,21 @@ def test_catalog_reads_are_explicit_utf8_on_startup_and_formula(app, monkeypatch
 def test_packaged_app_check_checks_catalog_pop_and_observations(
     app, tmp_path, monkeypatch
 ):
-    from frontend.bundle_check import verify
+    import subprocess
+    import sys
 
     monkeypatch.setenv("PLANEJADOR_DATA_DIR", str(tmp_path / "before"))
     report = tmp_path / "smoke.json"
-    assert verify(report) == 0
+    subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import sys; from frontend.bundle_check import verify; sys.exit(verify(sys.argv[1]))",
+            str(report),
+        ],
+        check=True,
+        env={**os.environ, "PYTHONPATH": os.pathsep.join([".", "backend"])},
+    )
     data = json.loads(report.read_text(encoding="utf-8"))
     assert data["ok"] and data["protocolos"] == data["pops_exportados"] == 10
     assert data["massa_percentual_g"] == 9 and data["media_observada"] == 4
