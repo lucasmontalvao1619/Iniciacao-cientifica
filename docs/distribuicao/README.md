@@ -85,3 +85,5 @@ Pacote Mac r2: `output/distribuicao/Planejador-Mac-PREP-001-a-010-integrado-r2.z
 ## Windows disponível — 2026-11-08T18:45:43.747607-03:00
 
 Lucas está no Mac com o PC Windows ao lado. As ferramentas deste chat continuam no Mac; nenhuma compilação Windows foi declarada. Pacote fonte isolado em `~/Desktop/Planejador-Fonte-Windows.zip`, sem `.venv`, dados de experimentos ou executável Mac. Extrair a pasta no Windows e abrir `COMPILAR-WINDOWS.cmd`; exige Python 3.11+ com `py` e internet. O launcher chama a receita existente e mantém a janela aberta para mostrar erros. A política PowerShell é definida apenas para esse processo, sem mudança permanente. Resultado previsto: `dist/Planejador-Windows.zip`, com exe, POPs e Registros de Experimentos. Ainda depende da execução e conferência reais no Windows.
+
+Verificação de distribuição em 2026-11-08T19:28:57-03:00: instalação/desinstalação Windows e pacote Mac aprovados no [CI 42529979732](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/actions/runs/42529979732). Detalhes e limites em `../modulos/CONFERENCIA_ENTREGA.md`.
