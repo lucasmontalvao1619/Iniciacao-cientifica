@@ -4,7 +4,7 @@ Organizada em 08/11/2026 por solicitação de Lucas. Entrada única: `~/Desktop/
 
 | Item visível | Uso |
 |---|---|
-| Planejador de Experimentos | Abrir o aplicativo atual, versão 0.2.1 |
+| Planejador de Experimentos | Abrir o aplicativo atual, versão atual |
 | POPs | Dez procedimentos ilustrados em DOCX |
 | Registros de Experimentos | Arquivos experimentais para consulta e exportação |
 | Pesquisa | Acervo original, extrações, referências, notas e áreas Git/Orca preservadas |
