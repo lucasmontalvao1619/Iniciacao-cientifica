@@ -1473,7 +1473,7 @@ def test_observation_drafts_survive_close_archive_and_readonly_consultation(
     app.processEvents()
     text = app.activeModalWidget().findChild(QTextEdit)
     assert text.isReadOnly() and "Lote incompleto" in text.toPlainText()
-    assert "rascunho" in text.toPlainText()
+    assert "rascunho" in text.toPlainText().lower()
     app.activeModalWidget().accept()
     reopened.close()
 
@@ -2267,4 +2267,64 @@ def test_large_excel_import_does_not_allocate_a_huge_empty_matrix(app, monkeypat
     assert len(panel.report["resumos"]) == 10
     assert panel.report["resumos"]["Grupo 0"]["n"] == 1000
     assert panel.graph_page.count() == 2
+    w.close()
+
+
+def test_history_consultation_shows_analysis_without_json(app):
+    from PyQt6.QtWidgets import QDialog, QTextEdit
+
+    w = PlannerWindow()
+    payload = {
+        "titulo": "Consulta",
+        "plano": {},
+        "resultados_observados": {
+            "unidade": "mg/mL",
+            "linhas_informadas": [{"grupo": "Controle", "valores": "2;4;6"}],
+            "analise": {
+                "resumos": {
+                    "Controle": {
+                        "n": 3,
+                        "media": 4.0,
+                        "desvio_padrao": 2.0,
+                        "variancia": 4.0,
+                    }
+                }
+            },
+        },
+    }
+    w.view_record(payload)
+    dialog = w.findChild(QDialog)
+    text = dialog.findChild(QTextEdit).toPlainText()
+    assert "Controle: 2, 4, 6" in text
+    assert "média = 4" in text
+    assert '"resumos"' not in text
+    dialog.close()
+    w.close()
+
+
+def test_collection_dialog_reuses_imported_groups_and_counts(app):
+    from PyQt6.QtCore import QTimer
+    from PyQt6.QtWidgets import QLineEdit, QSpinBox, QTableWidgetItem
+
+    w = PlannerWindow()
+    confirm(w)
+    w.generate()
+    w.navigate(4)
+    panel = w.analysis
+    panel.unit.setText("mg/mL")
+    for row, name in enumerate(("Controle", "Tratamento")):
+        panel.data.setItem(row, 0, QTableWidgetItem(name))
+        panel.data.setItem(row, 1, QTableWidgetItem("2;4;6"))
+    captured = {}
+
+    def inspect():
+        dialog = app.activeModalWidget()
+        captured["names"] = dialog.findChild(QLineEdit).text()
+        captured["repetitions"] = dialog.findChild(QSpinBox).value()
+        dialog.reject()
+
+    QTimer.singleShot(0, inspect)
+    panel.export_collection_template()
+    assert captured == {"names": "Controle; Tratamento", "repetitions": 3}
+    assert panel.collection is None
     w.close()

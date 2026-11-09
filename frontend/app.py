@@ -672,14 +672,18 @@ class PlannerWindow(QMainWindow):
             "",
             "Parâmetros informados",
         ]
+
+        def readable(value):
+            return f"{value:.8g}" if isinstance(value, float) else str(value)
+
         lines += [
-            f"{key.replace('_', ' ').capitalize()}: {value}"
+            f"{key.replace('_', ' ').capitalize()}: {readable(value)}"
             for key, value in params.items()
         ]
         lines += ["", "Resultado do planejamento"]
         for item in plan.get("reagentes", []):
             lines.append(
-                f"{item['nome']}: {item['quantidade_total']} {item['unidade']}"
+                f"{item['nome']}: {readable(item['quantidade_total'])} {item['unidade']}"
             )
         lines += [plan.get("solvente", ""), "", "Procedimento"] + plan.get(
             "procedimento", []
@@ -692,12 +696,34 @@ class PlannerWindow(QMainWindow):
             f"{source.get('title', '')} — {source.get('url', '')}"
             for source in plan.get("fontes", [])
         ]
-        if data.get("resultados_observados"):
+        observed = data.get("resultados_observados")
+        if observed:
             lines += [
                 "",
-                "Medições e análise observadas",
-                json.dumps(data["resultados_observados"], ensure_ascii=False, indent=2),
+                "Medições observadas",
+                f"Grandeza/unidade: {observed.get('unidade', 'Não informada')}",
             ]
+            for row in observed.get("linhas_informadas", []):
+                values = row.get("valores", "").split(";")
+                lines.append(f"{row.get('grupo', 'Grupo')}: {', '.join(values)}")
+            analysis = observed.get("analise") or {}
+            if analysis.get("resumos"):
+                lines += ["", "Resumo estatístico salvo"]
+                for name, summary in analysis["resumos"].items():
+                    lines.append(
+                        f"{name} · n = {summary['n']} · média = {readable(summary['media'])} · desvio padrão = {readable(summary['desvio_padrao'])} · variância = {readable(summary['variancia'])}"
+                    )
+                test = analysis.get("teste_t") or analysis.get("anova")
+                if test:
+                    kind = "Teste t" if analysis.get("teste_t") else "ANOVA"
+                    lines.append(
+                        f"{kind}: p = {readable(test['valor_p'])}; α = {readable(test['alpha'])}. Confira o desenho e os pressupostos registrados."
+                    )
+            else:
+                lines.append("Rascunho de medições; análise ainda não calculada.")
+            lines.append(
+                "A exportação JSON preserva o registro completo e a precisão dos valores."
+            )
         text.setPlainText("\n".join(lines))
         layout.addWidget(text)
         status = label(

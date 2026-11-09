@@ -459,6 +459,16 @@ class AnalysisWidget(QWidget):
             for group in self.collection["grupos"]:
                 if group.get("papel") == "controle":
                     control.setCurrentIndex(control.findData(group["nome"]))
+        else:
+            try:
+                groups = self.read_groups()
+            except ValueError:
+                groups = {}
+            if groups:
+                names.setText("; ".join(groups))
+                counts = {len(values) for values in groups.values()}
+                if len(counts) == 1:
+                    repeats.setValue(next(iter(counts)))
         note = QLabel(
             "Cada linha terá um identificador próprio. Repetições técnicas não são automaticamente tratadas como amostras independentes."
         )
@@ -467,6 +477,8 @@ class AnalysisWidget(QWidget):
         buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
         )
+        buttons.button(QDialogButtonBox.StandardButton.Ok).setText("Gerar modelo Excel")
+        buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("Cancelar")
         buttons.accepted.connect(dialog.accept)
         buttons.rejected.connect(dialog.reject)
         layout.addWidget(buttons)
