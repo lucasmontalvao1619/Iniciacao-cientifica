@@ -30,3 +30,13 @@ Implementados e verificados em testes: mapeamento de cabeçalho/colunas Excel, p
 Conferência independente adicional: teste t com variância amostral 4 e erro padrão da diferença √(8/3); ANOVA com somas de quadrados entre 54/dentro 6, F(2,6)=27 e p=0,001 por expressão analítica da distribuição. Teste numérico dirigido aprovado, sem usar a chamada SciPy como resultado esperado.
 
 Bundle Mac final recompilado com assinatura ad hoc verificada na origem temporária. Smoke completo aprovado em `/tmp/planejador-029-final-smoke.json`. A montagem do ZIP dentro do Desktop encontrou metadados de provedor de arquivos na cópia; não substitui nem invalida a verificação do bundle temporário. Pacotes do CI são montados em ambiente limpo e serão conferidos separadamente.
+
+## Pacotes aprovados no CI — 09/11/2026
+
+[Execução 42567226528](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/actions/runs/42567226528): Mac e Windows aprovados. Os dois testaram 349 casos do commit de implementação `015f643`; Mac sem pulos, Windows com um pulo explícito porque o sistema impede mover diretório com SQLite aberto. Sem falhas/erros. Executáveis verificaram cálculo, média observada, dez POPs, modelo/importação Excel e três exportações. Instalador Windows instalado/executado/desinstalado com preservação do arquivo experimental de teste.
+
+Após o commit de implementação foram acrescentados somente testes/documentação: conferência inferencial por resultado analítico e importação de 10.000 medições. **Suíte local final: 351 testes, nenhum pulo/falha/erro, 17,834 segundos.** Ruff aprovado. Código de execução idêntico ao validado no CI.
+
+Artefato Mac do CI conferido: 82.908.450 bytes, CRC aprovado, versão 0.2.9, catálogo idêntico ao código, dez POPs e ausência de bancos de usuário. ZIP local montado em pasta temporária também conferido: 83.460.351 bytes; diferenças de runtime/compactação não são dados de pesquisador. A cópia temporária evita os metadados do provedor do Desktop que interromperam a montagem local direta.
+
+Permanece pendente a conferência visual na janela nativa e a troca segura da instalação 0.2.8 enquanto o Mac está bloqueado. O pedido de desbloqueio foi enviado; não houve confirmação de desbloqueio. Antes da troca foi registrada localmente uma assinatura dos conteúdos dos **quatro registros** atuais, sem publicar esses conteúdos. Não substituir o aplicativo em uso nem inventar uma conferência visual.
