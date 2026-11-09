@@ -2302,7 +2302,8 @@ def test_history_consultation_shows_analysis_without_json(app):
     w.close()
 
 
-def test_collection_dialog_reuses_imported_groups_and_counts(app):
+@pytest.mark.parametrize("count", [3, 1000])
+def test_collection_dialog_reuses_imported_groups_and_counts(app, count):
     from PyQt6.QtCore import QTimer
     from PyQt6.QtWidgets import QLineEdit, QSpinBox, QTableWidgetItem
 
@@ -2314,7 +2315,7 @@ def test_collection_dialog_reuses_imported_groups_and_counts(app):
     panel.unit.setText("mg/mL")
     for row, name in enumerate(("Controle", "Tratamento")):
         panel.data.setItem(row, 0, QTableWidgetItem(name))
-        panel.data.setItem(row, 1, QTableWidgetItem("2;4;6"))
+        panel.data.setItem(row, 1, QTableWidgetItem(";".join(["2"] * count)))
     captured = {}
 
     def inspect():
@@ -2325,6 +2326,42 @@ def test_collection_dialog_reuses_imported_groups_and_counts(app):
 
     QTimer.singleShot(0, inspect)
     panel.export_collection_template()
-    assert captured == {"names": "Controle; Tratamento", "repetitions": 3}
+    assert captured == {"names": "Controle; Tratamento", "repetitions": count}
     assert panel.collection is None
+    w.close()
+
+
+@pytest.mark.parametrize(
+    "geometry", [(2, 3), (3, 4), (4, 6), (6, 8), (8, 12), (16, 24)]
+)
+def test_collection_dialog_preserves_saved_plate_geometry(app, geometry):
+    from PyQt6.QtCore import QTimer
+    from PyQt6.QtWidgets import QComboBox
+
+    from planejador.services.coleta import organizar_coleta
+
+    w = PlannerWindow()
+    confirm(w)
+    w.generate()
+    w.navigate(4)
+    panel = w.analysis
+    panel.unit.setText("mg/mL")
+    panel.collection = {
+        "unidades": organizar_coleta(
+            ["A"], 3, microplaca=True, linhas=geometry[0], colunas=geometry[1]
+        ),
+        "grupos": [{"nome": "A"}],
+        "microplaca": True,
+        "geometria": list(geometry),
+    }
+    captured = []
+
+    def inspect():
+        dialog = app.activeModalWidget()
+        captured.append(tuple(dialog.findChildren(QComboBox)[-1].currentData()))
+        dialog.reject()
+
+    QTimer.singleShot(0, inspect)
+    panel.export_collection_template()
+    assert captured == [geometry]
     w.close()

@@ -435,7 +435,7 @@ class AnalysisWidget(QWidget):
         layout.addWidget(repetition_type)
         layout.addWidget(QLabel("Quantas repetições serão registradas por grupo?"))
         repeats = QSpinBox()
-        repeats.setRange(1, 100)
+        repeats.setRange(1, 10000)
         layout.addWidget(repeats)
         plate = QCheckBox("Organizar posições em microplacas")
         layout.addWidget(plate)
@@ -451,8 +451,16 @@ class AnalysisWidget(QWidget):
             units = self.collection["unidades"]
             repeats.setValue(max(u["repeticao"] for u in units))
             plate.setChecked(self.collection.get("microplaca", False))
-            index = geometry.findData(tuple(self.collection.get("geometria", (8, 12))))
-            geometry.setCurrentIndex(max(0, index))
+            saved_geometry = tuple(self.collection.get("geometria", (8, 12)))
+            index = next(
+                (
+                    i
+                    for i in range(geometry.count())
+                    if tuple(geometry.itemData(i)) == saved_geometry
+                ),
+                4,
+            )
+            geometry.setCurrentIndex(index)
             repetition_type.setCurrentIndex(
                 max(0, repetition_type.findData(self.collection.get("tipo_repeticao")))
             )

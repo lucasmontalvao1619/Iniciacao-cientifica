@@ -73,3 +73,11 @@ def test_large_manifest_is_not_truncated_by_excel(tmp_path):
     book.save(path)
     book.close()
     assert conferir_coleta(read_workbook(path), context) == collection
+
+
+def test_collection_limit_matches_import_limit():
+    assert len(organizar_coleta(["A"], 1000)) == 1000
+    with pytest.raises(ValueError):
+        organizar_coleta(["A"], 10001)
+    with pytest.raises(ValueError, match="10.000 unidades"):
+        organizar_coleta(["A", "B"], 6000)

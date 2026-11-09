@@ -8,9 +8,9 @@ def organizar_coleta(grupos, repeticoes, *, linhas=8, colunas=12, microplaca=Fal
     if (
         isinstance(repeticoes, bool)
         or not isinstance(repeticoes, int)
-        or not 1 <= repeticoes <= 100
+        or not 1 <= repeticoes <= 10000
     ):
-        raise ValueError("Informe entre 1 e 100 repetições por grupo.")
+        raise ValueError("Informe entre 1 e 10.000 repetições por grupo.")
     names = [str(g).strip() for g in grupos]
     if not names or any(not n or len(n) > 160 for n in names):
         raise ValueError("Informe nomes de grupos com até 160 caracteres.")
