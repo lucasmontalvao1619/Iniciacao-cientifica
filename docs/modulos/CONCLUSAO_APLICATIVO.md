@@ -25,3 +25,8 @@ Implementados e verificados em testes: mapeamento de cabeçalho/colunas Excel, p
 349 testes passaram localmente, sem falhas/pulos; Ruff aprovado. Relatório com gráfico renderizado e quatro páginas inspecionadas; diálogos de importação e microplaca inspecionados em Qt offscreen. Fonte de evidências e limites em `docs/interface/AUDIT.md`.
 
 **Ainda não declarar conclusão:** falta a conferência da versão final na janela nativa (Mac bloqueado), substituir com segurança o aplicativo instalado, concluir pipeline Windows/Mac e atualizar os downloads locais/publicados. O aplicativo instalado permanece 0.2.8 até a troca segura. Nenhum protocolo novo foi adicionado. Testes computacionais não demonstram usabilidade, redução de tempo/erros ou validação em bancada.
+
+
+Conferência independente adicional: teste t com variância amostral 4 e erro padrão da diferença √(8/3); ANOVA com somas de quadrados entre 54/dentro 6, F(2,6)=27 e p=0,001 por expressão analítica da distribuição. Teste numérico dirigido aprovado, sem usar a chamada SciPy como resultado esperado.
+
+Bundle Mac final recompilado com assinatura ad hoc verificada na origem temporária. Smoke completo aprovado em `/tmp/planejador-029-final-smoke.json`. A montagem do ZIP dentro do Desktop encontrou metadados de provedor de arquivos na cópia; não substitui nem invalida a verificação do bundle temporário. Pacotes do CI são montados em ambiente limpo e serão conferidos separadamente.

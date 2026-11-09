@@ -57,3 +57,17 @@ def test_anova_tres_grupos():
 def test_anova_menos_de_dois_grupos_erro():
     with pytest.raises(EntradaInvalida):
         estatistica.anova_uma_via([1.0, 2.0, 3.0])
+
+
+def test_inferencia_com_resultados_analiticos_independentes():
+    # Variância de cada grupo = 4; erro padrão da diferença = sqrt(8/3).
+    import math
+
+    r = estatistica.teste_t([2, 4, 6], [3, 5, 7])
+    assert r.estatistica_t == pytest.approx(-1 / math.sqrt(8 / 3))
+    assert r.graus_liberdade == 4
+    # Somas de quadrados: entre = 54, dentro = 6; gl = 2 e 6.
+    # Para F(2,6), P(F >= 27) = (1 + 27/3)^(-3) = 0,001.
+    a = estatistica.anova_uma_via([1, 2, 3], [4, 5, 6], [7, 8, 9])
+    assert a.estatistica_f == pytest.approx(27)
+    assert a.valor_p == pytest.approx(0.001, abs=1e-12)
