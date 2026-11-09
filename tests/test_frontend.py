@@ -193,7 +193,9 @@ def test_integrated_results_and_reset(app, tmp_path):
     assert panel.report["experimento"]["protocolo"] == w.plan["protocolo"]
     assert panel.figure.axes[0].get_ylabel() == "mg/mL"
     assert panel.table.rowCount() == 2
-    assert len(panel.figure.axes[0].collections) == 2
+    assert len(panel.figure.axes[0].collections) == 4
+    panel.design.setCurrentIndex(1)
+    panel.assumptions.setChecked(True)
     panel.infer.setChecked(True)
     panel.analyze()
     assert panel.report["teste_t"] is not None
@@ -288,7 +290,7 @@ assert 'scipy' not in sys.modules
 w.navigate(4)
 assert w.analysis is not None
 assert w.analysis.context['titulo'] == 'Carregamento'
-assert 'matplotlib' in sys.modules and 'scipy' not in sys.modules
+assert 'matplotlib' not in sys.modules and 'scipy' not in sys.modules
 w.close()
 """
     env = dict(os.environ, QT_QPA_PLATFORM="offscreen")
@@ -450,6 +452,8 @@ def test_percentual_parameters_results_live_graph_and_export(app, tmp_path):
     )
     w.navigate(4)
     panel = w.percent_results
+    panel.chart_group.setChecked(True)
+    panel.adjustments.setChecked(True)
     panel.form.quantidade_final.setValue(500)
     assert w.plan["resultado"]["quantidade_reagente"] == pytest.approx(
         4.5, rel=1e-12, abs=1e-12
@@ -547,6 +551,8 @@ def test_molar_custom_form_live_results_history_and_protocol_switch(app, tmp_pat
     record_id = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.chart_group.setChecked(True)
+    panel.adjustments.setChecked(True)
     panel.form.quantidade_final.setValue(500)
     assert w.plan["resultado"]["quantidade_reagente"] == pytest.approx(2.922)
     assert panel.figure.axes[0].lines[0].get_ydata()[-1] == pytest.approx(2.922)
@@ -630,6 +636,8 @@ def test_stock_questions_equivalence_live_graph_optional_label_and_export(
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.chart_group.setChecked(True)
+    panel.adjustments.setChecked(True)
     panel.form.equivalencia.setValue(20)
     assert w.plan["resultado"]["quantidade_reagente"] == pytest.approx(20000 / 776)
     assert panel.figure.axes[0].lines[0].get_ydata()[-1] == pytest.approx(20000 / 776)
@@ -720,6 +728,8 @@ def test_stock_dilution_questions_plan_graph_export_and_switch(app, tmp_path):
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.chart_group.setChecked(True)
+    panel.adjustments.setChecked(True)
     panel.form.concentracao_inicial.setValue(2)
     assert w.plan["resultado"]["quantidade_reagente"] == pytest.approx(0.5)
     assert panel.figure.axes[0].lines[0].get_ydata()[-1] == pytest.approx(0.5)
@@ -785,6 +795,8 @@ def test_serial_questions_tables_live_graph_and_export(app, tmp_path):
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.chart_group.setChecked(True)
+    panel.adjustments.setChecked(True)
     assert panel.serie_table.rowCount() == 3
     assert panel.figure.axes[0].get_yscale() == "log"
     assert list(panel.figure.axes[0].lines[0].get_ydata()) == pytest.approx(
@@ -860,6 +872,8 @@ def test_factor_questions_graph_live_export_and_switch(app, tmp_path):
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.chart_group.setChecked(True)
+    panel.adjustments.setChecked(True)
     panel.form.quantidade_final.setValue(20)
     assert w.plan["resultado"]["concentracao_calculada"] == pytest.approx(5)
     assert w.plan["resultado"]["fator_diluicao"] == pytest.approx(20)
@@ -928,6 +942,8 @@ def test_volume_questions_live_totals_units_graph_and_export(app, tmp_path):
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.chart_group.setChecked(True)
+    panel.adjustments.setChecked(True)
     panel.form.n_unidades.setValue(20)
     assert w.plan["resultado"]["quantidade_final"] == pytest.approx(440)
     assert panel.figure.axes[0].lines[1].get_ydata()[-1] == pytest.approx(440)
@@ -999,6 +1015,8 @@ def test_formula_reference_custom_questions_live_results_and_export(app, tmp_pat
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.chart_group.setChecked(True)
+    panel.adjustments.setChecked(True)
     out = panel.form.formula_form
     assert panel.serie_table.rowCount() == 4
     out.target.setValue(500)
@@ -1089,6 +1107,8 @@ def test_commercial_medium_questions_live_graph_provenance_export_and_switch(
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.chart_group.setChecked(True)
+    panel.adjustments.setChecked(True)
     out = panel.form.comercial_form
     out.fields["volume_alvo_mL"].setValue(500)
     assert w.plan["resultado"]["quantidade_reagente"] == pytest.approx(13)
@@ -1181,6 +1201,8 @@ def test_recipients_questions_live_graph_history_export_and_reset(app, tmp_path)
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.chart_group.setChecked(True)
+    panel.adjustments.setChecked(True)
     out = panel.form
     out.n_unidades.setValue(20)
     assert w.plan["resultado"]["quantidade_final"] == pytest.approx(440)
@@ -1325,6 +1347,9 @@ def test_observations_associate_with_each_real_protocol_and_clear_on_plan_edit(
     record = w.history_id
     w.navigate(4)
     panel = w.analysis
+    assert w.percent_results.figure is None
+    assert w.percent_results.summary.text()
+    assert not w.percent_results.adjustments.isChecked()
     assert panel.context["protocolo_id"] == code
     assert panel.data.item(0, 1) is None
     assert not w.observations_group.isChecked()
@@ -1456,6 +1481,8 @@ def test_undefined_statistic_does_not_leave_exportable_nan_analysis(app):
     for row, name in enumerate(["A", "B"]):
         panel.data.setItem(row, 0, QTableWidgetItem(name))
         panel.data.setItem(row, 1, QTableWidgetItem("1;1;1"))
+    panel.design.setCurrentIndex(1)
+    panel.assumptions.setChecked(True)
     panel.infer.setChecked(True)
     panel.analyze()
     assert panel.report is None and not panel.save.isEnabled()
@@ -1836,6 +1863,9 @@ w.complete_protocol()
 w.percent_form.set_values({"unidade_concentracao":"mg/mL", "concentracao":1, "quantidade_final":100, "pureza":100, "correcao":"pureza", "forma":"pesagem"})
 w.generate()
 w.navigate(4)
+assert w.percent_results.figure is None
+assert "matplotlib" not in sys.modules
+w.percent_results.chart_group.setChecked(True)
 assert w.percent_results.figure.axes
 assert "planejador.services.estatistica_service" not in sys.modules
 assert "scipy.stats" not in sys.modules
@@ -1899,3 +1929,151 @@ def test_typed_number_commits_when_clicking_an_action(app):
     QTest.mouseClick(action, Qt.MouseButton.LeftButton)
     assert captured == [12.5]
     box.close()
+
+
+def test_results_summary_is_fast_and_adjustments_collapsed(app, monkeypatch):
+    w = PlannerWindow()
+    w.protocol.setCurrentIndex(w.protocol.findData("PREP-003"))
+    w.complete_protocol()
+    w.percent_form.set_values(
+        {
+            "unidade_concentracao": "mg/mL",
+            "concentracao": 1.5,
+            "quantidade_final": 100,
+            "pureza": 100,
+            "correcao": "pureza",
+            "forma": "pesagem",
+        }
+    )
+    w.generate()
+    w.navigate(4)
+    p = w.percent_results
+    assert "150 mg" in p.summary.text()
+    assert not p.adjustments.isChecked() and not p.chart_group.isChecked()
+    assert p.figure is None and w.analysis.figure is None
+    saves = []
+    monkeypatch.setattr(w, "save_history", lambda *args: saves.append(args))
+    p.chart_group.setChecked(True)
+    assert p.figure.axes
+    assert saves == []
+    w.close()
+
+
+def test_paste_excel_cells_preserves_drafts_and_planning_link(app):
+    from PyQt6.QtGui import QKeySequence
+    from PyQt6.QtWidgets import QTableWidgetItem
+
+    w = PlannerWindow()
+    confirm(w)
+    w.generate()
+    w.navigate(4)
+    if hasattr(w, "observations_group"):
+        w.observations_group.setChecked(True)
+    p = w.analysis
+    app.clipboard().setText("Controle\t1,5\t2,5\t3,5\nTratamento\t3\t4\t5\n")
+    p.paste_measurements()
+    assert p.read_groups() == {"Controle": [1.5, 2.5, 3.5], "Tratamento": [3, 4, 5]}
+    p.unit.setText("mg/mL")
+    p.analyze()
+    assert p.report["resumos"]["Controle"]["media"] == 2.5
+    assert p.report["experimento"]["protocolo"] == w.plan["protocolo"]
+    assert p.figure.axes[0].get_legend() is not None
+    assert len(set(p.figure.axes[0].collections[0].get_offsets()[:, 0])) == 3
+    p.data.setCurrentCell(1, 2)
+    app.clipboard().setText("pendente\t7\t8")
+    p.paste_measurements()
+    assert p.report is None
+    draft = p.observation_payload()
+    assert draft["linhas_informadas"][1]["valores"] == "3;pendente;7;8"
+    assert draft["estado"] == "rascunho"
+    with pytest.raises(ValueError):
+        p.read_groups()
+    p.data.setItem(1, 2, QTableWidgetItem("6"))
+    assert p.read_groups()["Tratamento"] == [3, 6, 7, 8]
+    p.data.setCurrentCell(0, 1)
+    p.data.setFocus()
+    w.show()
+    app.processEvents()
+    app.clipboard().setText("8\t9\t10")
+    QTest.keySequence(p.data, QKeySequence(QKeySequence.StandardKey.Paste))
+    assert p.read_groups()["Controle"] == [8, 9, 10]
+    w.close()
+
+
+def test_comparison_requires_design_and_assumptions(app):
+    from PyQt6.QtWidgets import QTableWidgetItem
+
+    w = PlannerWindow()
+    confirm(w)
+    w.generate()
+    w.navigate(4)
+    p = w.analysis
+    p.unit.setText("unidade")
+    for row, (name, values) in enumerate([("A", "1;2;3"), ("B", "2;4;6")]):
+        p.data.setItem(row, 0, QTableWidgetItem(name))
+        p.data.setItem(row, 1, QTableWidgetItem(values))
+    p.infer.setChecked(True)
+    p.analyze()
+    assert p.report is None and "independentes" in p.status.text()
+    p.design.setCurrentIndex(2)
+    p.analyze()
+    assert p.report is None
+    p.design.setCurrentIndex(1)
+    p.analyze()
+    assert p.report is None and "pressupostos" in p.status.text()
+    p.assumptions.setChecked(True)
+    p.analyze()
+    assert p.report["teste_t"] is not None
+    assert p.observation_payload()["pressupostos_conferidos"] is True
+    w.close()
+
+
+def test_background_analysis_keeps_events_and_discards_stale_result(app, monkeypatch):
+    import threading
+
+    from PyQt6.QtCore import QTimer
+    from PyQt6.QtWidgets import QTableWidgetItem
+
+    import frontend.analysis as analysis
+
+    w = PlannerWindow()
+    confirm(w)
+    w.generate()
+    w.navigate(4)
+    p = w.analysis
+    p.unit.setText("mg/mL")
+    p.data.setItem(0, 0, QTableWidgetItem("A"))
+    p.data.setItem(0, 1, QTableWidgetItem("2;4;6"))
+    calculate = analysis.calculate_report
+    started, release = threading.Event(), threading.Event()
+
+    def slow_report(*args):
+        started.set()
+        assert release.wait(5)
+        return calculate(*args)
+
+    monkeypatch.setattr(analysis, "calculate_report", slow_report)
+    p.start_analysis()
+    try:
+        assert started.wait(5)
+        events = []
+        QTimer.singleShot(0, lambda: events.append(True))
+        app.processEvents()
+        assert events and not p.run_button.isEnabled()
+        p.data.setItem(0, 1, QTableWidgetItem("3;6;9"))
+    finally:
+        release.set()
+    for _ in range(100):
+        QTest.qWait(20)
+        if p.worker is None:
+            break
+    assert p.worker is None and p.report is None
+    assert "mudaram" in p.status.text()
+    p.start_analysis()
+    for _ in range(100):
+        QTest.qWait(20)
+        if p.worker is None:
+            break
+    assert p.report["resumos"]["A"]["media"] == 6
+    assert p.run_button.isEnabled()
+    w.close()

@@ -3,6 +3,7 @@
 import json
 import os
 import tempfile
+import time
 import traceback
 from pathlib import Path
 
@@ -36,11 +37,20 @@ def verify(report_path):
             window.generate()
             assert abs(window.plan["resultado"]["quantidade_reagente"] - 9) < 1e-9
             window.navigate(4)
+            assert window.percent_results.figure is None
+            assert not window.percent_results.adjustments.isChecked()
             panel = window.analysis
             panel.unit.setText("mg/mL observado")
             panel.data.setItem(0, 0, QTableWidgetItem("Medições de teste"))
-            panel.data.setItem(0, 1, QTableWidgetItem("2;4;6"))
-            panel.analyze()
+            for col, value in enumerate(("2", "4", "6"), 1):
+                panel.data.setItem(0, col, QTableWidgetItem(value))
+            panel.start_analysis()
+            deadline = time.monotonic() + 60
+            while panel.worker is not None and time.monotonic() < deadline:
+                app.processEvents()
+                time.sleep(0.01)
+            assert panel.worker is None, "Análise não terminou em 60 segundos"
+            assert panel.figure.axes
             assert panel.report["resumos"]["Medições de teste"]["media"] == 4
             assert window.flush_observations()
             assert window.history.list()

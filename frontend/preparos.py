@@ -684,9 +684,6 @@ class PreparoResults(QWidget):
 
     def __init__(self, protocol, values):
         super().__init__()
-        from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
-        from matplotlib.figure import Figure
-
         self.protocol = protocol
         layout = QVBoxLayout(self)
         layout.setContentsMargins(32, 24, 32, 24)
@@ -706,16 +703,32 @@ class PreparoResults(QWidget):
         title.setWordWrap(True)
         layout.addWidget(title)
         instruction = QLabel(
-            "Edite os parâmetros abaixo para recalcular o dimensionamento e o gráfico. Confirme com Enter ou ao sair do campo."
+            "Confira as quantidades calculadas. Para alterar os valores, abra Ajustar planejamento."
         )
         instruction.setWordWrap(True)
         layout.addWidget(instruction)
         self.form = PreparoForm(protocol["tipo_calculo"])
         self.form.set_values(values)
-        layout.addWidget(self.form)
+        self.adjustments = QGroupBox("Ajustar planejamento")
+        self.adjustments.setCheckable(True)
+        self.adjustments.setChecked(False)
+        self.adjustments.setMaximumHeight(self.adjustments.fontMetrics().height() + 20)
+        self.adjustments.toggled.connect(
+            lambda on: self.adjustments.setMaximumHeight(
+                16777215 if on else self.adjustments.fontMetrics().height() + 20
+            )
+        )
+        QVBoxLayout(self.adjustments).addWidget(self.form)
+        self.form.hide()
+        self.adjustments.toggled.connect(self.form.setVisible)
         self.summary = QLabel()
         self.summary.setWordWrap(True)
+        font = self.summary.font()
+        font.setPointSize(16)
+        font.setBold(True)
+        self.summary.setFont(font)
         layout.addWidget(self.summary)
+        layout.addWidget(self.adjustments)
         self.serie_table = QTableWidget()
         self.serie_table.hide()
         layout.addWidget(self.serie_table)
@@ -727,29 +740,61 @@ class PreparoResults(QWidget):
         self.component_plot.setMinimumContentsLength(15)
         self.component_plot.setVisible(protocol["tipo_calculo"] == "formula")
         self.component_plot.currentIndexChanged.connect(self.recalculate)
-        layout.addWidget(self.component_plot)
-        self.figure = Figure(figsize=(6, 3), layout="constrained")
-        self.canvas = FigureCanvasQTAgg(self.figure)
-        self.canvas.setMinimumHeight(280)
-        layout.addWidget(self.canvas)
+        self.chart_group = QGroupBox("Simular quantidades no gráfico")
+        self.chart_group.setCheckable(True)
+        self.chart_group.setChecked(False)
+        self.chart_group.setMaximumHeight(self.chart_group.fontMetrics().height() + 20)
+        self.chart_body = QWidget()
+        self.chart_layout = QVBoxLayout(self.chart_body)
+        self.chart_layout.addWidget(self.component_plot)
+        QVBoxLayout(self.chart_group).addWidget(self.chart_body)
+        layout.addWidget(self.chart_group)
+        self.chart_body.hide()
+        self.figure = None
+        self.canvas = None
+        self.chart_group.toggled.connect(self.toggle_chart)
         note = QLabel(
             "Gráfico de dimensionamento planejado; não representa medições, validação em bancada nem uma análise estatística de dados observados."
         )
         note.setWordWrap(True)
-        layout.addWidget(note)
+        self.chart_layout.addWidget(note)
         self.back = QPushButton("Voltar ao plano")
         layout.addWidget(self.back)
         self.save = QPushButton("Exportar planejamento e resultados em JSON")
         layout.addWidget(self.save)
+        layout.addStretch()
         self.form.changed.connect(self.recalculate)
         self.recalculate()
+
+    def toggle_chart(self, checked):
+        self.chart_group.setMaximumHeight(
+            16777215 if checked else self.chart_group.fontMetrics().height() + 20
+        )
+        self.chart_body.setVisible(checked)
+        if checked:
+            self.recalculate()
+
+    def prepare_chart(self, params, plan):
+        if not self.chart_group.isChecked():
+            self.updated.emit(params, plan)
+            return False
+        if self.figure is None:
+            from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
+            from matplotlib.figure import Figure
+
+            self.figure = Figure(figsize=(6, 3.6), layout="constrained")
+            self.canvas = FigureCanvasQTAgg(self.figure)
+            self.canvas.setMinimumHeight(340)
+            self.chart_layout.insertWidget(1, self.canvas)
+        return True
 
     def recalculate(self):
         from planejador.core.exceptions import ErroPlanejamento
         from planejador.services.preparos import calcular_preparo
 
         params = self.form.values()
-        self.figure.clear()
+        if self.figure is not None:
+            self.figure.clear()
         try:
             plan = calcular_preparo(self.protocol, params)
         except ErroPlanejamento as exc:
@@ -758,7 +803,8 @@ class PreparoResults(QWidget):
             self.serie_table.setRowCount(0)
             self.serie_table.hide()
             self.invalid.emit()
-            self.canvas.draw_idle()
+            if self.canvas is not None:
+                self.canvas.draw_idle()
             return
         self.save.setEnabled(True)
         if self.protocol["tipo_calculo"] == "formula":
@@ -804,6 +850,8 @@ class PreparoResults(QWidget):
             self.summary.setText(
                 f"Volume nominal: {r['quantidade_final']:g} mL; fator de escala: {r['fator_escala']:g}.\n{plan['formula_origem']}{pending}"
             )
+            if not self.prepare_chart(params, plan):
+                return
             ax = self.figure.add_subplot(111)
             target = r["quantidade_final"]
             x = [target * i / 20 for i in range(21)]
@@ -822,6 +870,8 @@ class PreparoResults(QWidget):
             self.summary.setText(
                 f"Meio desidratado: {r['quantidade_reagente']:.6g} g.\n{plan['solvente']}\nInstrução declarada: {plan['fonte_fabricante_declarada']['referencia']}\n{pending}"
             )
+            if not self.prepare_chart(params, plan):
+                return
             ax = self.figure.add_subplot(111)
             target = r["quantidade_final"]
             x = [target * i / 20 for i in range(21)]
@@ -839,8 +889,6 @@ class PreparoResults(QWidget):
             self.updated.emit(params, plan)
             return
         if self.protocol["tipo_calculo"] in {"volume", "recipientes"}:
-            from matplotlib.ticker import MaxNLocator
-
             r = plan["resultado"]
             unit = params["unidade_volume"]
             n = params["n_unidades"]
@@ -849,6 +897,15 @@ class PreparoResults(QWidget):
             self.summary.setText(
                 f"Volume base: {r['volume_sem_excedente']:.6g} {unit}\nExcedente: {r['volume_excedente']:.6g} {unit} ({e:g}%)\nVolume total a preparar: {r['quantidade_final']:.6g} {unit}"
             )
+            if self.protocol["tipo_calculo"] == "recipientes":
+                self.summary.setText(
+                    f"{n} {params['recipiente']}\n"
+                    + self.summary.text()
+                    + "\n"
+                    + " ".join(plan["pendencias_preparo"])
+                )
+            if not self.prepare_chart(params, plan):
+                return
             ax = self.figure.add_subplot(111)
             x = sorted({round(n * i / 20) for i in range(21)})
             ax.plot(x, [v * i for i in x], label="Volume base", color="#315e5b")
@@ -861,14 +918,9 @@ class PreparoResults(QWidget):
                     color="#315e5b",
                 )
             ax.scatter([n], [r["quantidade_final"]], color="#315e5b")
+            from matplotlib.ticker import MaxNLocator
+
             ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-            if self.protocol["tipo_calculo"] == "recipientes":
-                self.summary.setText(
-                    f"{n} {params['recipiente']}\n"
-                    + self.summary.text()
-                    + "\n"
-                    + " ".join(plan["pendencias_preparo"])
-                )
             ax.set_xlabel(
                 "Número de " + params["recipiente"]
                 if self.protocol["tipo_calculo"] == "recipientes"
@@ -885,14 +937,14 @@ class PreparoResults(QWidget):
             self.summary.setText(
                 f"Alíquota por transferência: {plan['resultado']['quantidade_reagente']:.6g} mL. {plan['observacao_diluicao']}\n{plan['solvente']}"
             )
+            if not self.prepare_chart(params, plan):
+                return
             ax = self.figure.add_subplot(111)
             x = list(range(len(plan["etapas"]) + 1))
             y = [params["concentracao_inicial"]] + [
                 step["concentracao"] for step in plan["etapas"]
             ]
             ax.plot(x, y, marker="o", color="#315e5b")
-            from matplotlib.ticker import MaxNLocator
-
             ax.set_yscale("log")
             import math
 
@@ -901,6 +953,8 @@ class PreparoResults(QWidget):
                 lower = min(y)
             upper = max(y) * 1.1
             ax.set_ylim(lower, upper if math.isfinite(upper) else max(y))
+            from matplotlib.ticker import MaxNLocator
+
             ax.xaxis.set_major_locator(MaxNLocator(integer=True))
             ax.set_xlabel("Etapa (0 = estoque)")
             ax.set_ylabel(
@@ -926,6 +980,8 @@ class PreparoResults(QWidget):
         self.summary.setText(
             f"{dose_label}: {r['quantidade_reagente']:.6g} {r['unidade_reagente']}\nSolvente/diluente: {plan['solvente']}{detail}{label_issues}"
         )
+        if not self.prepare_chart(params, plan):
+            return
         ax = self.figure.add_subplot(111)
         quantity = r["quantidade_final"]
         if self.protocol["tipo_calculo"] == "fator":

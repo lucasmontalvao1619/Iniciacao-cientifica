@@ -296,3 +296,15 @@ A conferência visual encontrou texto indevidamente escuro nos botões desabilit
 Conclusão v0.2.4: [CI 42536815468](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/actions/runs/42536815468) aprovado: Mac 311 testes; Windows 310 aprovados e um caso de movimentação SQLite aberto inaplicável no sistema. Executáveis Mac/Windows e instalado Windows passaram na verificação empacotada: dez protocolos, dez DOCX e análise observada conferidos. Instalação Mac local atualizada, verificação empacotada aprovada e instaladores locais substituídos pelos assets v0.2.4, ZIP conferido sem erro.
 
 Conferência nativa do instalado Mac em sessão temporária separada dos dados pessoais: primeiro clique em Informe o valor permitiu digitar 1,5, confirmado como 1.5; 100 mL e pureza 100% produziram 150 mg em Plano e Resultados. A primeira abertura também gerou o cache de fontes Matplotlib nessa sessão temporária; esse trabalho inicial pode causar espera adicional à medição de desenvolvimento. A consulta foi aberta pelo teclado e encerrada por Fechar consulta; captura confirmou botão branco, com indicação de foco preservada. Dados pessoais e arquivos históricos não foram alterados nessa sessão. A sessão temporária foi encerrada e o aplicativo normal reaberto; a API visual apresentou timeout ao tentar inspecionar a nova janela. Sem teste manual no Windows, score ou gates upstream.
+
+
+## Reorganização de Resultados — 08/11/2026
+
+| Região | Tier/superfície | Defeito confirmado / tarefa | Verificação prevista |
+|---|---|---|---|
+| Resumo e ajustes | T2/B | PreparoResults repete formulário acima do resumo | Resumo primeiro, parâmetros recolhidos, cálculos de dez PREP preservados |
+| Gráficos | T2/B | Canvas e figuras criados antes de solicitar; atualização de gráfico propaga gravação mesmo com parâmetros iguais | Carga sob demanda; medir abertura fria, preservar histórico e observações |
+| Medições | T3/C | Uma string com ponto e vírgula por grupo; não cola retângulo Excel | Uma célula por medição, colagem TSV, validação e rascunhos preservados |
+| Orientação | T3/C | Inferência habilitada sem perguntas sobre desenho | Perguntas sobre independência e pressupostos antes de comparar, gráfico com pontos e média/DP identificados |
+
+Gates: pytest e Ruff. Scanners upstream ausentes, sem score. Verificação visual e nativa pendente até alterações concluídas.

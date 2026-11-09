@@ -101,3 +101,16 @@ Verificação: 292 testes passaram na suíte completa; 12 testes de integração
 
 
 Verificação da proteção de gravação: defeito reproduzido antes da correção (fechamento permitido após falha simulada); 295 testes passaram na suíte completa. Três testes de falha/recuperação repetidos após o ajuste que torna o botão de exportação visível. Cobrem tentativa automática, bloqueios, recuperação do histórico, cópia após invalidação do plano, cancelamento/erro de exportação e falha de atualização da lista depois da gravação efetiva. Captura `falha-gravacao-recuperacao-880.png` inspecionada, ação visível sem rolagem horizontal.
+
+
+## Resultados simplificados — versão 0.2.5 (08/11/2026)
+
+O resumo das quantidades calculadas abre antes do formulário. Ajustar planejamento, simulação gráfica e medições são expansões; Matplotlib e canvas só são construídos ao solicitar gráfico/análise. A troca de componente ou expansão da simulação, sem mudar parâmetros/plano, não grava o histórico nem limpa medições.
+
+Medições: uma linha por grupo, uma coluna por valor. Colar do Excel (botão ou atalho de colar na tabela, inclusive durante edição) aceita retângulos separados por tabulações, sem cabeçalho, com grupo na primeira coluna e valores nas seguintes. Pode colar parcialmente a partir da célula atual e acrescentar medições/grupos. Limite de 10.000 células por colagem; inválidos ficam preservados no rascunho e são recusados pela análise. Entradas anteriores com listas separadas por ponto e vírgula continuam aceitas.
+
+O botão Ver resumo e gráfico executa a estatística em tarefa de fundo; widgets e desenho permanecem na thread principal. Se dados, contexto ou opções mudarem durante o cálculo, seu resultado é descartado, sem sobrescrever as edições. Falhas são apresentadas na interface; rascunhos continuam persistidos.
+
+Comparar exige confirmação de unidades independentes e de pressupostos conferidos; dados pareados ou desconhecidos direcionam ao resumo, sem executar indevidamente Student/ANOVA. As respostas são registradas com as observações. Não há verificação automática de normalidade/homogeneidade, nem teste pareado novo. O gráfico observado exibe pontos afastados horizontalmente para revelar coincidências, média e desvio padrão amostral identificados na legenda; o afastamento horizontal é somente visual, os valores medidos não são alterados.
+
+Verificação local: 315 testes aprovados e Ruff aprovado. Abertura fria, mesma entrada PREP-003, com janela/processamento de eventos Qt: versão anterior 0,3877 s e revisão 0,0277 s no Mac de desenvolvimento. Matplotlib ausente da primeira abertura, sem confundir essa medida com tempo de análise/gráfico solicitado. Capturas a 880 px inspecionadas sem rolagem horizontal. Verificação empacotada/nativa desta versão em andamento; evidência final em interface/AUDIT.md.

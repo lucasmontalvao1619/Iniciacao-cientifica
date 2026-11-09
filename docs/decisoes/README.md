@@ -125,3 +125,8 @@ Lucas informou acesso ao PC Windows, ao lado do Mac. A compilação/teste deixam
 ## Instalação e testes pelo GitHub — 08/11/2026
 
 Lucas priorizou concluir o aplicativo e usar GitHub para compilar/testar Windows, com downloads Mac/Windows no repositório. Windows terá instalador Inno Setup por usuário, incluindo dependências e atalhos, além do ZIP portátil; não exigir Python do usuário final. Pipeline deve conferir código e executável empacotado antes da publicação, e testar instalação/desinstalação preservando registros. A validação clínica/bancada e a revisão formal não são inferidas desses testes.
+
+
+## Resultados por etapas — 08/11/2026
+
+A pedido de Lucas: resumo calculado aparece primeiro; ajustar parâmetros e visualizar simulação são expansões opcionais. Figuras/canvas carregam somente ao solicitar visualização/análise. Medições usam colunas por valor e colagem tabular Excel; strings antigas com ponto e vírgula continuam legíveis. Comparação exige respostas explícitas sobre independência e pressupostos, sem acrescentar testes ou interpretar significância como eficácia. Plano e observações mantêm vínculo e regras de invalidação/preservação existentes.

@@ -285,6 +285,12 @@ class PlannerWindow(QMainWindow):
                 group = QGroupBox("Medições observadas e análise estatística")
                 group.setCheckable(True)
                 group.setChecked(False)
+                group.setMaximumHeight(group.fontMetrics().height() + 20)
+                group.toggled.connect(
+                    lambda on: group.setMaximumHeight(
+                        16777215 if on else group.fontMetrics().height() + 20
+                    )
+                )
                 QVBoxLayout(group).addWidget(self.analysis)
                 self.analysis.hide()
                 group.toggled.connect(self.analysis.setVisible)
@@ -1197,6 +1203,8 @@ class PlannerWindow(QMainWindow):
         self.export_status.clear()
 
     def accept_percent_result(self, params, plan):
+        if params == self.parameters and plan == self.plan:
+            return
         if not self.flush_observations():
             self.invalidate_plan()
             self.show_pending_data()
