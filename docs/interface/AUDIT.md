@@ -349,3 +349,5 @@ Capturas Qt a 880 × 720, PREP-003 com 1,5 mg/mL e 100 mL: medições abertas po
 
 
 Conferência nativa 0.2.8: aplicativo instalado em sessão temporária, PREP-003, 1,5 mg/mL e 100 mL; tela Medições e análise aberta com entrada visível, azul discreto e planejamento associado. Fonte de sistema e widgets Qt existentes. Suíte completa de 317 testes e Ruff aprovados em desenvolvimento; executável Mac passou verificação empacotada de dez protocolos, POPs e média 4. Aplicativo real reaberto após backup consistente; conteúdo dos três registros comparado e preservado. CI de Mac/Windows em andamento; sem teste manual no Windows ou score upstream.
+
+CI 42562090461 aprovado para Mac e Windows, incluindo teste de instalação e preservação de registro. Release 0.2.8 publicada; instaladores locais atualizados e ZIP Mac verificado. Teste manual do Windows não realizado.
