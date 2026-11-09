@@ -15,8 +15,7 @@ Código: `backend/planejador/core/estatistica.py`, `core/tabelas.py` e
 | `erro_padrao` | Erro padrão da média |
 | `resumo` | `ResumoDescritivo` com n, média, desvio, variância, erro padrão, mínimo e máximo |
 
-O padrão **amostral** (denominador n−1) é o correto para dados experimentais,
-onde as medições são uma amostra e não a população inteira.
+O aplicativo usa o padrão **amostral** (denominador n−1). O pesquisador deve definir a unidade experimental e distinguir repetições técnicas de unidades independentes; contar medições não resolve essa decisão.
 
 ## Testes de hipótese
 
@@ -38,8 +37,7 @@ ANOVA de uma via, para comparar **três ou mais grupos**. Devolve
 Aceita 2 grupos tecnicamente, mas nesse caso a mensagem de erro sugere o teste t.
 Exige ao menos 2 valores por grupo.
 
-> A ANOVA indica que **existe** diferença entre os grupos, não **quais** grupos
-> diferem. Teste post-hoc (Tukey) não está implementado.
+> Quando há evidência estatística no nível escolhido, a ANOVA indica diferença global entre médias, sem identificar quais pares diferem. Teste post-hoc (Tukey) não está implementado.
 
 ## Escolha automática do teste
 
@@ -142,3 +140,12 @@ Continuação da conclusão: exportação Word agora inclui parâmetros e result
 
 
 Conferência integrada da continuidade: geração de coleta → preenchimento XLSX → importação com manifesto → média 4 → gravação no histórico → encerramento → novo processo lógico/janela → retomada com mesmo registro, grupos, unidade, coleta e SHA importado preservados. Registros recentes podem continuar a sessão; arquivados mantêm consulta/exportação, conforme decisão de Lucas. Regras alteradas impedem retomada silenciosa e mantêm consulta original. Corrigida a serialização do manifesto para células Excel de até 30.000 caracteres, testada coleta com mil unidades. CSV de medições e CSV de resumo têm escolhas distintas; metadados extensos de exportação Excel também são divididos. 64 casos de coleta/interface passaram e dois de exportação passaram; Ruff/diff-check aprovados. Pendentes mapeamento de colunas ambíguas/identificadores em planilhas externas, conferência visual de relatórios/diálogos e pacote final.
+
+
+## Fluxo desktop de 09/11/2026
+
+A comparação é opcional e permanece desligada por padrão. O pesquisador declara desenho independente e pressupostos; o aplicativo não executa testes automáticos para escolher métodos. Sem evidência suficiente, o relatório não afirma equivalência. Repetições técnicas registradas na coleta bloqueiam t/ANOVA; dados pareados e desenhos mais complexos não são suportados nesta versão.
+
+O modelo Excel nasce vazio e vinculado ao planejamento. A prévia reconhece formatos comuns ou permite selecionar cabeçalho/colunas; fórmulas exigem conversão para valores. Gráficos mostram observações e média ± DP amostral, em páginas de até oito grupos; o resumo e as exportações preservam todos os dados. PNG salva a página atual; Word contém todas as páginas gráficas. Excel e CSV preservam precisão numérica, enquanto Word usa apresentação arredondada.
+
+Referências de implementação consultadas em 09/11/2026 (documentação técnica de software, não corpus da revisão de protocolos): [SciPy ttest_ind](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html) e [SciPy f_oneway](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.f_oneway.html). Ambas sustentam a necessidade de independência; as variantes clássicas usadas aqui assumem variâncias populacionais iguais.

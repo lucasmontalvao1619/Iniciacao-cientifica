@@ -17,3 +17,11 @@ Lucas autorizou concluir o produto atual, deixando apenas a ampliação do catá
 | Distribuição | Mac instalado e verificado; instalador Windows e preservação de registros testados; downloads atualizados | Recompilar ao concluir |
 
 Conclusão exige execução integrada, inspeção de telas e evidências por item. Não declarar que testes computacionais substituem avaliação de usabilidade, validação em bancada ou aprovação científica. Não adicionar novos protocolos durante esta entrega. Não ampliar para técnicas estatísticas sem limite: o escopo estatístico obrigatório é o do projeto (descritiva, t e ANOVA); desenhos incompatíveis devem ser identificados e encaminhados com clareza.
+
+## Conferência de 09/11/2026 — candidata 0.2.9
+
+Implementados e verificados em testes: mapeamento de cabeçalho/colunas Excel, prevenção de identificadores numéricos como grupos, manifesto de coleta vinculado ao registro/plano, retomada recente, mapa consultável de microplacas, bloqueio de comparação para repetições técnicas, gráficos paginados com todos os grupos no relatório, exportações Excel/CSV/Word e gravação atômica para preservar arquivo anterior em falha. Importação e análise usam trabalhadores em segundo plano; rascunhos e fontes permanecem vinculados ao planejamento.
+
+349 testes passaram localmente, sem falhas/pulos; Ruff aprovado. Relatório com gráfico renderizado e quatro páginas inspecionadas; diálogos de importação e microplaca inspecionados em Qt offscreen. Fonte de evidências e limites em `docs/interface/AUDIT.md`.
+
+**Ainda não declarar conclusão:** falta a conferência da versão final na janela nativa (Mac bloqueado), substituir com segurança o aplicativo instalado, concluir pipeline Windows/Mac e atualizar os downloads locais/publicados. O aplicativo instalado permanece 0.2.8 até a troca segura. Nenhum protocolo novo foi adicionado. Testes computacionais não demonstram usabilidade, redução de tempo/erros ou validação em bancada.

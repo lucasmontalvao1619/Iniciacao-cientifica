@@ -5,6 +5,7 @@ import io
 import json
 import math
 import textwrap
+from datetime import datetime
 from pathlib import Path
 
 from PyQt6.QtCore import QObject, QRunnable, Qt, QThreadPool, pyqtSignal
@@ -188,6 +189,10 @@ class AnalysisWidget(QWidget):
         model = QPushButton("Organizar coleta e gerar modelo Excel")
         model.clicked.connect(self.export_collection_template)
         entry.addWidget(model)
+        self.view_collection = QPushButton("Ver organização da coleta")
+        self.view_collection.clicked.connect(self.show_collection)
+        self.view_collection.setEnabled(False)
+        entry.addWidget(self.view_collection)
         entry.addWidget(explanation)
         self.data = MeasurementsTable()
         self.data.paste_requested.connect(self.paste_measurements)
@@ -306,6 +311,12 @@ class AnalysisWidget(QWidget):
         layout.addWidget(self.table)
         self.figure = None
         self.canvas = None
+        self.graph_page = QComboBox()
+        self.graph_page.setAccessibleName("Página do gráfico por grupos")
+        self.graph_page.currentIndexChanged.connect(self.draw_graph)
+        self.graph_page.hide()
+        layout.addWidget(self.graph_page)
+        self.graph_groups = {}
         self.graph_layout = QVBoxLayout()
         layout.addLayout(self.graph_layout)
         self.save = QPushButton("Salvar gráfico em PNG")
@@ -346,6 +357,19 @@ class AnalysisWidget(QWidget):
         try:
             from planejador.services.exportacao_resultados import exportar_resultados
 
+            graph = None
+            if Path(path).suffix.lower() == ".docx":
+                graph = []
+                selected_page = self.graph_page.currentIndex()
+                try:
+                    for page in range(self.graph_page.count()):
+                        self.graph_page.setCurrentIndex(page)
+                        image = io.BytesIO()
+                        self.figure.savefig(image, format="png", dpi=140)
+                        image.seek(0)
+                        graph.append(image)
+                finally:
+                    self.graph_page.setCurrentIndex(selected_page)
             exportar_resultados(
                 path,
                 {
@@ -354,14 +378,27 @@ class AnalysisWidget(QWidget):
                     "parametros_planejados": self.parameter_snapshot,
                 },
                 resumo_csv=selected_format.startswith("Resumo CSV"),
+                grafico=graph,
             )
             self.status.setText(f"Resultados exportados: {Path(path).name}")
         except (OSError, ValueError) as exc:
             self.status.setText(f"Não foi possível exportar: {exc}")
 
+    def show_collection(self):
+        if self.collection:
+            from frontend.collection_preview import collection_dialog
+
+            collection_dialog(self.collection, self).exec()
+
     def export_collection_template(self):
         from planejador.services.coleta import exportar_modelo, organizar_coleta
 
+        if not self.unit.text().strip():
+            self.status.setText(
+                "Informe a grandeza/unidade a medir antes de organizar a coleta."
+            )
+            self.unit.setFocus()
+            return
         dialog = QDialog(self)
         dialog.setWindowTitle("Organização da coleta")
         layout = QVBoxLayout(dialog)
@@ -409,6 +446,19 @@ class AnalysisWidget(QWidget):
         geometry.setEnabled(False)
         plate.toggled.connect(geometry.setEnabled)
         layout.addWidget(geometry)
+        if self.collection:
+            names.setText("; ".join(g["nome"] for g in self.collection["grupos"]))
+            units = self.collection["unidades"]
+            repeats.setValue(max(u["repeticao"] for u in units))
+            plate.setChecked(self.collection.get("microplaca", False))
+            index = geometry.findData(tuple(self.collection.get("geometria", (8, 12))))
+            geometry.setCurrentIndex(max(0, index))
+            repetition_type.setCurrentIndex(
+                max(0, repetition_type.findData(self.collection.get("tipo_repeticao")))
+            )
+            for group in self.collection["grupos"]:
+                if group.get("papel") == "controle":
+                    control.setCurrentIndex(control.findData(group["nome"]))
         note = QLabel(
             "Cada linha terá um identificador próprio. Repetições técnicas não são automaticamente tratadas como amostras independentes."
         )
@@ -439,6 +489,7 @@ class AnalysisWidget(QWidget):
                 "unidades": units,
                 "unidade": self.unit.text().strip(),
                 "microplaca": plate.isChecked(),
+                "geometria": list(geometry.currentData()),
                 "tipo_repeticao": repetition_type.currentData(),
                 "grupos": [
                     {
@@ -454,6 +505,7 @@ class AnalysisWidget(QWidget):
                 path, units, {**self.context, "coleta": collection}, self.unit.text()
             )
             self.collection = collection
+            self.view_collection.setEnabled(True)
             self.invalidate()
             self.status.setText(
                 f"Modelo salvo: {len(units)} unidades de coleta, com medições ainda vazias. Preencha os valores e importe o arquivo."
@@ -499,9 +551,10 @@ class AnalysisWidget(QWidget):
             if not preview.exec():
                 return
             groups = preview.groups
-            if self.collection is not None and collection is None:
+            reference_collection = collection or self.collection
+            if reference_collection is not None:
                 expected = {}
-                for unit in self.collection["unidades"]:
+                for unit in reference_collection["unidades"]:
                     expected[unit["grupo"]] = expected.get(unit["grupo"], 0) + 1
                 if {name: len(values) for name, values in groups.items()} != expected:
                     raise ValueError(
@@ -511,22 +564,30 @@ class AnalysisWidget(QWidget):
             try:
                 self.data.clearContents()
                 self.data.setRowCount(len(groups))
-                self.data.setColumnCount(max(map(len, groups.values())) + 1)
+                self.data.setColumnCount(min(40, max(map(len, groups.values()))) + 1)
                 self.data.update_headers()
                 for row, (name, values) in enumerate(groups.items()):
                     self.data.setItem(row, 0, QTableWidgetItem(name))
-                    for col, value in enumerate(values, 1):
+                    cells = (
+                        values if len(values) <= 40 else [";".join(map(str, values))]
+                    )
+                    for col, value in enumerate(cells, 1):
                         self.data.setItem(row, col, QTableWidgetItem(str(value)))
             finally:
                 self.data.blockSignals(False)
             if collection is not None:
                 self.collection = collection
+                self.view_collection.setEnabled(True)
                 self.unit.setText(collection["unidade"])
             self.import_source = {
                 "arquivo": Path(path).name,
+                "importado_em": datetime.now()
+                .astimezone()
+                .isoformat(timespec="seconds"),
                 "sha256": digest,
                 "aba": preview.sheet.currentText(),
                 "formato": preview.mode.currentData(),
+                "mapeamento": preview.mapping,
             }
             self.invalidate()
             self.status.setText(
@@ -549,6 +610,7 @@ class AnalysisWidget(QWidget):
 
     def clear_experiment(self):
         self.collection = None
+        self.view_collection.setEnabled(False)
         self.import_source = None
         self.context = None
         self.data.clearContents()
@@ -620,6 +682,7 @@ class AnalysisWidget(QWidget):
             )
             self.assumptions.setChecked(saved.get("pressupostos_conferidos", False))
             self.collection = saved.get("coleta_planejada")
+            self.view_collection.setEnabled(bool(self.collection))
             self.import_source = saved.get("importacao")
             self.invalidate()
         finally:
@@ -649,7 +712,10 @@ class AnalysisWidget(QWidget):
         rows = [row for row in rows if row["grupo"] or row["valores"]]
         if not rows and not self.unit.text().strip():
             return None
+        from planejador import __version__
+
         payload = {
+            "versao_aplicativo": __version__,
             "linhas_informadas": rows,
             "unidade": self.unit.text().strip(),
             "comparacao_solicitada": self.infer.isChecked(),
@@ -701,6 +767,8 @@ class AnalysisWidget(QWidget):
         self.report = None
         self.table.setRowCount(0)
         self.table.hide()
+        self.graph_page.hide()
+        self.graph_groups = {}
         self.save.hide()
         if self.figure is not None and self.figure.axes:
             self.figure.clear()
@@ -724,6 +792,14 @@ class AnalysisWidget(QWidget):
                 "Informe o que foi medido ou a unidade para identificar o gráfico."
             )
         groups = self.read_groups()
+        if self.collection:
+            expected = {}
+            for unit in self.collection["unidades"]:
+                expected[unit["grupo"]] = expected.get(unit["grupo"], 0) + 1
+            if {name: len(values) for name, values in groups.items()} != expected:
+                raise ValueError(
+                    "Grupos ou quantidades de medições diferem da coleta planejada. Confira a organização da coleta e os dados."
+                )
         if self.infer.isChecked():
             if self.collection and self.collection.get("tipo_repeticao") == "tecnicas":
                 raise ValueError(
@@ -820,36 +896,16 @@ class AnalysisWidget(QWidget):
             self.canvas = FigureCanvasQTAgg(self.figure)
             self.canvas.setMinimumHeight(360)
             self.graph_layout.addWidget(self.canvas)
-        self.figure.clear()
-        axes = self.figure.add_subplot()
-        for i, (name, values) in enumerate(groups.items()):
-            offsets = [
-                i - 0.18 + 0.12 * j / max(1, len(values) - 1)
-                for j in range(len(values))
-            ]
-            axes.scatter(
-                offsets, values, alpha=0.75, label="Medições" if i == 0 else None
+        self.graph_groups = groups
+        self.graph_page.blockSignals(True)
+        self.graph_page.clear()
+        for start in range(0, len(groups), 8):
+            self.graph_page.addItem(
+                f"Gráfico · grupos {start + 1} a {min(start + 8, len(groups))} de {len(groups)}"
             )
-            summary = self.report["resumos"][name]
-            axes.errorbar(
-                i,
-                summary["media"],
-                yerr=summary["desvio_padrao"],
-                fmt="D",
-                color="black",
-                capsize=5,
-                label="Média ± desvio padrão" if i == 0 else None,
-            )
-        axes.legend(fontsize="small")
-        axes.set_xticks(
-            range(len(groups)), [textwrap.fill(name, 20) for name in groups]
-        )
-        axes.set_ylabel(self.unit.text().strip(), wrap=True)
-        axes.set_title(textwrap.fill(self.context["titulo"], 60), wrap=True)
-        axes.set_xlabel("Grupo")
-        axes.grid(axis="y", alpha=0.2)
-        self.canvas.show()
-        self.canvas.draw_idle()
+        self.graph_page.blockSignals(False)
+        self.graph_page.setVisible(len(groups) > 8)
+        self.draw_graph()
         test = self.report.get("teste_t") or self.report.get("anova")
         if test:
             kind = "t de Student" if self.report.get("teste_t") else "ANOVA de uma via"
@@ -874,9 +930,48 @@ class AnalysisWidget(QWidget):
                 break
             parent = parent.parentWidget()
 
+    def draw_graph(self, *_):
+        if self.figure is None or self.report is None or not self.graph_groups:
+            return
+        self.figure.clear()
+        axes = self.figure.add_subplot()
+        start = max(0, self.graph_page.currentIndex()) * 8
+        groups = dict(list(self.graph_groups.items())[start : start + 8])
+        for i, (name, values) in enumerate(groups.items()):
+            offsets = [
+                i - 0.18 + 0.12 * j / max(1, len(values) - 1)
+                for j in range(len(values))
+            ]
+            axes.scatter(
+                offsets, values, alpha=0.75, label="Medições" if i == 0 else None
+            )
+            summary = self.report["resumos"][name]
+            axes.errorbar(
+                i,
+                summary["media"],
+                yerr=summary["desvio_padrao"],
+                fmt="D",
+                color="black",
+                capsize=5,
+                label="Média ± desvio padrão" if i == 0 else None,
+            )
+        axes.legend(fontsize="small")
+        axes.set_xticks(
+            range(len(groups)), [textwrap.fill(name, 20) for name in groups]
+        )
+        axes.set_ylabel(self.unit.text().strip(), wrap=True)
+        title = self.context["titulo"]
+        if len(self.graph_groups) > 8:
+            title += f" (grupos {start + 1} a {start + len(groups)} de {len(self.graph_groups)})"
+        axes.set_title(textwrap.fill(title, 60), wrap=True)
+        axes.set_xlabel("Grupo")
+        axes.grid(axis="y", alpha=0.2)
+        self.canvas.show()
+        self.canvas.draw_idle()
+
     def save_graph(self):
         path, _ = QFileDialog.getSaveFileName(
-            self, "Salvar gráfico", "grafico.png", "PNG (*.png)"
+            self, "Salvar página atual do gráfico", "grafico.png", "PNG (*.png)"
         )
         if path:
             try:

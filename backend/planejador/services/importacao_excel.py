@@ -1,5 +1,6 @@
 """Leitura de medições Excel sem executar fórmulas nem modificar o arquivo."""
 
+import io
 import math
 import unicodedata
 from pathlib import Path
@@ -25,7 +26,7 @@ def numeric(value, location):
     return result
 
 
-def read_workbook(path):
+def read_workbook(path, *, content=None):
     from openpyxl import load_workbook
 
     path = Path(path)
@@ -33,9 +34,16 @@ def read_workbook(path):
         raise ValueError(
             "Escolha um arquivo .xlsx. Salve planilhas antigas nesse formato no Excel."
         )
-    if path.stat().st_size > 20 * 1024 * 1024:
+    if (
+        len(content) if content is not None else path.stat().st_size
+    ) > 20 * 1024 * 1024:
         raise ValueError("O arquivo deve ter até 20 MB.")
-    book = load_workbook(path, read_only=True, data_only=False, keep_links=False)
+    book = load_workbook(
+        io.BytesIO(content) if content is not None else path,
+        read_only=True,
+        data_only=False,
+        keep_links=False,
+    )
     sheets = {}
     try:
         total = 0
@@ -66,13 +74,25 @@ def read_workbook(path):
     return sheets
 
 
-def recognize(rows, mode="auto"):
+def recognize(
+    rows,
+    mode="auto",
+    *,
+    header_row=None,
+    group_column=None,
+    value_column=None,
+    columns=None,
+):
     """Aceita grupos em colunas, grupos em linhas e formato longo grupo/valor."""
     start = next(
         (i for i, row in enumerate(rows) if any(v is not None for v in row)), None
     )
     if start is None:
         raise ValueError("A aba está vazia.")
+    if header_row is not None:
+        if not 0 <= header_row < len(rows):
+            raise ValueError("Linha de cabeçalho fora da aba.")
+        start = header_row
     header = rows[start]
     names = [normalized(v) for v in header]
     group_col = next(
@@ -82,6 +102,19 @@ def recognize(rows, mode="auto"):
     value_col = next(
         (i for i, h in enumerate(names) if h in {"valor", "medicao", "resultado"}), None
     )
+    group_col = group_col if group_column is None else group_column
+    value_col = value_col if value_column is None else value_column
+    if (
+        mode == "long"
+        and group_col is not None
+        and value_col is not None
+        and (
+            group_col == value_col
+            or not 0 <= group_col < len(header)
+            or not 0 <= value_col < len(header)
+        )
+    ):
+        raise ValueError("Escolha colunas distintas e válidas para grupo e medição.")
     if mode == "auto":
         if group_col is not None and value_col is not None:
             mode = "long"
@@ -105,6 +138,33 @@ def recognize(rows, mode="auto"):
             )
     groups = {}
     if mode == "columns":
+        identifiers = {
+            "amostra",
+            "id",
+            "identificador",
+            "replica",
+            "repeticao",
+            "placa",
+            "poco",
+            "unidade",
+        }
+        if columns is None and any(n in identifiers for n in names):
+            raise ValueError(
+                "Há possíveis identificadores entre as colunas. Escolha Uma coluna por grupo e selecione somente as colunas de medições."
+            )
+        if columns is not None:
+            if (
+                not columns
+                or len(set(columns)) != len(columns)
+                or any(i < 0 or i >= len(header) for i in columns)
+            ):
+                raise ValueError("Selecione colunas válidas e distintas.")
+            rows = rows[:start] + [
+                [row[i] if i < len(row) else None for i in columns]
+                for row in rows[start:]
+            ]
+            header = rows[start]
+
         labels = [str(v).strip() if v is not None else "" for v in header]
         if not all(labels) or len({v.casefold() for v in labels}) != len(labels):
             raise ValueError("Cada coluna precisa de um nome de grupo único.")
@@ -143,6 +203,8 @@ def recognize(rows, mode="auto"):
             )
         else:
             raise ValueError("Formato não reconhecido.")
+    if sum(map(len, groups.values())) > 10000:
+        raise ValueError("Importe até 10.000 medições por experimento.")
     if not groups or any(not values for values in groups.values()):
         raise ValueError("Há grupos sem medições. Confira os cabeçalhos e os dados.")
     return mode, groups

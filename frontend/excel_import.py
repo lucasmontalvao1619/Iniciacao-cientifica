@@ -1,12 +1,15 @@
 """Prévia de importação: nenhuma medição é aplicada antes da conferência."""
 
-from PyQt6.QtCore import QObject, QRunnable, pyqtSignal
+from PyQt6.QtCore import QObject, QRunnable, Qt, pyqtSignal
 from PyQt6.QtWidgets import (
     QComboBox,
     QDialog,
     QDialogButtonBox,
     QHeaderView,
     QLabel,
+    QListWidget,
+    QListWidgetItem,
+    QSpinBox,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -23,11 +26,11 @@ class ExcelPreview(QDialog):
         self.sheets = sheets
         self.groups = None
         layout = QVBoxLayout(self)
-        layout.addWidget(
-            QLabel(
-                "Confira a aba, a organização e os grupos reconhecidos antes de substituir a tabela atual."
-            )
+        intro = QLabel(
+            "Confira a aba, a organização e os grupos reconhecidos antes de substituir a tabela atual."
         )
+        intro.setWordWrap(True)
+        layout.addWidget(intro)
         self.sheet = QComboBox()
         self.sheet.addItems(sheets)
         layout.addWidget(self.sheet)
@@ -40,6 +43,18 @@ class ExcelPreview(QDialog):
         ]:
             self.mode.addItem(title, key)
         layout.addWidget(self.mode)
+        layout.addWidget(QLabel("Linha do cabeçalho"))
+        self.header_row = QSpinBox()
+        self.header_row.setRange(1, max(map(len, sheets.values())))
+        layout.addWidget(self.header_row)
+        self.group_column = QComboBox()
+        self.value_column = QComboBox()
+        self.columns = QListWidget()
+        self.columns.setMaximumHeight(110)
+        layout.addWidget(self.group_column)
+        layout.addWidget(self.value_column)
+        layout.addWidget(self.columns)
+        self.mapping = {}
         self.status = QLabel()
         self.status.setWordWrap(True)
         layout.addWidget(self.status)
@@ -55,11 +70,52 @@ class ExcelPreview(QDialog):
         self.buttons.button(QDialogButtonBox.StandardButton.Ok).setText(
             "Importar grupos e medições"
         )
+        self.buttons.button(QDialogButtonBox.StandardButton.Cancel).setText("Cancelar")
         self.buttons.accepted.connect(self.accept)
         self.buttons.rejected.connect(self.reject)
         layout.addWidget(self.buttons)
-        self.sheet.currentIndexChanged.connect(self.refresh)
+        self.sheet.currentIndexChanged.connect(self.rebuild_mapping)
+        self.header_row.valueChanged.connect(self.rebuild_mapping)
         self.mode.currentIndexChanged.connect(self.refresh)
+        self.group_column.currentIndexChanged.connect(self.refresh)
+        self.value_column.currentIndexChanged.connect(self.refresh)
+        self.columns.itemChanged.connect(self.refresh)
+        self.rebuild_mapping()
+
+    def rebuild_mapping(self):
+        rows = self.sheets[self.sheet.currentText()]
+        index = self.header_row.value() - 1
+        header = rows[index] if index < len(rows) else []
+        for widget in (self.group_column, self.value_column, self.columns):
+            widget.blockSignals(True)
+            widget.clear()
+        self.group_column.addItem("Coluna do grupo: reconhecer", None)
+        self.value_column.addItem("Coluna da medição: reconhecer", None)
+        from planejador.services.importacao_excel import normalized
+
+        for i, name in enumerate(header):
+            self.group_column.addItem(f"Grupo: {name}", i)
+            self.value_column.addItem(f"Medição: {name}", i)
+            item = QListWidgetItem(f"{i + 1}: {name}")
+            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
+            item.setCheckState(
+                Qt.CheckState.Unchecked
+                if normalized(name)
+                in {
+                    "amostra",
+                    "id",
+                    "identificador",
+                    "placa",
+                    "poco",
+                    "replica",
+                    "repeticao",
+                    "unidade",
+                }
+                else Qt.CheckState.Checked
+            )
+            self.columns.addItem(item)
+        for widget in (self.group_column, self.value_column, self.columns):
+            widget.blockSignals(False)
         self.refresh()
 
     def refresh(self):
@@ -67,9 +123,25 @@ class ExcelPreview(QDialog):
         self.table.clear()
         self.table.setRowCount(0)
         self.buttons.button(QDialogButtonBox.StandardButton.Ok).setEnabled(False)
+        selected = self.mode.currentData()
+        self.group_column.setVisible(selected == "long")
+        self.value_column.setVisible(selected == "long")
+        self.columns.setVisible(selected == "columns")
+        self.mapping = {
+            "header_row": self.header_row.value() - 1,
+            "group_column": self.group_column.currentData(),
+            "value_column": self.value_column.currentData(),
+            "columns": [
+                i
+                for i in range(self.columns.count())
+                if self.columns.item(i).checkState() == Qt.CheckState.Checked
+            ]
+            if selected == "columns"
+            else None,
+        }
         try:
             mode, groups = recognize(
-                self.sheets[self.sheet.currentText()], self.mode.currentData()
+                self.sheets[self.sheet.currentText()], selected, **self.mapping
             )
         except ValueError as exc:
             self.status.setText(str(exc))
@@ -106,8 +178,10 @@ class ImportJob(QRunnable):
         from planejador.services.importacao_excel import read_workbook
 
         try:
-            result = read_workbook(self.path)
-            digest = hashlib.sha256(Path(self.path).read_bytes()).hexdigest()
+            with Path(self.path).open("rb") as source:
+                content = source.read(20 * 1024 * 1024 + 1)
+            result = read_workbook(self.path, content=content)
+            digest = hashlib.sha256(content).hexdigest()
         except Exception as exc:
             result, digest = str(exc), None
         self.signals.finished.emit((self.path, self.revision, result, digest))

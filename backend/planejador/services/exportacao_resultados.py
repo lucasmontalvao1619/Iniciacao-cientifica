@@ -2,10 +2,48 @@
 
 import csv
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 
 
-def exportar_resultados(destino, payload, *, resumo_csv=False):
+def _texto(value):
+    if value is None:
+        return "Não informado"
+    if isinstance(value, bool):
+        return "Sim" if value else "Não"
+    if isinstance(value, float):
+        return format(value, ".8g").replace(".", ",")
+    if isinstance(value, dict):
+        return "; ".join(
+            f"{k.replace('_', ' ')}: {_texto(v)}" for k, v in value.items()
+        )
+    if isinstance(value, list):
+        return "; ".join(map(_texto, value))
+    return str(value)
+
+
+def _tabela(document, rows):
+    from docx.oxml import OxmlElement
+
+    table = document.add_table(rows=0, cols=len(rows[0]))
+    table.style = "Light Shading Accent 1"
+    for values in rows:
+        row = table.add_row()
+        row._tr.get_or_add_trPr().append(OxmlElement("w:cantSplit"))
+        for cell, value in zip(row.cells, values, strict=True):
+            cell.text = _texto(value)
+    table.rows[0]._tr.get_or_add_trPr().append(OxmlElement("w:tblHeader"))
+    return table
+
+
+def exportar_resultados(destino, payload, *, resumo_csv=False, grafico=None):
+    from planejador.services.arquivos import gravacao_atomica
+
+    with gravacao_atomica(destino) as temporary:
+        _exportar_resultados(temporary, payload, resumo_csv=resumo_csv, grafico=grafico)
+
+
+def _exportar_resultados(destino, payload, *, resumo_csv=False, grafico=None):
     path = Path(destino)
     groups = payload["medicoes"]
     summaries = payload["analise"]["resumos"]
@@ -68,8 +106,19 @@ def exportar_resultados(destino, payload, *, resumo_csv=False):
         book.close()
     elif path.suffix.lower() == ".docx":
         from docx import Document
+        from docx.shared import Inches, Pt, RGBColor
 
         document = Document()
+        for name in ("Normal", "Title", "Heading 1", "Heading 2"):
+            style = document.styles[name]
+            style.font.name = "Calibri"
+            style.font.color.rgb = RGBColor(0, 0, 0)
+            borders = style.element.xpath("./w:pPr/w:pBdr")
+            for border in borders:
+                border.getparent().remove(border)
+        document.styles["Normal"].font.size = Pt(10)
+        document.styles["Normal"].paragraph_format.space_after = Pt(6)
+        document.styles["Title"].font.size = Pt(24)
         document.add_heading("Relatório do experimento", 0)
         context = payload["analise"].get("experimento", {})
         document.add_paragraph(context.get("titulo", "Experimento"))
@@ -77,31 +126,66 @@ def exportar_resultados(destino, payload, *, resumo_csv=False):
             "Protocolo: " + context.get("protocolo", "Não informado")
         )
         document.add_paragraph("Grandeza/unidade: " + payload["unidade"])
-        document.add_heading("Resumo estatístico", 1)
-        table = document.add_table(rows=0, cols=5)
-        table.style = "Light Shading Accent 1"
-        for row in stats:
-            for cell, value in zip(table.add_row().cells, row, strict=True):
-                cell.text = str(value)
-        test = payload["analise"].get("teste_t") or payload["analise"].get("anova")
+        from planejador import __version__
+
         document.add_paragraph(
-            "Comparação: " + json.dumps(test, ensure_ascii=False)
-            if test
-            else "Comparação entre grupos não solicitada."
+            f"Aplicativo {__version__} · Exportado em {datetime.now(UTC).isoformat(timespec='seconds')}"
         )
+        document.add_heading("Resumo estatístico", 1)
+        _tabela(document, stats)
+        document.add_paragraph(
+            "Desvio padrão e variância amostrais; n é a quantidade de observações informadas em cada grupo."
+        )
+        test = payload["analise"].get("teste_t") or payload["analise"].get("anova")
+        if test:
+            is_t = bool(payload["analise"].get("teste_t"))
+            name = (
+                ("Teste t de Welch" if test.get("welch") else "Teste t de Student")
+                if is_t
+                else "ANOVA de uma via"
+            )
+            statistic = test["estatistica_t" if is_t else "estatistica_f"]
+            document.add_paragraph(
+                f"{name}: {'t' if is_t else 'F'} = {_texto(statistic)}; p = {_texto(test['valor_p'])}; α = {_texto(test['alpha'])}."
+            )
+            if is_t:
+                document.add_paragraph(
+                    f"Graus de liberdade: {_texto(test['graus_liberdade'])}."
+                )
+            else:
+                document.add_paragraph(
+                    "A ANOVA avalia diferença global entre médias; não identifica quais pares diferem."
+                )
+            document.add_paragraph(
+                "Há evidência estatística de diferença entre as médias no nível informado."
+                if test["significativo"]
+                else "Não houve evidência estatística suficiente de diferença entre as médias no nível informado. Isso não demonstra equivalência."
+            )
+            document.add_paragraph(
+                "A interpretação depende do desenho experimental e dos pressupostos declarados pelo pesquisador. Significância estatística não mede relevância prática."
+            )
+        else:
+            document.add_paragraph("Comparação entre grupos não solicitada.")
+        if grafico is not None:
+            document.add_heading("Gráfico das observações", 1)
+            for image in grafico if isinstance(grafico, list) else [grafico]:
+                document.add_picture(image, width=Inches(6))
+            document.add_paragraph(
+                "Pontos representam observações; o marcador central e as barras representam média e desvio padrão amostral."
+            )
         document.add_heading("Dados observados", 1)
-        table = document.add_table(rows=0, cols=4)
-        table.style = "Light Shading Accent 1"
-        for row in rows:
-            for cell, value in zip(table.add_row().cells, row, strict=True):
-                cell.text = str(value)
+        _tabela(document, rows)
         plan = payload.get("planejamento") or {}
         document.add_heading("Planejamento utilizado", 1)
         for key, value in payload.get("parametros_planejados", {}).items():
-            document.add_paragraph(f"{key.replace('_', ' ').capitalize()}: {value}")
+            document.add_paragraph(
+                f"{key.replace('_', ' ').capitalize()}: {_texto(value)}"
+            )
         if plan.get("resultado"):
             for key, value in plan["resultado"].items():
-                document.add_paragraph(f"{key.replace('_', ' ').capitalize()}: {value}")
+                document.add_paragraph(
+                    f"{key.replace('_', ' ').capitalize()}: {_texto(value)}"
+                )
         if plan.get("procedimento"):
             document.add_heading("Procedimento planejado", 1)
             for step in plan["procedimento"]:
@@ -143,10 +227,24 @@ def exportar_resultados(destino, payload, *, resumo_csv=False):
             )
         if payload.get("coleta_planejada"):
             document.add_heading("Organização da coleta", 1)
-            for unit in payload["coleta_planejada"]["unidades"]:
-                document.add_paragraph(
-                    f"{unit['amostra']} · {unit['grupo']} · repetição {unit['repeticao']} · placa {unit.get('placa')} · poço {unit.get('poco')}"
-                )
+            collection = payload["coleta_planejada"]
+            document.add_paragraph(
+                "Tipo de repetição: " + _texto(collection.get("tipo_repeticao"))
+            )
+            _tabela(
+                document,
+                [["Amostra", "Grupo", "Repetição", "Placa", "Poço"]]
+                + [
+                    [
+                        u["amostra"],
+                        u["grupo"],
+                        u["repeticao"],
+                        u.get("placa"),
+                        u.get("poco"),
+                    ]
+                    for u in collection["unidades"]
+                ],
+            )
         document.save(path)
     else:
         raise ValueError("Escolha Excel (.xlsx), CSV (.csv) ou relatório Word (.docx).")

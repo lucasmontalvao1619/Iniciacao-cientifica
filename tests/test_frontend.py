@@ -2220,3 +2220,27 @@ def test_excel_collection_import_history_and_resume(app, tmp_path, monkeypatch):
     assert restored.observation_payload()["importacao"]["sha256"] == "hash-teste"
     assert reopened.export_button.isEnabled()
     reopened.close()
+
+
+def test_many_groups_have_readable_graph_pages_without_losing_summary(app):
+    from PyQt6.QtWidgets import QTableWidgetItem
+
+    w = PlannerWindow()
+    confirm(w)
+    w.generate()
+    w.navigate(4)
+    panel = w.analysis
+    panel.unit.setText("mg/mL")
+    panel.data.setRowCount(12)
+    for i in range(12):
+        panel.data.setItem(i, 0, QTableWidgetItem(f"Grupo {i + 1}"))
+        panel.data.setItem(i, 1, QTableWidgetItem("2;4;6"))
+    panel.analyze()
+    assert panel.table.rowCount() == 12
+    assert panel.graph_page.count() == 2
+    assert len(panel.figure.axes[0].get_xticklabels()) == 8
+    panel.graph_page.setCurrentIndex(1)
+    assert len(panel.figure.axes[0].get_xticklabels()) == 4
+    assert panel.figure.axes[0].get_xticklabels()[0].get_text() == "Grupo 9"
+    assert len(panel.report["resumos"]) == 12
+    w.close()

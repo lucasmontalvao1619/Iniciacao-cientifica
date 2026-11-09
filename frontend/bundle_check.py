@@ -52,6 +52,35 @@ def verify(report_path):
             assert panel.worker is None, "Análise não terminou em 60 segundos"
             assert panel.figure.axes
             assert panel.report["resumos"]["Medições de teste"]["media"] == 4
+            from openpyxl import load_workbook
+
+            from planejador.services.coleta import (
+                conferir_coleta,
+                exportar_modelo,
+                organizar_coleta,
+            )
+            from planejador.services.exportacao_resultados import exportar_resultados
+            from planejador.services.importacao_excel import read_workbook, recognize
+
+            units = organizar_coleta(["Medições de teste"], 3, microplaca=True)
+            collection = {"unidades": units, "unidade": panel.unit.text()}
+            model = Path(directory) / "coleta.xlsx"
+            exportar_modelo(
+                model, units, {**panel.context, "coleta": collection}, panel.unit.text()
+            )
+            book = load_workbook(model)
+            for row, value in enumerate((2, 4, 6), 2):
+                book["Medições"].cell(row, 7, value)
+            book.save(model)
+            book.close()
+            sheets = read_workbook(model)
+            assert conferir_coleta(sheets, panel.context) == collection
+            assert recognize(sheets["Medições"])[1] == {"Medições de teste": [2, 4, 6]}
+            payload = panel.observation_payload()
+            for extension in ("xlsx", "csv", "docx"):
+                exportar_resultados(
+                    Path(directory) / f"resultados.{extension}", payload
+                )
             assert window.flush_observations()
             assert window.history.list()
             for protocol in window.catalog.values():
@@ -68,6 +97,8 @@ def verify(report_path):
                 massa_percentual_g=9,
                 media_observada=4,
                 pops_exportados=10,
+                coleta_excel_conferida=True,
+                exportacoes_resultados=3,
             )
     except Exception:
         report["ok"] = False

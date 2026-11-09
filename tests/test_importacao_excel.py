@@ -58,3 +58,29 @@ def test_workbook_formula_and_multiple_sheets(tmp_path):
     book.save(path)
     with pytest.raises(ValueError, match="fórmula"):
         read_workbook(path)
+
+
+def test_numeric_identifiers_require_column_selection():
+    rows = [["Amostra", "Controle", "Tratamento"], [1, 2, 3], [2, 4, 5]]
+    with pytest.raises(ValueError, match="identificadores"):
+        recognize(rows)
+    assert recognize(rows, "columns", columns=[1, 2])[1] == {
+        "Controle": [2, 4],
+        "Tratamento": [3, 5],
+    }
+
+
+def test_explicit_header_and_long_mapping():
+    rows = [
+        ["Título"],
+        [],
+        ["Código", "Condição experimental", "Leitura OD"],
+        ["x", "A", 0.2],
+        ["y", "B", "0,3"],
+    ]
+    assert recognize(rows, "long", header_row=2, group_column=1, value_column=2)[1] == {
+        "A": [0.2],
+        "B": [0.3],
+    }
+    with pytest.raises(ValueError, match="distintas"):
+        recognize(rows, "long", header_row=2, group_column=2, value_column=2)

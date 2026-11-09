@@ -201,6 +201,7 @@ class PlannerWindow(QMainWindow):
             self.steps.append(item)
             side.addWidget(item)
         side.addStretch()
+        side.addWidget(button("Como usar", self.show_help))
         side.addWidget(label("IC · UNIT\nPlanejamento experimental", 11))
         layout.addWidget(sidebar)
         self.stack = QStackedWidget()
@@ -501,6 +502,27 @@ class PlannerWindow(QMainWindow):
         )
         self.dilution.setVisible(not isinstance(self.protocol.currentData(), str))
         self.show_page(2)
+
+    def show_help(self):
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Como usar o Planejador")
+        dialog.resize(700, 560)
+        layout = QVBoxLayout(dialog)
+        text = QTextBrowser()
+        text.setHtml("""
+        <h2>Do planejamento aos resultados</h2>
+        <p><b>1. Escolha um protocolo.</b> Consulte sua finalidade, fonte e POP. O POP é adaptado aos parâmetros do seu planejamento.</p>
+        <p><b>2. Informe os parâmetros.</b> Defina valores e unidades conforme seu método. Confira o plano antes de executar o experimento.</p>
+        <p><b>3. Organize a coleta.</b> Em Medições e análise, informe a grandeza/unidade e gere o modelo Excel. Defina grupos, controle e repetições. Para microplacas, consulte o mapa de poços.</p>
+        <p><b>4. Registre observações reais.</b> Preencha apenas a coluna Valor do modelo e importe o arquivo. Também é possível importar outra planilha .xlsx e conferir o reconhecimento na prévia.</p>
+        <p><b>5. Calcule o resumo e o gráfico.</b> Média indica o valor central; desvio padrão e variância indicam dispersão. n conta as observações informadas, não garante que sejam unidades independentes.</p>
+        <p><b>6. Compare grupos quando o desenho permitir.</b> A opção avançada aplica teste t para dois grupos ou ANOVA para três ou mais. Informe independência e confira os pressupostos. Leituras técnicas repetidas não substituem unidades experimentais independentes. Dados pareados ou desenhos mais complexos exigem outro método.</p>
+        <p><b>7. Exporte e continue depois.</b> Exporte dados, resumo, relatório Word e gráfico. Em Início, consulte um registro recente e escolha Continuar planejamento. Registros arquivados permitem consulta e exportação.</p>
+        <p>O histórico é salvo localmente. Para transportar um experimento, exporte seus dados; entrar na mesma conta não sincroniza automaticamente os registros entre computadores.</p>
+        """)
+        layout.addWidget(text)
+        layout.addWidget(button("Fechar", dialog.accept))
+        dialog.exec()
 
     def build_home(self):
         body = self.page(
@@ -1328,7 +1350,10 @@ class PlannerWindow(QMainWindow):
     def export_payload(self):
         if self.plan is None:
             raise ValueError("Gere um plano válido antes de exportar.")
+        from planejador import __version__
+
         payload = {
+            "versao_aplicativo": __version__,
             "titulo": self.title.text().strip(),
             "fontes": self.plan.get("fontes", []),
             "protocolo_id": self.plan.get("protocolo_id", self.protocol.currentData()),
@@ -1343,10 +1368,13 @@ class PlannerWindow(QMainWindow):
 
     def write_export(self, path):
         payload = self.export_payload()
-        path.write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False),
-            encoding="utf-8",
-        )
+        from planejador.services.arquivos import gravacao_atomica
+
+        with gravacao_atomica(path) as temporary:
+            temporary.write_text(
+                json.dumps(payload, ensure_ascii=False, indent=2, allow_nan=False),
+                encoding="utf-8",
+            )
 
 
 def create_app():

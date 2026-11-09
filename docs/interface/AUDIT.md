@@ -351,3 +351,20 @@ Capturas Qt a 880 × 720, PREP-003 com 1,5 mg/mL e 100 mL: medições abertas po
 Conferência nativa 0.2.8: aplicativo instalado em sessão temporária, PREP-003, 1,5 mg/mL e 100 mL; tela Medições e análise aberta com entrada visível, azul discreto e planejamento associado. Fonte de sistema e widgets Qt existentes. Suíte completa de 317 testes e Ruff aprovados em desenvolvimento; executável Mac passou verificação empacotada de dez protocolos, POPs e média 4. Aplicativo real reaberto após backup consistente; conteúdo dos três registros comparado e preservado. CI de Mac/Windows em andamento; sem teste manual no Windows ou score upstream.
 
 CI 42562090461 aprovado para Mac e Windows, incluindo teste de instalação e preservação de registro. Release 0.2.8 publicada; instaladores locais atualizados e ZIP Mac verificado. Teste manual do Windows não realizado.
+
+## Integração de coleta e resultados — 09/11/2026 — candidata 0.2.9
+
+Superfícies B/T2: prévia Excel (conferir colunas antes da substituição), organização da coleta (vincular unidades aos dados), mapa de microplacas (localizar amostras), medições/análise (interpretar e exportar resultados) e ajuda (entender a sequência). Ações preservam o histórico; registros arquivados continuam apenas para consulta/exportação.
+
+### Screen seen
+
+| Superfície | Ambiente | Dados e evidência |
+|---|---|---|
+| Prévia Excel | Qt offscreen 720×520 | Identificador numérico e dois grupos, três medições cada. Seleção de colunas e seis valores conferidos em `output/qa-integracao/importacao.png` |
+| Mapa da coleta | Qt offscreen 850×520 | Cem unidades, duas placas de 96 poços. Primeira placa inspecionada em `output/qa-integracao/microplaca.png`; troca para segunda e posição U00097 verificadas por teste |
+| Relatório Word | Renderer empacotado, quatro páginas | PREP-003, dois grupos, teste t, gráfico, observações, parâmetros, procedimento e fontes. Todas as páginas inspecionadas em `output/qa-relatorio/render-final-graph/` |
+| Janela nativa integrada | Pendente | Mac bloqueado; CUA não conseguiu acessar a janela. Não equivale às capturas offscreen |
+
+Correções confirmadas: comparação em JSON substituída por texto interpretável; números do relatório formatados sem alterar dados numéricos Excel/CSV; cabeçalhos repetidos nas tabelas; gráfico incluído no relatório; páginas de oito grupos no gráfico para evitar rótulos sobrepostos; importação não aloca uma matriz gigante de células vazias; ajuda acessível na navegação. Cada página gráfica permanece identificada e o Word inclui todas; PNG exporta a página selecionada.
+
+Ruff aprovado e 349 testes aprovados no macOS, sem falhas ou testes pulados. Smoke do bundle Mac passou com dez POPs, cálculo, média, modelo Excel/importação conferida e três exportações. A recompilação após os últimos ajustes de proveniência e a distribuição Windows ainda precisam de evidências finais. Gates upstream indisponíveis continuam não executados; sem nota inventada. Não representa avaliação com pesquisadores ou validação em bancada.

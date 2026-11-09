@@ -40,6 +40,13 @@ def organizar_coleta(grupos, repeticoes, *, linhas=8, colunas=12, microplaca=Fal
 
 
 def exportar_modelo(destino, unidades, contexto, unidade):
+    from planejador.services.arquivos import gravacao_atomica
+
+    with gravacao_atomica(destino) as temporary:
+        _exportar_modelo(temporary, unidades, contexto, unidade)
+
+
+def _exportar_modelo(destino, unidades, contexto, unidade):
     from openpyxl import Workbook
 
     if not unidade.strip():
