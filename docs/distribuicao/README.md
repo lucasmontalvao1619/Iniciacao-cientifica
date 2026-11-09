@@ -1,5 +1,7 @@
 # Distribuição do aplicativo
 
+**Versão atual: 0.2.9**, publicada em 09/11/2026 e instalada neste Mac, preservando os quatro registros pessoais. [Release](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/releases/tag/v0.2.9) · [CI da tag](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/actions/runs/42627055044). Instaladores locais sincronizados por SHA-256; conferência detalhada em [conclusão](../modulos/CONCLUSAO_APLICATIVO.md).
+
 ## Instalação atual pelo GitHub
 
 - Windows: baixar `Planejador-Windows-Setup.exe` na [última versão](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/releases/latest), abrir e concluir a instalação. Python não é necessário; instalação por usuário, sem exigir administrador, com atalhos. Também há ZIP portátil.

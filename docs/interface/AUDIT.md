@@ -370,3 +370,15 @@ Correções confirmadas: comparação em JSON substituída por texto interpretá
 Ruff aprovado e 349 testes aprovados no macOS, sem falhas ou testes pulados. Smoke do bundle Mac passou com dez POPs, cálculo, média, modelo Excel/importação conferida e três exportações. A recompilação após os últimos ajustes de proveniência e a distribuição Windows ainda precisam de evidências finais. Gates upstream indisponíveis continuam não executados; sem nota inventada. Não representa avaliação com pesquisadores ou validação em bancada.
 
 Atualização final de testes: 351 casos aprovados localmente, sem pulos/falhas/erros. O CI do código de execução passou em Mac (349 casos) e Windows (349 casos, um pulo por restrição do SO a mover diretório SQLite aberto), mais smoke do bundle e instalação/desinstalação. Os dois testes adicionais só ampliam cobertura; não alteram execução. Conferência nativa do novo fluxo continua pendente pelo bloqueio do Mac.
+
+
+## Conferência nativa final de 09/11/2026
+
+CUA abriu e inspecionou a janela real: resultados/gráfico com doze grupos e seletor de páginas, guia Como usar, prévia Excel com seis medições, organização da coleta e mapa de 96 poços. No pacote instalado, importou planilha externa e modelo gerado pelo próprio app; conferiu médias 4/5 e DP 2, Excel exportado e Word com figura. Navegação do histórico por Tab/Espaço e digitação direta de três repetições verificadas. Não se afirma um percurso manual exaustivo de leitor de tela ou Windows.
+
+Defeitos confirmados: consulta mostrava JSON bruto e geometria retornava ao primeiro item ao reabrir. Consulta agora apresenta dados/resumo legíveis; geometria explicitamente comparada, com regressão nos seis tamanhos. O executável do commit bfb1abf mostrou 96 poços ao retomar a coleta. Grupos e contagens são reaproveitados no modelo; total de 10.000 unidades preservado como limite. 361 testes locais e lint aprovados. Gates upstream ausentes continuam não executados; nenhuma nota quantitativa inventada.
+
+Sessão de teste encerrada; aplicativo de produção reaberto pelo atalho do Desktop, com os quatro registros pessoais e assinatura de conteúdo preservados. Instalação atual 0.2.9; respaldo de dados e evidências em `docs/modulos/CONCLUSAO_APLICATIVO.md`.
+
+
+Encerramento: versão final bfb1abf aberta pelo atalho do Desktop, dados pessoais preservados, release pública 0.2.9 e pipeline da tag aprovados. A nota histórica de “janela nativa pendente” acima foi superada pelas conferências documentadas nesta seção. Não há declaração de nota 100 nem de validação formal de usabilidade.

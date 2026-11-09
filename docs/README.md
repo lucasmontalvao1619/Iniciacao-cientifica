@@ -26,13 +26,9 @@ Registro de origem e datas dos protocolos: [REGISTRO](../REGISTRO.md).
 
 ## Estado do projeto
 
-O **backend está implementado** (cálculos, estatística, banco, services e API
-opcional), com testes automatizados. A **interface PyQt6 tem uma primeira prévia navegável** —
-ver [frontend](arquitetura/frontend.md).
+O aplicativo PyQt6 integra dez PREP, planejamento, coleta/Excel, estatística básica, gráficos, exportações e histórico local. A API HTTP permanece opcional. Ver [critérios e evidências da entrega](modulos/CONCLUSAO_APLICATIVO.md) e [auditoria da interface](interface/AUDIT.md).
 
-Prévia e fluxo: [interface](interface/README.md).
-
-Aplicativo macOS: [distribuição](distribuicao/README.md).
+Instaladores Mac/Windows: [distribuição](distribuicao/README.md).
 
 ## Fora desta pasta
 

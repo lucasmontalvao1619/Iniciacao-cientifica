@@ -28,7 +28,9 @@ Aplicativo desktop para planejamento de experimentos laboratoriais e análise es
 
 O sistema implementa dez protocolos PREP, com parâmetros próprios, planos calculados, POPs ilustrados, medições, estatística e gráficos.
 
-## Módulos previstos
+O fluxo liga o plano à coleta: gere o modelo Excel, registre observações reais, importe com prévia e consulte o resumo e os gráficos. Também é possível importar planilhas existentes e escolher cabeçalhos/colunas. A opção **Como usar**, dentro do aplicativo, explica o percurso; [critérios e evidências da entrega](docs/modulos/CONCLUSAO_APLICATIVO.md) registram os limites e as verificações.
+
+## Módulos implementados
 
 - Planejamento experimental.
 - Protocolos laboratoriais.
@@ -57,7 +59,7 @@ Iniciacao-cientifica/
 │   ├── api/                # API HTTP opcional (FastAPI)
 │   ├── config.py           # configuração via variáveis de ambiente
 │   └── bootstrap.py        # cria tabelas e semeia dados de exemplo
-├── frontend/               # prévia PyQt6 de planejamento
+├── frontend/               # interface PyQt6 de planejamento e análise
 ├── database/               # schema.sql (referência do modelo) e seed.sql
 ├── docs/                   # documentação, organizada por tema
 ├── tests/                  # testes do backend (pytest)
@@ -80,9 +82,9 @@ documentação, começar por `docs/README.md`.
 3. Modelar banco de dados.
 4. Planejar implementação.
 5. Implementar mediante pedido explícito (backend já implementado; frontend
-   PyQt6 já tem uma primeira prévia em `frontend/`).
+   PyQt6 implementado em `frontend/`).
 
-## Abrir a prévia
+## Executar a partir do código
 
 Na raiz: `.venv/bin/python -m frontend.app`. Instalação: `pip install -e ".[ui]"`. Ver [fluxo e auditoria](docs/interface/README.md).
 
