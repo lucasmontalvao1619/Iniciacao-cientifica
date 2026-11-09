@@ -13,6 +13,8 @@ from PyQt6.QtWidgets import (
     QApplication,
     QCheckBox,
     QComboBox,
+    QDialog,
+    QDialogButtonBox,
     QFileDialog,
     QGroupBox,
     QHBoxLayout,
@@ -21,6 +23,7 @@ from PyQt6.QtWidgets import (
     QLineEdit,
     QPushButton,
     QScrollArea,
+    QSpinBox,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -153,6 +156,9 @@ class AnalysisWidget(QWidget):
         self.report = None
         self.revision = 0
         self.worker = None
+        self.import_worker = None
+        self.import_source = None
+        self.collection = None
         self.context = None
         layout = QVBoxLayout(self)
         layout.setContentsMargins(32, 24, 32, 24)
@@ -177,6 +183,9 @@ class AnalysisWidget(QWidget):
         entry = QVBoxLayout(self.entry)
         entry.setSpacing(12)
         layout.addWidget(self.entry)
+        model = QPushButton("Organizar coleta e gerar modelo Excel")
+        model.clicked.connect(self.export_collection_template)
+        entry.addWidget(model)
         entry.addWidget(explanation)
         self.data = MeasurementsTable()
         self.data.paste_requested.connect(self.paste_measurements)
@@ -200,6 +209,10 @@ class AnalysisWidget(QWidget):
         paste_row = QHBoxLayout()
         paste = QPushButton("Colar do Excel")
         paste.clicked.connect(self.paste_measurements)
+        import_button = QPushButton("Importar Excel (.xlsx)")
+        import_button.setProperty("primary", True)
+        import_button.clicked.connect(self.import_excel)
+        paste_row.addWidget(import_button)
         paste_row.addWidget(paste)
         add_value = QPushButton("Adicionar medição")
         add_value.clicked.connect(self.data.add_measurement)
@@ -303,12 +316,173 @@ class AnalysisWidget(QWidget):
         self.save_experiment = QPushButton("Salvar planejamento e resultados em JSON")
         self.save_experiment.setEnabled(False)
         layout.addWidget(self.save_experiment)
+        self.export_results = QPushButton(
+            "Exportar dados e relatório (Excel, CSV ou Word)"
+        )
+        self.export_results.setEnabled(False)
+        self.export_results.clicked.connect(self.export_observations)
+        layout.addWidget(self.export_results)
         self.back = QPushButton("Voltar ao plano deste experimento")
         layout.addWidget(self.back)
         self.infer.toggled.connect(self.invalidate)
         self.alpha.valueChanged.connect(self.invalidate)
         self.design.currentIndexChanged.connect(self.invalidate)
         self.assumptions.toggled.connect(self.invalidate)
+
+    def export_observations(self):
+        payload = self.observation_payload()
+        if payload is None or self.report is None:
+            return
+        path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Exportar resultados",
+            "resultados.xlsx",
+            "Excel (*.xlsx);;Medições CSV (*.csv);;Relatório Word (*.docx)",
+        )
+        if not path:
+            return
+        try:
+            from planejador.services.exportacao_resultados import exportar_resultados
+
+            exportar_resultados(path, payload)
+            self.status.setText(f"Resultados exportados: {Path(path).name}")
+        except (OSError, ValueError) as exc:
+            self.status.setText(f"Não foi possível exportar: {exc}")
+
+    def export_collection_template(self):
+        from planejador.services.coleta import exportar_modelo, organizar_coleta
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Organização da coleta")
+        layout = QVBoxLayout(dialog)
+        prompt = QLabel(
+            "Quais grupos ou preparos serão medidos? Separe os nomes por ponto e vírgula."
+        )
+        prompt.setWordWrap(True)
+        layout.addWidget(prompt)
+        names = QLineEdit()
+        names.setPlaceholderText("Nomes definidos no seu experimento")
+        layout.addWidget(names)
+        layout.addWidget(QLabel("Quantas repetições serão registradas por grupo?"))
+        repeats = QSpinBox()
+        repeats.setRange(1, 100)
+        layout.addWidget(repeats)
+        plate = QCheckBox("Organizar posições em microplacas")
+        layout.addWidget(plate)
+        geometry = QComboBox()
+        for rows, cols in [(2, 3), (3, 4), (4, 6), (6, 8), (8, 12), (16, 24)]:
+            geometry.addItem(f"{rows * cols} poços ({rows} × {cols})", (rows, cols))
+        geometry.setCurrentIndex(4)
+        geometry.setEnabled(False)
+        plate.toggled.connect(geometry.setEnabled)
+        layout.addWidget(geometry)
+        note = QLabel(
+            "Cada linha terá um identificador próprio. Repetições técnicas não são automaticamente tratadas como amostras independentes."
+        )
+        note.setWordWrap(True)
+        layout.addWidget(note)
+        buttons = QDialogButtonBox(
+            QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        )
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        if not dialog.exec():
+            return
+        try:
+            units = organizar_coleta(
+                names.text().split(";"),
+                repeats.value(),
+                linhas=geometry.currentData()[0],
+                colunas=geometry.currentData()[1],
+                microplaca=plate.isChecked(),
+            )
+            path, _ = QFileDialog.getSaveFileName(
+                self, "Salvar modelo de coleta", "coleta.xlsx", "Excel (*.xlsx)"
+            )
+            if not path:
+                return
+            collection = {
+                "unidades": units,
+                "unidade": self.unit.text().strip(),
+                "microplaca": plate.isChecked(),
+            }
+            exportar_modelo(
+                path, units, {**self.context, "coleta": collection}, self.unit.text()
+            )
+            self.collection = collection
+            self.invalidate()
+            self.status.setText(
+                f"Modelo salvo: {len(units)} unidades de coleta, com medições ainda vazias. Preencha os valores e importe o arquivo."
+            )
+        except (ValueError, OSError) as exc:
+            self.status.setText(f"Não foi possível gerar o modelo: {exc}")
+
+    def import_excel(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Importar medições", "", "Excel (*.xlsx)"
+        )
+        if not path:
+            return
+        from frontend.excel_import import ImportJob
+
+        if self.import_worker is not None:
+            self.status.setText("Uma importação já está em andamento.")
+            return
+        self.status.setText("Lendo a planilha… A janela continua disponível.")
+        self.import_worker = ImportJob(path, self.revision)
+        self.import_worker.signals.finished.connect(self.finish_import)
+        QThreadPool.globalInstance().start(self.import_worker)
+
+    def finish_import(self, outcome):
+        path, revision, sheets, digest = outcome
+        self.import_worker = None
+        if revision != self.revision:
+            self.status.setText(
+                "O experimento mudou durante a leitura. Importe novamente para conferir os dados atuais."
+            )
+            return
+        try:
+            from frontend.excel_import import ExcelPreview
+
+            if isinstance(sheets, str):
+                raise ValueError(sheets)
+            from planejador.services.coleta import conferir_coleta
+
+            collection = conferir_coleta(sheets, self.context)
+            preview = ExcelPreview(
+                {k: v for k, v in sheets.items() if k != "Planejamento"}, self
+            )
+            if not preview.exec():
+                return
+            groups = preview.groups
+            self.data.blockSignals(True)
+            try:
+                self.data.clearContents()
+                self.data.setRowCount(len(groups))
+                self.data.setColumnCount(max(map(len, groups.values())) + 1)
+                self.data.update_headers()
+                for row, (name, values) in enumerate(groups.items()):
+                    self.data.setItem(row, 0, QTableWidgetItem(name))
+                    for col, value in enumerate(values, 1):
+                        self.data.setItem(row, col, QTableWidgetItem(str(value)))
+            finally:
+                self.data.blockSignals(False)
+            if collection is not None:
+                self.collection = collection
+                self.unit.setText(collection["unidade"])
+            self.import_source = {
+                "arquivo": Path(path).name,
+                "sha256": digest,
+                "aba": preview.sheet.currentText(),
+                "formato": preview.mode.currentData(),
+            }
+            self.invalidate()
+            self.status.setText(
+                f"{Path(path).name}: grupos e medições importados. Confira a grandeza/unidade e calcule o resumo."
+            )
+        except Exception as exc:
+            self.status.setText(f"Não foi possível importar: {exc}")
 
     def paste_measurements(self):
         try:
@@ -323,6 +497,8 @@ class AnalysisWidget(QWidget):
             self.invalidate()
 
     def clear_experiment(self):
+        self.collection = None
+        self.import_source = None
         self.context = None
         self.data.clearContents()
         self.data.setRowCount(2)
@@ -336,9 +512,20 @@ class AnalysisWidget(QWidget):
         self.context_label.setText("Conclua o planejamento para registrar as medições.")
         self.invalidate()
 
-    def set_experiment(self, title, plan):
+    def set_experiment(self, title, plan, record_id=None):
         self.clear_experiment()
-        self.context = {"titulo": title, "protocolo": plan["protocolo"]}
+        import hashlib
+
+        self.context = {
+            "titulo": title,
+            "protocolo": plan["protocolo"],
+            "registro_id": record_id,
+            "planejamento_sha256": hashlib.sha256(
+                json.dumps(
+                    plan, sort_keys=True, ensure_ascii=False, allow_nan=False
+                ).encode()
+            ).hexdigest(),
+        }
         if "protocolo_id" in plan:
             self.context["protocolo_id"] = plan["protocolo_id"]
         detail = ""
@@ -388,6 +575,10 @@ class AnalysisWidget(QWidget):
             "pressupostos_conferidos": self.assumptions.isChecked(),
             "estado": "analisado" if self.report is not None else "rascunho",
         }
+        if self.collection is not None:
+            payload["coleta_planejada"] = self.collection
+        if self.import_source is not None:
+            payload["importacao"] = dict(self.import_source)
         if self.report is not None:
             payload.update(medicoes=self.read_groups(), analise=self.report)
         return payload
@@ -433,6 +624,7 @@ class AnalysisWidget(QWidget):
             self.canvas.hide()
         self.save.setEnabled(False)
         self.save_experiment.setEnabled(False)
+        self.export_results.setEnabled(False)
         self.status.setText(
             "Informe suas medições e clique em Calcular resumo e gráfico."
         )
@@ -586,6 +778,7 @@ class AnalysisWidget(QWidget):
         self.save.setEnabled(True)
         self.save.show()
         self.save_experiment.setEnabled(True)
+        self.export_results.setEnabled(True)
         self.changed.emit()
         parent = self.parentWidget()
         while parent is not None:

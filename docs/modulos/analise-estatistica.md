@@ -123,3 +123,16 @@ Revisão final 0.2.7: seções recolhidas sem molduras que pareciam campos vazio
 
 
 Entrega 0.2.7 conferida: 317 testes Mac; 316 Windows e um inaplicável. Executáveis e instalação Windows aprovados no CI 42551354018; instalado Mac local verificado e reaberto com registros pessoais preservados. Auditoria final em `docs/interface/AUDIT.md`. Não equivale a teste manual Windows, estudo de usabilidade ou validação em bancada.
+
+
+## Importação Excel em desenvolvimento — 09/11/2026
+
+Lucas escolheu reconhecer formatos comuns com prévia e atender tanto preparos/diluições quanto ensaios, sem prioridade exclusiva. Implementada primeira etapa no código: .xlsx, escolha de aba, reconhecimento de grupos em colunas, em linhas ou formato longo Grupo/Valor e prévia antes de substituir medições. Não executar fórmulas; exigir valores exportados para impedir uso silencioso de caches desatualizados. Limites de 20 MB/100.000 células. Grupos vazios, valores inválidos e não finitos são recusados; células vazias em séries são ignoradas e isso é informado. Dependência openpyxl (UI), carregada sob demanda.
+
+Nove testes novos de reconhecimento/leitura e os 59 testes existentes de interface passaram. Ainda em desenvolvimento: leitura em segundo plano, rastreabilidade da importação, modelo Excel derivado do planejamento, desenho de ensaio com controles/tratamentos/repetições, correspondência de amostras/poços e revisão estatística completa. Não considerar esta etapa a entrega integral pedida por Lucas. Não foi instalada ou publicada nova versão com importação.
+
+
+Autorização ampla de conclusão em 09/11/2026: critérios em `CONCLUSAO_APLICATIVO.md`. Implementados em desenvolvimento: leitura Excel em tarefa de fundo, descarte se o contexto mudar, arquivo/hash/aba/formato no payload de observações, gerador de coleta com identificadores e repetições e microplacas opcionais de 96 poços, planilha com observações vazias e contexto do planejamento. Interface para gerar o modelo integrada a Medições e análise. Teste do ciclo geração/preenchimento/reimportação e distribuição entre placas passou. Ainda não é entrega integral; faltam conferência completa de vínculo, persistência de desenho de ensaio, exportações de relatório/dados e inspeção/compilação final.
+
+
+Continuação 09/11/2026: modelos agora incluem manifesto de coleta, registro e hash do plano. Reimportação confere identificadores únicos, completude, grupo, repetição, posição e unidade; recusado arquivo de outro planejamento. Organização e proveniência persistem no payload de observações. Geometrias de microplaca disponíveis de 6 a 384 poços. Exportação de dados CSV, pasta Excel com medições/resumo/rastreabilidade e relatório Word integrada. 72 testes dirigidos passaram (coleta/importação/exportações/interface), Ruff e diff-check aprovados. Pendente: relatório com plano/fontes completos e revisão visual; controles e desenho científico melhor representados; auditoria estatística e implantação final. Versão instalada permanece 0.2.8.

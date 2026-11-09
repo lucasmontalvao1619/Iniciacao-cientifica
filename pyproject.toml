@@ -18,7 +18,7 @@ dependencies = [
 
 [project.optional-dependencies]
 bundle = ["pyinstaller>=6.22,<7"]
-ui = ["PyQt6>=6.7,<7", "matplotlib>=3.9,<4", "python-docx>=1.2,<2"]
+ui = ["PyQt6>=6.7,<7", "matplotlib>=3.9,<4", "python-docx>=1.2,<2", "openpyxl>=3.1,<4"]
 # Motores de banco alternativos (opcionais). SQLite já vem com o Python.
 postgres = ["psycopg[binary]>=3.1"]
 mysql = ["PyMySQL>=1.1"]
