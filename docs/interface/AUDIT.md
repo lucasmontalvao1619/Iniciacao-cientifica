@@ -346,3 +346,6 @@ Sem bibliotecas novas, imagens decorativas ou animação. Gates pytest/Ruff; sca
 ## Screen seen — Bancada 0.2.8
 
 Capturas Qt a 880 × 720, PREP-003 com 1,5 mg/mL e 100 mL: medições abertas por padrão, identificação do planejamento visível, estado vazio com instrução e tabela sem rolagem horizontal. Dados de exemplo 1,5/1,5/1,7 e 2,1/2,4/2,6 resultaram em tabela e gráfico; planejamento e simulação permanecem acessíveis em seção secundária. Uma regressão de colagem por atalho causada pela nova hierarquia de widgets foi corrigida com sinal Qt e coberta pelo teste existente de colagem. Suíte completa 317 testes e Ruff passaram em desenvolvimento. Sem score nem scanners upstream; inspeção do bundle e CI em andamento.
+
+
+Conferência nativa 0.2.8: aplicativo instalado em sessão temporária, PREP-003, 1,5 mg/mL e 100 mL; tela Medições e análise aberta com entrada visível, azul discreto e planejamento associado. Fonte de sistema e widgets Qt existentes. Suíte completa de 317 testes e Ruff aprovados em desenvolvimento; executável Mac passou verificação empacotada de dez protocolos, POPs e média 4. Aplicativo real reaberto após backup consistente; conteúdo dos três registros comparado e preservado. CI de Mac/Windows em andamento; sem teste manual no Windows ou score upstream.
