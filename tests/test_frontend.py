@@ -2270,13 +2270,14 @@ def test_large_excel_import_does_not_allocate_a_huge_empty_matrix(app, monkeypat
     w.close()
 
 
-def test_history_consultation_shows_analysis_without_json(app):
+@pytest.mark.parametrize("title", ["PREP-003", "Nome personalizado"])
+def test_history_consultation_shows_analysis_without_json(app, title):
     from PyQt6.QtWidgets import QDialog, QTextEdit
 
     w = PlannerWindow()
     payload = {
-        "titulo": "Consulta",
-        "plano": {},
+        "titulo": title,
+        "plano": {"protocolo": "PREP-003"},
         "resultados_observados": {
             "unidade": "mg/mL",
             "linhas_informadas": [{"grupo": "Controle", "valores": "2;4;6"}],
@@ -2295,6 +2296,8 @@ def test_history_consultation_shows_analysis_without_json(app):
     w.view_record(payload)
     dialog = w.findChild(QDialog)
     text = dialog.findChild(QTextEdit).toPlainText()
+    assert text.startswith(title)
+    assert text.count("PREP-003") == 1
     assert "Controle: 2, 4, 6" in text
     assert "média = 4" in text
     assert '"resumos"' not in text

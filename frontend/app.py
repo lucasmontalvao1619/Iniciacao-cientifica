@@ -666,12 +666,12 @@ class PlannerWindow(QMainWindow):
         data = payload.get("experimento", payload)
         plan = data.get("plano", {})
         params = data.get("parametros", {})
-        lines = [
-            data.get("titulo", "Experimento"),
-            plan.get("protocolo", ""),
-            "",
-            "Parâmetros informados",
-        ]
+        title = data.get("titulo", "Experimento")
+        protocol = plan.get("protocolo", "")
+        lines = [title]
+        if protocol and protocol.strip() != title.strip():
+            lines.append(f"Protocolo: {protocol}")
+        lines += ["", "Parâmetros informados"]
 
         def readable(value):
             return f"{value:.8g}" if isinstance(value, float) else str(value)
