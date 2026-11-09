@@ -170,23 +170,24 @@ class PlannerWindow(QMainWindow):
         sidebar.setObjectName("sidebar")
         sidebar.setFixedWidth(216)
         side = QVBoxLayout(sidebar)
-        side.setContentsMargins(24, 32, 24, 24)
-        side.setSpacing(16)
-        side.addWidget(label("PLANEJADOR", 15, True))
-        side.addWidget(label("Laboratório\nMicrobiologia", 12))
+        side.setContentsMargins(18, 24, 18, 24)
+        side.setSpacing(10)
+        side.addWidget(label("Planejador", 16, True))
+        side.addWidget(label("Bancada experimental", 11))
         self.steps = []
         for index, text in enumerate(
             [
-                "01  Início",
-                "02  Protocolo",
-                "03  Parâmetros",
-                "04  Plano",
-                "05  Resultados",
+                "Início",
+                "Protocolo",
+                "Parâmetros",
+                "Plano",
+                "Medições e análise",
             ]
         ):
             item = button(
                 text, lambda checked=False, target=index: self.navigate(target)
             )
+            item.setProperty("navigation", True)
             item.setCheckable(True)
             # macOS accessibility activates checkable buttons through their state.
             item.toggled.connect(
@@ -236,7 +237,7 @@ class PlannerWindow(QMainWindow):
         body.setContentsMargins(40, 32, 40, 32)
         body.setSpacing(16)
         body.addWidget(label(eyebrow.upper(), 11, True))
-        body.addWidget(label(title, 28, True))
+        body.addWidget(label(title, 24, True))
         body.addWidget(label(subtitle, 13))
         body.addSpacing(16)
         scroll = QScrollArea()
@@ -279,28 +280,12 @@ class PlannerWindow(QMainWindow):
                 from frontend.analysis import AnalysisWidget
 
                 self.analysis = AnalysisWidget()
-                self.analysis.layout().setContentsMargins(0, 16, 0, 0)
                 self.configure_analysis()
                 self.analysis.back.hide()
                 self.analysis.save_experiment.hide()
-                group = QGroupBox("Medições observadas e análise estatística")
-                group.setProperty("foldable", True)
-                group.setCheckable(True)
-                group.setChecked(False)
-                group.setMaximumHeight(group.fontMetrics().height() + 20)
-                group.toggled.connect(
-                    lambda on: group.setMaximumHeight(
-                        16777215 if on else group.fontMetrics().height() + 20
-                    )
-                )
-                QVBoxLayout(group).addWidget(self.analysis)
-                self.analysis.hide()
-                group.toggled.connect(self.analysis.setVisible)
-                self.observations_group = group
-                result_layout = self.percent_results.layout()
-                result_layout.insertWidget(
-                    result_layout.indexOf(self.percent_results.back), group
-                )
+                self.analysis.heading.hide()
+                self.analysis.layout().setContentsMargins(0, 0, 0, 0)
+                self.percent_results.layout().insertWidget(2, self.analysis)
         elif index == 4 and self.analysis is None:
             from frontend.analysis import AnalysisWidget
 
@@ -324,7 +309,7 @@ class PlannerWindow(QMainWindow):
             item.setFont(
                 QFont(
                     "Segoe UI" if sys.platform == "win32" else "Helvetica Neue",
-                    13,
+                    12,
                     QFont.Weight.Bold if i == index else QFont.Weight.Normal,
                 )
             )
@@ -521,7 +506,7 @@ class PlannerWindow(QMainWindow):
             "Da pergunta ao plano experimental.",
             "Organize as variáveis antes de começar a bancada.",
         )
-        box = QGroupBox("Seu primeiro planejamento")
+        box = QGroupBox("Planejamento")
         content = QVBoxLayout(box)
         content.setSpacing(16)
         icon = QLabel()
@@ -1332,35 +1317,45 @@ def create_app():
     app.setStyle("Fusion")
     palette = QPalette()
     # EXCEPTION to token/css: Qt uses semantic QPalette roles, not CSS HSL channels.
-    for role, color in [
-        (QPalette.ColorRole.Window, "whitesmoke"),
-        (QPalette.ColorRole.Base, "white"),
-        (QPalette.ColorRole.WindowText, "black"),
-        (QPalette.ColorRole.Text, "black"),
-        (QPalette.ColorRole.Button, "white"),
-        (QPalette.ColorRole.ButtonText, "black"),
-        (QPalette.ColorRole.Highlight, "darkslategray"),
-        (QPalette.ColorRole.HighlightedText, "white"),
+    for role, channels in [
+        (QPalette.ColorRole.Window, (244, 247, 250)),
+        (QPalette.ColorRole.Base, (255, 255, 255)),
+        (QPalette.ColorRole.WindowText, (27, 48, 53)),
+        (QPalette.ColorRole.Text, (27, 48, 53)),
+        (QPalette.ColorRole.Button, (255, 255, 255)),
+        (QPalette.ColorRole.ButtonText, (27, 48, 53)),
+        (QPalette.ColorRole.Highlight, (49, 92, 168)),
+        (QPalette.ColorRole.HighlightedText, (255, 255, 255)),
+        (QPalette.ColorRole.Mid, (220, 229, 231)),
+        (QPalette.ColorRole.AlternateBase, (237, 242, 251)),
+        (QPalette.ColorRole.PlaceholderText, (82, 103, 108)),
     ]:
-        palette.setColor(role, QColor(color))
+        palette.setColor(role, QColor(*channels))
     palette.setColor(
         QPalette.ColorGroup.Disabled, QPalette.ColorRole.ButtonText, QColor("gray")
     )
     app.setPalette(palette)
-    app.setFont(QFont("Segoe UI" if sys.platform == "win32" else "Helvetica Neue", 13))
+    app.setFont(QFont("Segoe UI" if sys.platform == "win32" else "Helvetica Neue", 12))
     app.setStyleSheet("""
         QFrame#sidebar { background: palette(base); border-right: 1px solid palette(mid); }
-        QGroupBox { background: palette(base); border: 1px solid palette(mid); border-radius: 8px; margin-top: 16px; padding: 24px; }
+        QGroupBox { background: palette(base); border: 1px solid palette(mid); border-radius: 8px; margin-top: 16px; padding: 16px; }
         QGroupBox[foldable="true"]:!checked { border: none; background: transparent; padding: 0px; }
         QGroupBox[foldable="true"]::indicator { width: 14px; height: 14px; border: 1px solid palette(mid); background: palette(base); }
         QGroupBox[foldable="true"]::indicator:checked { background: palette(highlight); }
         QGroupBox::title { subcontrol-origin: margin; left: 16px; }
         QPushButton { background: palette(button); padding: 8px 16px; border: 1px solid palette(mid); border-radius: 6px; }
+        QPushButton:hover { background: palette(alternate-base); }
         QPushButton[primary="true"] { background: palette(highlight); color: palette(highlighted-text); }
         QPushButton:checked { background: palette(highlight); color: palette(highlighted-text); }
+        QPushButton[navigation="true"] { background: transparent; border: 1px solid transparent; text-align: left; padding: 8px 12px; }
+        QPushButton[navigation="true"]:checked { background: palette(alternate-base); color: palette(highlight); border: 1px solid palette(alternate-base); }
+        QPushButton[navigation="true"]:focus { border: 1px solid palette(highlight); }
+        QHeaderView::section { background: palette(alternate-base); color: palette(text); border: none; border-bottom: 1px solid palette(mid); padding: 7px; }
+        QTableWidget { selection-background-color: palette(alternate-base); selection-color: palette(text); }
         QPushButton:focus, QLineEdit:focus, QComboBox:focus { border: 2px solid palette(highlight); }
         QLineEdit, QSpinBox, QDoubleSpinBox, QComboBox { padding: 8px; min-height: 20px; }
         QLabel#error { font-weight: bold; }
+        QTableWidget QLineEdit { padding: 2px; min-height: 0px; }
         QTableWidget { background: palette(base); gridline-color: palette(mid); }
     """)
     return app

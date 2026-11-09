@@ -14,6 +14,7 @@ from PyQt6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QFileDialog,
+    QGroupBox,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -103,14 +104,14 @@ class AnalysisJob(QRunnable):
 class MeasurementsTable(QTableWidget):
     """Uma linha por grupo; colagem retangular como em uma planilha."""
 
+    paste_requested = pyqtSignal()
+
     def __init__(self):
         super().__init__(2, 4)
         self.update_headers()
         self.paste_shortcut = QShortcut(QKeySequence.StandardKey.Paste, self)
         self.paste_shortcut.setContext(Qt.ShortcutContext.WidgetWithChildrenShortcut)
-        self.paste_shortcut.activated.connect(
-            lambda: self.parentWidget().paste_measurements()
-        )
+        self.paste_shortcut.activated.connect(self.paste_requested.emit)
 
     def update_headers(self):
         self.setHorizontalHeaderLabels(
@@ -155,7 +156,8 @@ class AnalysisWidget(QWidget):
         self.context = None
         layout = QVBoxLayout(self)
         layout.setContentsMargins(32, 24, 32, 24)
-        title = QLabel("Registre as medições do seu experimento")
+        title = QLabel("Medições e análise")
+        self.heading = title
         font = title.font()
         font.setPointSize(24)
         font.setBold(True)
@@ -168,18 +170,25 @@ class AnalysisWidget(QWidget):
         self.context_label.setWordWrap(True)
         layout.addWidget(self.context_label)
         explanation = QLabel(
-            "Uma linha por grupo e uma medição por célula. Cole do Excel com a primeira coluna contendo os grupos e as seguintes contendo os números, sem cabeçalho. Use somente valores observados na bancada."
+            "Uma linha por grupo, uma medição por célula. Ao colar do Excel, inclua os grupos na primeira coluna e omita o cabeçalho."
         )
         explanation.setWordWrap(True)
-        layout.addWidget(explanation)
+        self.entry = QGroupBox("Medições da bancada")
+        entry = QVBoxLayout(self.entry)
+        entry.setSpacing(12)
+        layout.addWidget(self.entry)
+        entry.addWidget(explanation)
         self.data = MeasurementsTable()
+        self.data.paste_requested.connect(self.paste_measurements)
         self.data.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Stretch
         )
         self.data.setAccessibleName("Grupos e valores medidos")
-        self.data.setMinimumHeight(150)
-        self.data.setMaximumHeight(170)
-        layout.addWidget(self.data)
+        self.data.setMinimumHeight(128)
+        self.data.setAlternatingRowColors(True)
+        self.data.verticalHeader().setDefaultSectionSize(32)
+        self.data.setMaximumHeight(160)
+        entry.addWidget(self.data)
         controls = QHBoxLayout()
         add = QPushButton("Adicionar grupo")
         add.clicked.connect(lambda: self.data.insertRow(self.data.rowCount()))
@@ -187,7 +196,7 @@ class AnalysisWidget(QWidget):
         remove = QPushButton("Remover grupo selecionado")
         remove.clicked.connect(self.remove_group)
         controls.addWidget(remove)
-        layout.addLayout(controls)
+        entry.addLayout(controls)
         paste_row = QHBoxLayout()
         paste = QPushButton("Colar do Excel")
         paste.clicked.connect(self.paste_measurements)
@@ -195,21 +204,22 @@ class AnalysisWidget(QWidget):
         add_value = QPushButton("Adicionar medição")
         add_value.clicked.connect(self.data.add_measurement)
         paste_row.addWidget(add_value)
-        layout.addLayout(paste_row)
+        entry.addLayout(paste_row)
         self.unit = QLineEdit()
         self.unit.setMaxLength(80)
         self.unit.setPlaceholderText("Ex.: absorbância, UFC/mL, mg/mL")
-        unit_label = QLabel(
-            "O que foi medido? Informe a unidade ou grandeza do gráfico"
-        )
+        unit_label = QLabel("Grandeza / unidade")
         unit_label.setWordWrap(True)
         unit_label.setBuddy(self.unit)
-        layout.addWidget(unit_label)
-        layout.addWidget(self.unit)
-        self.run_button = QPushButton("Ver resumo e gráfico")
+        unit_row = QHBoxLayout()
+        unit_row.addWidget(unit_label)
+        unit_row.addWidget(self.unit, 1)
+        entry.addLayout(unit_row)
+        self.run_button = QPushButton("Calcular resumo e gráfico")
         self.run_button.setMinimumHeight(42)
+        self.run_button.setProperty("primary", True)
         self.run_button.clicked.connect(self.start_analysis)
-        layout.addWidget(self.run_button)
+        entry.addWidget(self.run_button)
         advanced_toggle = QCheckBox("Comparar grupos (opções avançadas)")
         layout.addWidget(advanced_toggle)
         self.advanced = QWidget()
@@ -238,9 +248,7 @@ class AnalysisWidget(QWidget):
         )
         design_help.setWordWrap(True)
         advanced_layout.addWidget(design_help)
-        self.assumptions = QCheckBox(
-            "Os pressupostos do teste foram conferidos?"
-        )
+        self.assumptions = QCheckBox("Os pressupostos do teste foram conferidos?")
         advanced_layout.addWidget(self.assumptions)
         self.alpha = QDoubleSpinBox()
         self.alpha.setRange(0.001, 0.999)
@@ -259,7 +267,13 @@ class AnalysisWidget(QWidget):
         note.setWordWrap(True)
         advanced_layout.addWidget(note)
         layout.addWidget(self.advanced)
-        self.status = QLabel("Aguardando medições.")
+        summary_heading = QLabel("Resumo estatístico")
+        font = summary_heading.font()
+        font.setPointSize(14)
+        font.setBold(True)
+        summary_heading.setFont(font)
+        layout.addWidget(summary_heading)
+        self.status = QLabel("Preencha a tabela para calcular seu primeiro resumo.")
         self.status.setWordWrap(True)
         layout.addWidget(self.status)
         self.table = QTableWidget(0, 5)
@@ -271,8 +285,9 @@ class AnalysisWidget(QWidget):
             QHeaderView.ResizeMode.ResizeToContents
         )
         self.table.horizontalHeader().setStretchLastSection(True)
-        self.table.setMinimumHeight(140)
-        self.table.setMaximumHeight(150)
+        self.table.setAlternatingRowColors(True)
+        self.table.verticalHeader().setDefaultSectionSize(32)
+        self.table.hide()
         layout.addWidget(self.table)
         self.figure = None
         self.canvas = None
@@ -280,6 +295,7 @@ class AnalysisWidget(QWidget):
         layout.addLayout(self.graph_layout)
         self.save = QPushButton("Salvar gráfico em PNG")
         self.save.setEnabled(False)
+        self.save.hide()
         self.save.clicked.connect(self.save_graph)
         layout.addWidget(self.save)
         self.data.itemChanged.connect(self.invalidate)
@@ -337,7 +353,7 @@ class AnalysisWidget(QWidget):
             title if title == plan["protocolo"] else f"{title} · {plan['protocolo']}"
         )
         self.context_label.setText(
-            f"{heading}\n{detail}As medições abaixo pertencem a este planejamento. Alterar seus parâmetros limpa estas medições e a análise."
+            f"{heading}\n{detail}Medições vinculadas a este planejamento, separadas dos valores calculados."
         )
         self.status.setText(
             "Preencha os grupos e valores obtidos na bancada. Nenhuma medição é preenchida automaticamente."
@@ -410,13 +426,15 @@ class AnalysisWidget(QWidget):
         self.revision += 1
         self.report = None
         self.table.setRowCount(0)
+        self.table.hide()
+        self.save.hide()
         if self.figure is not None and self.figure.axes:
             self.figure.clear()
             self.canvas.hide()
         self.save.setEnabled(False)
         self.save_experiment.setEnabled(False)
         self.status.setText(
-            "Clique em Ver resumo e gráfico após informar ou editar os valores."
+            "Informe suas medições e clique em Calcular resumo e gráfico."
         )
 
         if self.context is not None:
@@ -465,7 +483,7 @@ class AnalysisWidget(QWidget):
         self.run_button.setEnabled(True)
         if revision != self.revision:
             self.status.setText(
-                "Os dados mudaram durante o cálculo. Clique em Ver resumo e gráfico para analisar os valores atuais."
+                "Os dados mudaram durante o cálculo. Clique em Calcular resumo e gráfico para analisar os valores atuais."
             )
             return
         if isinstance(result, str):
@@ -489,6 +507,13 @@ class AnalysisWidget(QWidget):
 
     def render_analysis(self, groups):
         self.table.setRowCount(len(groups))
+        self.table.setFixedHeight(
+            min(
+                240,
+                max(94, self.table.horizontalHeader().height() + 32 * len(groups) + 4),
+            )
+        )
+        self.table.show()
         for i, (name, summary) in enumerate(self.report["resumos"].items()):
             for j, value in enumerate(
                 [
@@ -554,11 +579,12 @@ class AnalysisWidget(QWidget):
             )
         else:
             self.status.setText(
-                "Resumo calculado. A média mostra o valor central; o desvio padrão mostra a dispersão dos valores. Cada ponto do gráfico é uma medição. Nenhuma comparação estatística foi aplicada."
+                "Resumo calculado. A média indica o valor central; o desvio padrão, a dispersão. Nenhuma comparação entre grupos foi aplicada."
             )
         self.report["experimento"] = dict(self.context)
         self.report["unidade"] = self.unit.text().strip()
         self.save.setEnabled(True)
+        self.save.show()
         self.save_experiment.setEnabled(True)
         self.changed.emit()
         parent = self.parentWidget()

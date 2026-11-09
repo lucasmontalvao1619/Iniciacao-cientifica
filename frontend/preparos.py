@@ -687,29 +687,40 @@ class PreparoResults(QWidget):
         self.protocol = protocol
         layout = QVBoxLayout(self)
         layout.setContentsMargins(32, 24, 32, 24)
-        title = QLabel(
-            {
-                "molar": "Resultados do preparo molar",
-                "estoque": "Resultados da solução-estoque",
-                "diluicao": "Resultados da diluição de solução-estoque",
-                "seriada": "Resultados da diluição seriada",
-                "fator": "Fator de diluição e concentração final",
-                "volume": "Volume total e excedente",
-                "recipientes": "Meio necessário para placas ou tubos",
-                "formula": "Resultado da formulação",
-                "desidratado": "Preparo de meio comercial desidratado",
-            }.get(protocol["tipo_calculo"], "Resultados do preparo percentual")
-        )
-        title.setWordWrap(True)
-        layout.addWidget(title)
+        self.heading = QLabel("Medições e análise")
+        font = self.heading.font()
+        font.setPointSize(24)
+        font.setBold(True)
+        self.heading.setFont(font)
+        self.heading.setWordWrap(True)
+        layout.addWidget(self.heading)
         instruction = QLabel(
-            "Confira as quantidades calculadas. Para alterar os valores, abra Ajustar planejamento."
+            "Registre os valores obtidos na bancada e consulte o resumo deste experimento."
         )
         instruction.setWordWrap(True)
         layout.addWidget(instruction)
+        self.plan_details = QGroupBox("Consultar planejamento e simulação")
+        self.plan_details.setProperty("foldable", True)
+        self.plan_details.setCheckable(True)
+        self.plan_details.setChecked(False)
+        self.plan_details.setMaximumHeight(
+            self.plan_details.fontMetrics().height() + 24
+        )
+        self.plan_body = QWidget()
+        plan_layout = QVBoxLayout(self.plan_body)
+        plan_layout.setContentsMargins(0, 0, 0, 0)
+        QVBoxLayout(self.plan_details).addWidget(self.plan_body)
+        self.plan_body.hide()
+        self.plan_details.toggled.connect(self.plan_body.setVisible)
+        self.plan_details.toggled.connect(
+            lambda on: self.plan_details.setMaximumHeight(
+                16777215 if on else self.plan_details.fontMetrics().height() + 24
+            )
+        )
+        layout.addWidget(self.plan_details)
         self.form = PreparoForm(protocol["tipo_calculo"])
         self.form.set_values(values)
-        self.adjustments = QGroupBox("Ajustar planejamento")
+        self.adjustments = QGroupBox("Ajustar planejamento (limpa as medições)")
         self.adjustments.setProperty("foldable", True)
         self.adjustments.setCheckable(True)
         self.adjustments.setChecked(False)
@@ -728,11 +739,11 @@ class PreparoResults(QWidget):
         font.setPointSize(16)
         font.setBold(True)
         self.summary.setFont(font)
-        layout.addWidget(self.summary)
-        layout.addWidget(self.adjustments)
+        plan_layout.addWidget(self.summary)
+        plan_layout.addWidget(self.adjustments)
         self.serie_table = QTableWidget()
         self.serie_table.hide()
-        layout.addWidget(self.serie_table)
+        plan_layout.addWidget(self.serie_table)
         self.component_plot = QComboBox()
         self.component_plot.setAccessibleName("Qual componente visualizar no gráfico?")
         self.component_plot.setSizeAdjustPolicy(
@@ -750,7 +761,7 @@ class PreparoResults(QWidget):
         self.chart_layout = QVBoxLayout(self.chart_body)
         self.chart_layout.addWidget(self.component_plot)
         QVBoxLayout(self.chart_group).addWidget(self.chart_body)
-        layout.addWidget(self.chart_group)
+        plan_layout.addWidget(self.chart_group)
         self.chart_body.hide()
         self.figure = None
         self.font_job = None
@@ -782,7 +793,9 @@ class PreparoResults(QWidget):
 
     def fonts_loaded(self, error):
         self.font_job = None
-        self.chart_status.setText(f"Não foi possível abrir o gráfico: {error}" if error else "")
+        self.chart_status.setText(
+            f"Não foi possível abrir o gráfico: {error}" if error else ""
+        )
         if not error and self.chart_group.isChecked():
             self.recalculate()
 
@@ -794,7 +807,9 @@ class PreparoResults(QWidget):
 
         if not plotting.figure_ready:
             if self.font_job is None:
-                self.chart_status.setText("Preparando fontes do gráfico… A janela continua disponível.")
+                self.chart_status.setText(
+                    "Preparando fontes do gráfico… A janela continua disponível."
+                )
                 self.font_job = plotting.FontJob()
                 self.font_job.signals.finished.connect(self.fonts_loaded)
                 QThreadPool.globalInstance().start(self.font_job)

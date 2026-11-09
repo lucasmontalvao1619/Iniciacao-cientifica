@@ -452,6 +452,7 @@ def test_percentual_parameters_results_live_graph_and_export(app, tmp_path):
     )
     w.navigate(4)
     panel = w.percent_results
+    panel.plan_details.setChecked(True)
     panel.chart_group.setChecked(True)
     panel.adjustments.setChecked(True)
     panel.form.quantidade_final.setValue(500)
@@ -551,6 +552,7 @@ def test_molar_custom_form_live_results_history_and_protocol_switch(app, tmp_pat
     record_id = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.plan_details.setChecked(True)
     panel.chart_group.setChecked(True)
     panel.adjustments.setChecked(True)
     panel.form.quantidade_final.setValue(500)
@@ -636,6 +638,7 @@ def test_stock_questions_equivalence_live_graph_optional_label_and_export(
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.plan_details.setChecked(True)
     panel.chart_group.setChecked(True)
     panel.adjustments.setChecked(True)
     panel.form.equivalencia.setValue(20)
@@ -728,6 +731,7 @@ def test_stock_dilution_questions_plan_graph_export_and_switch(app, tmp_path):
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.plan_details.setChecked(True)
     panel.chart_group.setChecked(True)
     panel.adjustments.setChecked(True)
     panel.form.concentracao_inicial.setValue(2)
@@ -795,6 +799,7 @@ def test_serial_questions_tables_live_graph_and_export(app, tmp_path):
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.plan_details.setChecked(True)
     panel.chart_group.setChecked(True)
     panel.adjustments.setChecked(True)
     assert panel.serie_table.rowCount() == 3
@@ -872,6 +877,7 @@ def test_factor_questions_graph_live_export_and_switch(app, tmp_path):
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.plan_details.setChecked(True)
     panel.chart_group.setChecked(True)
     panel.adjustments.setChecked(True)
     panel.form.quantidade_final.setValue(20)
@@ -942,6 +948,7 @@ def test_volume_questions_live_totals_units_graph_and_export(app, tmp_path):
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.plan_details.setChecked(True)
     panel.chart_group.setChecked(True)
     panel.adjustments.setChecked(True)
     panel.form.n_unidades.setValue(20)
@@ -1015,6 +1022,7 @@ def test_formula_reference_custom_questions_live_results_and_export(app, tmp_pat
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.plan_details.setChecked(True)
     panel.chart_group.setChecked(True)
     panel.adjustments.setChecked(True)
     out = panel.form.formula_form
@@ -1107,6 +1115,7 @@ def test_commercial_medium_questions_live_graph_provenance_export_and_switch(
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.plan_details.setChecked(True)
     panel.chart_group.setChecked(True)
     panel.adjustments.setChecked(True)
     out = panel.form.comercial_form
@@ -1201,6 +1210,7 @@ def test_recipients_questions_live_graph_history_export_and_reset(app, tmp_path)
     record = w.history_id
     w.navigate(4)
     panel = w.percent_results
+    panel.plan_details.setChecked(True)
     panel.chart_group.setChecked(True)
     panel.adjustments.setChecked(True)
     out = panel.form
@@ -1352,8 +1362,7 @@ def test_observations_associate_with_each_real_protocol_and_clear_on_plan_edit(
     assert not w.percent_results.adjustments.isChecked()
     assert panel.context["protocolo_id"] == code
     assert panel.data.item(0, 1) is None
-    assert not w.observations_group.isChecked()
-    w.observations_group.setChecked(True)
+    assert not panel.isHidden()
     panel.unit.setText("mg/mL observado")
     panel.data.setItem(0, 0, QTableWidgetItem("Lote A"))
     panel.data.setItem(0, 1, QTableWidgetItem("2;4;6"))
@@ -1972,8 +1981,6 @@ def test_paste_excel_cells_preserves_drafts_and_planning_link(app):
     confirm(w)
     w.generate()
     w.navigate(4)
-    if hasattr(w, "observations_group"):
-        w.observations_group.setChecked(True)
     p = w.analysis
     app.clipboard().setText("Controle\t1,5\t2,5\t3,5\nTratamento\t3\t4\t5\n")
     p.paste_measurements()

@@ -130,3 +130,8 @@ Lucas priorizou concluir o aplicativo e usar GitHub para compilar/testar Windows
 ## Resultados por etapas — 08/11/2026
 
 A pedido de Lucas: resumo calculado aparece primeiro; ajustar parâmetros e visualizar simulação são expansões opcionais. Figuras/canvas carregam somente ao solicitar visualização/análise. Medições usam colunas por valor e colagem tabular Excel; strings antigas com ponto e vírgula continuam legíveis. Comparação exige respostas explícitas sobre independência e pressupostos, sem acrescentar testes ou interpretar significância como eficácia. Plano e observações mantêm vínculo e regras de invalidação/preservação existentes.
+
+
+## Direção visual Bancada — 08/11/2026
+
+Lucas escolheu a proposta Bancada: navegação lateral compacta, azul discreto, superfícies claras sólidas e medições/resumo no centro. Aplicar no PyQt6 existente. Preservar as cinco etapas/gates de planejamento, fontes, POPs, unidades, histórico e exportações. Resultados passa a se chamar Medições e análise e abre a entrada de observações visível; cálculo planejado continua no Plano e em consulta/ajustes secundários. Nenhuma alteração nos métodos estatísticos nem na modelagem dos dados.

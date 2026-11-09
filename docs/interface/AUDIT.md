@@ -329,3 +329,20 @@ Sem score, scanners upstream ou teste manual Windows. CI final e instaladores em
 
 
 Conclusão 0.2.7: [CI 42551354018](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/actions/runs/42551354018) aprovado; Mac 317 testes, Windows 316 aprovados e um caso SQLite/diretório aberto inaplicável. Executáveis Mac/Windows e instalado Windows: ok, dez protocolos, dez POPs e média observada 4. Instalador Windows passou instalação/desinstalação com preservação de registro. Assets v0.2.7 baixados para Instaladores; ZIP conferido sem erro e plist 0.2.7. Tamanhos: Mac 78,6 MiB e instalador Windows 75,0 MiB. Instalado Mac local 0.2.7 passou verificação empacotada assíncrona, reaberto no Início; dois registros pessoais vistos e conteúdo comparado com backup consistente sem alterações. Sessões de QA isoladas dos dados reais; bundles intermediários e backups temporários de aplicativos removidos. Primeira preparação de fontes pode demorar segundos, com janela responsiva e cache reutilizado; não foi feito teste manual no PC Windows nem avaliação de usabilidade com pesquisadores.
+
+
+## Estilo Bancada aprovado por Lucas — 08/11/2026
+
+| Região | Tier/superfície | Alteração autorizada e raiz confirmada | Verificação |
+|---|---|---|---|
+| Shell | T2/B | Direção Bancada: navegação lateral discreta, azul, fundos sólidos, fonte do sistema; shell atual usa botões grandes e verde | Todas as etapas, foco e estado desabilitado, 880/1180 px |
+| Medições | T3/C | AnalysisWidget fica escondido em grupo recolhido e abaixo de controles de cálculo | Entrada visível ao abrir Medições e análise; colagem/rascunhos/cálculo mantidos |
+| Resumo | T2/B | Tabela vazia ocupa espaço e status longo torna difícil ver se funcionou | Estado vazio explícito e tabela apenas após calcular; média/DP/variância e gráfico preservados |
+| Planejamento de referência | T3/C | Repetição das quantidades/ajustes acima das medições | Consulta/edição em painel secundário; invalidar observações ao editar preservado |
+
+Sem bibliotecas novas, imagens decorativas ou animação. Gates pytest/Ruff; scanners upstream ausentes. Capturas e janela nativa pendentes nesta abertura do relatório.
+
+
+## Screen seen — Bancada 0.2.8
+
+Capturas Qt a 880 × 720, PREP-003 com 1,5 mg/mL e 100 mL: medições abertas por padrão, identificação do planejamento visível, estado vazio com instrução e tabela sem rolagem horizontal. Dados de exemplo 1,5/1,5/1,7 e 2,1/2,4/2,6 resultaram em tabela e gráfico; planejamento e simulação permanecem acessíveis em seção secundária. Uma regressão de colagem por atalho causada pela nova hierarquia de widgets foi corrigida com sinal Qt e coberta pelo teste existente de colagem. Suíte completa 317 testes e Ruff passaram em desenvolvimento. Sem score nem scanners upstream; inspeção do bundle e CI em andamento.
