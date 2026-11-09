@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 
-def exportar_resultados(destino, payload):
+def exportar_resultados(destino, payload, *, resumo_csv=False):
     path = Path(destino)
     groups = payload["medicoes"]
     summaries = payload["analise"]["resumos"]
@@ -25,7 +25,7 @@ def exportar_resultados(destino, payload):
     if path.suffix.lower() == ".csv":
         with path.open("w", encoding="utf-8-sig", newline="") as stream:
             writer = csv.writer(stream, delimiter=";")
-            for row in rows:
+            for row in stats if resumo_csv else rows:
                 writer.writerow(
                     [
                         ("'" + v if v.startswith(("=", "+", "-", "@")) else v)
@@ -39,17 +39,20 @@ def exportar_resultados(destino, payload):
 
         book = Workbook()
         book.remove(book.active)
+        trace_rows = [["Campo", "Informação"]]
+        for key, value in metadata.items():
+            serialized = json.dumps(value, ensure_ascii=False, allow_nan=False)
+            for offset in range(0, max(1, len(serialized)), 30000):
+                trace_rows.append(
+                    [
+                        key if offset == 0 else f"{key} continuação {offset // 30000}",
+                        serialized[offset : offset + 30000],
+                    ]
+                )
         for name, data in [
             ("Medições", rows),
             ("Resumo", stats),
-            (
-                "Rastreabilidade",
-                [["Campo", "Informação"]]
-                + [
-                    [k, json.dumps(v, ensure_ascii=False, allow_nan=False)]
-                    for k, v in metadata.items()
-                ],
-            ),
+            ("Rastreabilidade", trace_rows),
         ]:
             sheet = book.create_sheet(name)
             for row in data:

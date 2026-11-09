@@ -12,7 +12,7 @@ Lucas autorizou concluir o produto atual, deixando apenas a ampliação do catá
 | Estatística básica | Média, DP, variância, t/ANOVA com desenho e pressupostos explícitos; resultados indefinidos tratados | Existente; ampliar conferência e orientação |
 | Gráficos | Dados observados identificados, legíveis, exportáveis, sem confundir com simulação | Existente; conferir seleção e exportação |
 | Exportações | Dados e resumo em Excel/CSV, relatório do experimento com parâmetros, fontes e análise; figuras | Excel/CSV/Word com plano, parâmetros e fontes; falta QA visual do relatório |
-| Continuidade | Preservar rascunhos, histórico, importações e exportações; recuperação/backup verificáveis | Existente; ampliar verificação |
+| Continuidade | Preservar rascunhos, histórico, importações e exportações; recuperação/backup verificáveis | Retomada de registros recentes com coleta/proveniência implementada e testada; arquivos seguem consulta; conferir interface nativa |
 | Interface | Estilo Bancada, ajuda contextual, estados vazios/erro/sucesso e teclado; nenhuma etapa pareça indisponível sem motivo | Conferir após integração |
 | Distribuição | Mac instalado e verificado; instalador Windows e preservação de registros testados; downloads atualizados | Recompilar ao concluir |
 

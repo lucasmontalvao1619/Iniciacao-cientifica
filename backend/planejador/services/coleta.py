@@ -69,9 +69,16 @@ def exportar_modelo(destino, unidades, contexto, unidade):
     for col in sheet.columns:
         sheet.column_dimensions[col[0].column_letter].width = 22
     metadata = book.create_sheet("Planejamento")
-    metadata.append(
-        ["Contexto", json.dumps(contexto, ensure_ascii=False, allow_nan=False)]
-    )
+    serialized = json.dumps(contexto, ensure_ascii=False, allow_nan=False)
+    for offset in range(0, len(serialized), 30000):
+        metadata.append(
+            [
+                "Contexto"
+                if offset == 0
+                else f"Contexto continuação {offset // 30000}",
+                serialized[offset : offset + 30000],
+            ]
+        )
     metadata.append(
         ["Medições", "Preencher somente observações reais na coluna Valor."]
     )
@@ -87,7 +94,12 @@ def conferir_coleta(sheets, contexto):
     if "Contexto" not in metadata:
         return None
     try:
-        saved = json.loads(metadata["Contexto"])
+        chunks = [metadata["Contexto"]]
+        index = 1
+        while f"Contexto continuação {index}" in metadata:
+            chunks.append(metadata[f"Contexto continuação {index}"])
+            index += 1
+        saved = json.loads("".join(chunks))
     except (TypeError, ValueError) as exc:
         raise ValueError("O contexto do modelo de coleta está inválido.") from exc
     for field in ("registro_id", "planejamento_sha256"):

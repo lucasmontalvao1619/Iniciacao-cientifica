@@ -2162,3 +2162,61 @@ def test_first_simulation_loads_fonts_without_blocking_events(app, monkeypatch):
             break
     assert p.font_job is None and p.figure.axes
     w.close()
+
+
+def test_excel_collection_import_history_and_resume(app, tmp_path, monkeypatch):
+    from openpyxl import load_workbook
+
+    from frontend.excel_import import ExcelPreview
+    from planejador.services.coleta import exportar_modelo, organizar_coleta
+    from planejador.services.importacao_excel import read_workbook
+
+    w = PlannerWindow()
+    w.protocol.setCurrentIndex(w.protocol.findData("PREP-003"))
+    w.complete_protocol()
+    w.percent_form.set_values(
+        {
+            "unidade_concentracao": "mg/mL",
+            "concentracao": 1.5,
+            "quantidade_final": 100,
+            "pureza": 100,
+            "correcao": "pureza",
+            "forma": "pesagem",
+        }
+    )
+    w.generate()
+    record_id = w.history_id
+    w.navigate(4)
+    p = w.analysis
+    units = organizar_coleta(["Controle", "Tratamento"], 3, microplaca=True)
+    collection = {
+        "unidades": units,
+        "unidade": "mg/mL",
+        "tipo_repeticao": "independentes",
+    }
+    path = tmp_path / "coleta.xlsx"
+    exportar_modelo(path, units, {**p.context, "coleta": collection}, "mg/mL")
+    book = load_workbook(path)
+    for row, value in enumerate([2, 4, 6, 3, 5, 7], 2):
+        book["Medições"].cell(row, 7, value)
+    book.save(path)
+    book.close()
+    monkeypatch.setattr(ExcelPreview, "exec", lambda self: 1)
+    p.finish_import((str(path), p.revision, read_workbook(path), "hash-teste"))
+    assert p.read_groups() == {"Controle": [2, 4, 6], "Tratamento": [3, 5, 7]}
+    assert p.collection == collection and p.unit.text() == "mg/mL"
+    p.analyze()
+    assert p.report["resumos"]["Controle"]["media"] == 4
+    assert w.flush_observations()
+    w.close()
+    reopened = PlannerWindow()
+    saved = reopened.history.list()[0]
+    assert saved["id"] == record_id
+    assert reopened.resume_record(json.loads(saved["conteudo"]), record_id)
+    restored = reopened.analysis
+    assert restored.read_groups() == {"Controle": [2, 4, 6], "Tratamento": [3, 5, 7]}
+    assert restored.collection == collection
+    assert restored.context["registro_id"] == record_id
+    assert restored.observation_payload()["importacao"]["sha256"] == "hash-teste"
+    assert reopened.export_button.isEnabled()
+    reopened.close()

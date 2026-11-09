@@ -335,11 +335,11 @@ class AnalysisWidget(QWidget):
         payload = self.observation_payload()
         if payload is None or self.report is None:
             return
-        path, _ = QFileDialog.getSaveFileName(
+        path, selected_format = QFileDialog.getSaveFileName(
             self,
             "Exportar resultados",
             "resultados.xlsx",
-            "Excel (*.xlsx);;Medições CSV (*.csv);;Relatório Word (*.docx)",
+            "Excel (*.xlsx);;Medições CSV (*.csv);;Resumo CSV (*.csv);;Relatório Word (*.docx)",
         )
         if not path:
             return
@@ -353,6 +353,7 @@ class AnalysisWidget(QWidget):
                     "planejamento": self.plan_snapshot,
                     "parametros_planejados": self.parameter_snapshot,
                 },
+                resumo_csv=selected_format.startswith("Resumo CSV"),
             )
             self.status.setText(f"Resultados exportados: {Path(path).name}")
         except (OSError, ValueError) as exc:
@@ -498,6 +499,14 @@ class AnalysisWidget(QWidget):
             if not preview.exec():
                 return
             groups = preview.groups
+            if self.collection is not None and collection is None:
+                expected = {}
+                for unit in self.collection["unidades"]:
+                    expected[unit["grupo"]] = expected.get(unit["grupo"], 0) + 1
+                if {name: len(values) for name, values in groups.items()} != expected:
+                    raise ValueError(
+                        "Os grupos ou números de medições diferem da coleta planejada. Confira a planilha ou atualize a organização da coleta."
+                    )
             self.data.blockSignals(True)
             try:
                 self.data.clearContents()
@@ -589,6 +598,35 @@ class AnalysisWidget(QWidget):
         )
         self.status.setText(
             "Preencha os grupos e valores obtidos na bancada. Nenhuma medição é preenchida automaticamente."
+        )
+
+    def restore_observations(self, saved):
+        self.blockSignals(True)
+        self.data.blockSignals(True)
+        try:
+            rows = saved.get("linhas_informadas", [])
+            self.data.clearContents()
+            self.data.setRowCount(max(2, len(rows)))
+            self.data.setColumnCount(4)
+            self.data.update_headers()
+            for row, record in enumerate(rows):
+                self.data.setItem(row, 0, QTableWidgetItem(record.get("grupo", "")))
+                self.data.setItem(row, 1, QTableWidgetItem(record.get("valores", "")))
+            self.unit.setText(saved.get("unidade", ""))
+            self.infer.setChecked(saved.get("comparacao_solicitada", False))
+            self.alpha.setValue(saved.get("alpha", 0.05))
+            self.design.setCurrentIndex(
+                max(0, self.design.findText(saved.get("desenho_informado", "")))
+            )
+            self.assumptions.setChecked(saved.get("pressupostos_conferidos", False))
+            self.collection = saved.get("coleta_planejada")
+            self.import_source = saved.get("importacao")
+            self.invalidate()
+        finally:
+            self.data.blockSignals(False)
+            self.blockSignals(False)
+        self.status.setText(
+            "Planejamento e medições restaurados. Calcule o resumo para conferir a análise nesta versão."
         )
 
     def observation_payload(self):

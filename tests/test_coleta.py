@@ -55,3 +55,21 @@ def test_manifest_binds_samples_positions_and_plan(tmp_path):
     sheets["Medições"][2][1] = sheets["Medições"][1][1]
     with pytest.raises(ValueError, match="repetido"):
         conferir_coleta(sheets, context)
+
+
+def test_large_manifest_is_not_truncated_by_excel(tmp_path):
+    from openpyxl import load_workbook
+
+    from planejador.services.coleta import conferir_coleta
+
+    units = organizar_coleta([f"Grupo{i}" for i in range(10)], 100)
+    collection = {"unidades": units, "unidade": "mg/mL"}
+    context = {"registro_id": "r", "planejamento_sha256": "p"}
+    path = tmp_path / "grande.xlsx"
+    exportar_modelo(path, units, {**context, "coleta": collection}, "mg/mL")
+    book = load_workbook(path)
+    for row in range(2, 1002):
+        book["Medições"].cell(row, 7, row)
+    book.save(path)
+    book.close()
+    assert conferir_coleta(read_workbook(path), context) == collection

@@ -603,7 +603,9 @@ class PlannerWindow(QMainWindow):
                 1,
                 button(
                     "Consultar",
-                    lambda checked=False, data=payload: self.view_record(data),
+                    lambda checked=False, data=payload, rid=record["id"]: (
+                        self.view_record(data, rid)
+                    ),
                 ),
             )
             self.history_table.setCellWidget(
@@ -631,7 +633,7 @@ class PlannerWindow(QMainWindow):
         self.history_status.setText(f"Arquivado para consulta: {target.name}")
         self.refresh_history()
 
-    def view_record(self, payload):
+    def view_record(self, payload, record_id=None):
         dialog = QDialog(self)
         dialog.setWindowTitle("Consulta do experimento")
         dialog.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -677,7 +679,9 @@ class PlannerWindow(QMainWindow):
         text.setPlainText("\n".join(lines))
         layout.addWidget(text)
         status = label(
-            "Consulta somente leitura. Este registro não reabre o planejamento."
+            "Registro recente: você pode continuar este planejamento."
+            if record_id
+            else "Consulta somente leitura. Este registro não reabre o planejamento."
         )
         layout.addWidget(status)
 
@@ -698,9 +702,53 @@ class PlannerWindow(QMainWindow):
                     return
                 status.setText("Registro exportado.")
 
+        if record_id:
+
+            def resume():
+                if self.resume_record(data, record_id):
+                    dialog.accept()
+
+            layout.addWidget(button("Continuar planejamento", resume, True))
         layout.addWidget(button("Exportar registro em JSON", export))
         layout.addWidget(button("Fechar consulta", dialog.accept))
         dialog.open()
+
+    def resume_record(self, payload, record_id):
+        from planejador.services.preparos import calcular_preparo
+
+        data = copy.deepcopy(payload)
+        code = data.get("protocolo_id")
+        if code not in self.catalog:
+            self.history_status.setText(
+                "Este protocolo não está disponível para continuar. Preserve a consulta e a exportação."
+            )
+            return False
+        try:
+            expected = calcular_preparo(self.catalog[code], data["parametros"])
+            if expected != data["plano"]:
+                raise ValueError(
+                    "As regras deste protocolo mudaram. Consulte o registro original e crie um novo planejamento com a versão atual."
+                )
+        except (ValueError, KeyError, ErroPlanejamento) as exc:
+            self.history_status.setText(str(exc))
+            return False
+        if not self.flush_observations():
+            self.show_pending_data()
+            return False
+        self.new_planning()
+        self.protocol.setCurrentIndex(self.protocol.findData(code))
+        self.complete_protocol()
+        self.title.setText(data["titulo"])
+        self.percent_form.set_values(data["parametros"])
+        self.parameters, self.plan = data["parametros"], data["plano"]
+        self.history_id = record_id
+        self.render_plan()
+        self.export_button.setEnabled(True)
+        self.continue_button.setEnabled(True)
+        self.show_page(4)
+        if data.get("resultados_observados"):
+            self.analysis.restore_observations(data["resultados_observados"])
+        return True
 
     def open_archived_record(self):
         path, _ = QFileDialog.getOpenFileName(
