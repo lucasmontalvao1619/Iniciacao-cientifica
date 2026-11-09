@@ -92,10 +92,58 @@ def exportar_resultados(destino, payload):
         for row in rows:
             for cell, value in zip(table.add_row().cells, row, strict=True):
                 cell.text = str(value)
-        document.add_heading("Rastreabilidade e opções informadas", 1)
+        plan = payload.get("planejamento") or {}
+        document.add_heading("Planejamento utilizado", 1)
+        for key, value in payload.get("parametros_planejados", {}).items():
+            document.add_paragraph(f"{key.replace('_', ' ').capitalize()}: {value}")
+        if plan.get("resultado"):
+            for key, value in plan["resultado"].items():
+                document.add_paragraph(f"{key.replace('_', ' ').capitalize()}: {value}")
+        if plan.get("procedimento"):
+            document.add_heading("Procedimento planejado", 1)
+            for step in plan["procedimento"]:
+                document.add_paragraph(str(step), style="List Number")
+        document.add_heading("Fontes do protocolo", 1)
+        for source in plan.get("fontes", []):
+            pages = ", ".join(map(str, source.get("paginas", [])))
+            document.add_paragraph(
+                f"{source.get('title', source.get('id', 'Fonte'))}. {source.get('organization', '')}, {source.get('year', '')}. Páginas: {pages}."
+            )
+            document.add_paragraph(source.get("url", ""))
+            document.add_paragraph(
+                f"Consulta registrada: {source.get('consultado_em', 'Não informada')}"
+            )
+        document.add_heading("Condições da análise e rastreabilidade", 1)
         document.add_paragraph(
-            json.dumps(metadata, ensure_ascii=False, indent=2, allow_nan=False)
+            "Desenho informado: "
+            + str(payload.get("desenho_informado", "Não informado"))
         )
+        document.add_paragraph(
+            "Pressupostos declarados conferidos: "
+            + ("Sim" if payload.get("pressupostos_conferidos") else "Não")
+        )
+        document.add_paragraph(
+            "Nível de significância: " + str(payload.get("alpha", 0.05))
+        )
+        document.add_paragraph(
+            "Registro do planejamento: "
+            + str(context.get("registro_id", "Não informado"))
+        )
+        document.add_paragraph(
+            "Identificador do conteúdo planejado: "
+            + str(context.get("planejamento_sha256", "Não informado"))
+        )
+        imported = payload.get("importacao")
+        if imported:
+            document.add_paragraph(
+                f"Arquivo importado: {imported.get('arquivo')}; aba: {imported.get('aba')}; SHA-256: {imported.get('sha256')}"
+            )
+        if payload.get("coleta_planejada"):
+            document.add_heading("Organização da coleta", 1)
+            for unit in payload["coleta_planejada"]["unidades"]:
+                document.add_paragraph(
+                    f"{unit['amostra']} · {unit['grupo']} · repetição {unit['repeticao']} · placa {unit.get('placa')} · poço {unit.get('poco')}"
+                )
         document.save(path)
     else:
         raise ValueError("Escolha Excel (.xlsx), CSV (.csv) ou relatório Word (.docx).")

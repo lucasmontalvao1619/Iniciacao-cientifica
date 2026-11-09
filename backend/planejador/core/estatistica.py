@@ -11,8 +11,10 @@ padrão populacional do NumPy.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Sequence
 from dataclasses import dataclass
+from numbers import Real
 
 import numpy as np
 from scipy import stats
@@ -22,10 +24,27 @@ from .exceptions import EntradaInvalida
 
 def _validar_amostra(nome: str, valores: Sequence[float], minimo: int = 1) -> None:
     """Valida que a amostra tem tamanho suficiente e é numérica."""
+    if any(
+        isinstance(v, bool) or not isinstance(v, Real) or not math.isfinite(v)
+        for v in valores
+    ):
+        raise EntradaInvalida(f"'{nome}' deve conter somente números reais finitos.")
     if len(valores) < minimo:
         raise EntradaInvalida(
             f"'{nome}' precisa de ao menos {minimo} valor(es) "
             f"(recebido: {len(valores)})."
+        )
+
+
+def _validar_alpha(alpha):
+    if (
+        isinstance(alpha, bool)
+        or not isinstance(alpha, Real)
+        or not math.isfinite(alpha)
+        or not 0 < alpha < 1
+    ):
+        raise EntradaInvalida(
+            "O nível de significância deve estar entre 0 e 1, sem incluir os extremos."
         )
 
 
@@ -135,6 +154,7 @@ def teste_t(
     Raises:
         EntradaInvalida: Se algum grupo tiver menos de 2 valores.
     """
+    _validar_alpha(alpha)
     _validar_amostra("grupo_a", grupo_a, minimo=2)
     _validar_amostra("grupo_b", grupo_b, minimo=2)
     resultado = stats.ttest_ind(grupo_a, grupo_b, equal_var=not welch)
@@ -162,9 +182,7 @@ class ResultadoAnova:
     alpha: float
 
 
-def anova_uma_via(
-    *grupos: Sequence[float], alpha: float = 0.05
-) -> ResultadoAnova:
+def anova_uma_via(*grupos: Sequence[float], alpha: float = 0.05) -> ResultadoAnova:
     """ANOVA de uma via para comparar três ou mais grupos.
 
     Args:
@@ -178,6 +196,7 @@ def anova_uma_via(
         EntradaInvalida: Se houver menos de 2 grupos ou algum grupo com < 2
             valores.
     """
+    _validar_alpha(alpha)
     if len(grupos) < 2:
         raise EntradaInvalida(
             "A ANOVA exige ao menos 2 grupos (idealmente 3 ou mais).",

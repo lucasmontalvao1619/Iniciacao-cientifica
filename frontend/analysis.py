@@ -160,6 +160,8 @@ class AnalysisWidget(QWidget):
         self.import_source = None
         self.collection = None
         self.context = None
+        self.plan_snapshot = None
+        self.parameter_snapshot = {}
         layout = QVBoxLayout(self)
         layout.setContentsMargins(32, 24, 32, 24)
         title = QLabel("Medições e análise")
@@ -344,7 +346,14 @@ class AnalysisWidget(QWidget):
         try:
             from planejador.services.exportacao_resultados import exportar_resultados
 
-            exportar_resultados(path, payload)
+            exportar_resultados(
+                path,
+                {
+                    **payload,
+                    "planejamento": self.plan_snapshot,
+                    "parametros_planejados": self.parameter_snapshot,
+                },
+            )
             self.status.setText(f"Resultados exportados: {Path(path).name}")
         except (OSError, ValueError) as exc:
             self.status.setText(f"Não foi possível exportar: {exc}")
@@ -363,6 +372,29 @@ class AnalysisWidget(QWidget):
         names = QLineEdit()
         names.setPlaceholderText("Nomes definidos no seu experimento")
         layout.addWidget(names)
+        layout.addWidget(QLabel("Qual grupo é o controle? (opcional)"))
+        control = QComboBox()
+
+        def update_controls():
+            previous = control.currentText()
+            control.clear()
+            control.addItem("Sem controle definido", None)
+            for name in names.text().split(";"):
+                if name.strip():
+                    control.addItem(name.strip(), name.strip())
+            index = control.findText(previous)
+            if index >= 0:
+                control.setCurrentIndex(index)
+
+        names.textChanged.connect(update_controls)
+        update_controls()
+        layout.addWidget(control)
+        layout.addWidget(QLabel("As repetições representam o quê?"))
+        repetition_type = QComboBox()
+        repetition_type.addItem("Ainda não definido", "indefinido")
+        repetition_type.addItem("Unidades experimentais independentes", "independentes")
+        repetition_type.addItem("Leituras repetidas da mesma unidade", "tecnicas")
+        layout.addWidget(repetition_type)
         layout.addWidget(QLabel("Quantas repetições serão registradas por grupo?"))
         repeats = QSpinBox()
         repeats.setRange(1, 100)
@@ -406,6 +438,16 @@ class AnalysisWidget(QWidget):
                 "unidades": units,
                 "unidade": self.unit.text().strip(),
                 "microplaca": plate.isChecked(),
+                "tipo_repeticao": repetition_type.currentData(),
+                "grupos": [
+                    {
+                        "nome": name.strip(),
+                        "papel": "controle"
+                        if name.strip() == control.currentData()
+                        else "tratamento ou preparo",
+                    }
+                    for name in names.text().split(";")
+                ],
             }
             exportar_modelo(
                 path, units, {**self.context, "coleta": collection}, self.unit.text()
@@ -512,10 +554,13 @@ class AnalysisWidget(QWidget):
         self.context_label.setText("Conclua o planejamento para registrar as medições.")
         self.invalidate()
 
-    def set_experiment(self, title, plan, record_id=None):
+    def set_experiment(self, title, plan, record_id=None, parameters=None):
         self.clear_experiment()
+        import copy
         import hashlib
 
+        self.plan_snapshot = copy.deepcopy(plan)
+        self.parameter_snapshot = copy.deepcopy(parameters or {})
         self.context = {
             "titulo": title,
             "protocolo": plan["protocolo"],
@@ -642,6 +687,10 @@ class AnalysisWidget(QWidget):
             )
         groups = self.read_groups()
         if self.infer.isChecked():
+            if self.collection and self.collection.get("tipo_repeticao") == "tecnicas":
+                raise ValueError(
+                    "A coleta registra leituras repetidas da mesma unidade. Use o resumo descritivo; elas não são amostras independentes para t/ANOVA."
+                )
             if self.design.currentIndex() != 1:
                 raise ValueError(
                     "Confirme unidades independentes para comparar. Para dados pareados ou dúvida, desative a comparação e consulte o resumo."

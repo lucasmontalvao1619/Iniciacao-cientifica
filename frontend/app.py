@@ -316,7 +316,7 @@ class PlannerWindow(QMainWindow):
 
     def configure_analysis(self):
         self.analysis.set_experiment(
-            self.title.text().strip(), self.plan, self.history_id
+            self.title.text().strip(), self.plan, self.history_id, self.parameters
         )
         self.analysis.save_experiment.clicked.connect(self.export_plan)
         self.analysis.back.clicked.connect(lambda: self.show_page(3))
@@ -1100,7 +1100,7 @@ class PlannerWindow(QMainWindow):
         self.export_button.setEnabled(True)
         if self.analysis is not None and not pending and "resultado" not in plan:
             self.analysis.set_experiment(
-                self.title.text().strip(), self.plan, self.history_id
+                self.title.text().strip(), self.plan, self.history_id, self.parameters
             )
         self.parameters = params
         self.render_plan()
@@ -1202,7 +1202,7 @@ class PlannerWindow(QMainWindow):
             return
         if params != self.parameters and self.analysis is not None:
             self.analysis.set_experiment(
-                self.title.text().strip(), plan, self.history_id
+                self.title.text().strip(), plan, self.history_id, params
             )
         self.parameters, self.plan = params, plan
         self.percent_form.blockSignals(True)

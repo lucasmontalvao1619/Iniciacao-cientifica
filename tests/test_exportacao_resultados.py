@@ -28,3 +28,35 @@ def test_exports_keep_observations_and_summary(tmp_path):
         assert len(list(csv.reader(stream, delimiter=";"))) == 4
     doc = Document(tmp_path / "dados.docx")
     assert doc.tables[0].cell(1, 2).text == "4"
+
+
+def test_report_includes_plan_parameters_and_sources(tmp_path):
+    payload = {
+        "unidade": "mg/mL",
+        "medicoes": {"A": [2, 4, 6]},
+        "analise": {
+            "resumos": {"A": {"n": 3, "media": 4, "desvio_padrao": 2, "variancia": 4}},
+            "experimento": {"titulo": "Experimento", "protocolo": "PREP-003"},
+        },
+        "planejamento": {
+            "resultado": {"massa": 2.5},
+            "procedimento": ["Conferir o procedimento do método."],
+            "fontes": [
+                {
+                    "title": "Fonte institucional",
+                    "organization": "Fiocruz",
+                    "year": 2009,
+                    "paginas": [227],
+                    "url": "https://www.arca.fiocruz.br/",
+                    "consultado_em": "2026-11-08",
+                }
+            ],
+        },
+        "parametros_planejados": {"quantidade_final": 250},
+    }
+    path = tmp_path / "relatorio.docx"
+    exportar_resultados(path, payload)
+    text = "\n".join(p.text for p in Document(path).paragraphs)
+    assert "Quantidade final: 250" in text
+    assert "Fonte institucional" in text and "227" in text
+    assert "Conferir o procedimento" in text

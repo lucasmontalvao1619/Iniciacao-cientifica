@@ -5,13 +5,13 @@ Lucas autorizou concluir o produto atual, deixando apenas a ampliação do catá
 | Área | Critério verificável | Estado atual |
 |---|---|---|
 | Protocolos atuais | Dez PREP, cálculo, entradas/unidades, fonte, POP/DOCX | Implementado, reconferir regressões |
-| Organização experimental | Controles, tratamentos, unidades independentes, repetições e organização em recipientes/microplacas ligados ao plano | Completar interface e persistência |
+| Organização experimental | Controles, tratamentos, unidades independentes, repetições e organização em recipientes/microplacas ligados ao plano | Controle e tipo de repetição registrados na coleta; conferir fluxo completo e visualização |
 | Excel | Importação por arquivo, múltiplos formatos/abas, prévia, erros claros, leitura em segundo plano | Leitura/prévia e leitura em segundo plano implementadas; conferir integração nativa |
 | Modelo de coleta | Planilha gerada pelo planejamento com identificadores e espaços vazios para medições reais | Gerador e interface implementados; conferir persistência/vínculo |
 | Vínculo | Conferir correspondência entre coleta/importação e organização planejada, preservar proveniência | Implementado manifesto com registro/hash do plano e amostras; ampliar integração/UI |
 | Estatística básica | Média, DP, variância, t/ANOVA com desenho e pressupostos explícitos; resultados indefinidos tratados | Existente; ampliar conferência e orientação |
 | Gráficos | Dados observados identificados, legíveis, exportáveis, sem confundir com simulação | Existente; conferir seleção e exportação |
-| Exportações | Dados e resumo em Excel/CSV, relatório do experimento com parâmetros, fontes e análise; figuras | Excel/CSV/Word integrados; completar conteúdo do plano/fontes e QA visual |
+| Exportações | Dados e resumo em Excel/CSV, relatório do experimento com parâmetros, fontes e análise; figuras | Excel/CSV/Word com plano, parâmetros e fontes; falta QA visual do relatório |
 | Continuidade | Preservar rascunhos, histórico, importações e exportações; recuperação/backup verificáveis | Existente; ampliar verificação |
 | Interface | Estilo Bancada, ajuda contextual, estados vazios/erro/sucesso e teclado; nenhuma etapa pareça indisponível sem motivo | Conferir após integração |
 | Distribuição | Mac instalado e verificado; instalador Windows e preservação de registros testados; downloads atualizados | Recompilar ao concluir |
