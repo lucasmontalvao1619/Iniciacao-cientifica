@@ -2244,3 +2244,27 @@ def test_many_groups_have_readable_graph_pages_without_losing_summary(app):
     assert panel.figure.axes[0].get_xticklabels()[0].get_text() == "Grupo 9"
     assert len(panel.report["resumos"]) == 12
     w.close()
+
+
+def test_large_excel_import_does_not_allocate_a_huge_empty_matrix(app, monkeypatch):
+    from frontend.excel_import import ExcelPreview
+
+    w = PlannerWindow()
+    confirm(w)
+    w.generate()
+    w.navigate(4)
+    panel = w.analysis
+    panel.unit.setText("mg/mL")
+    sheets = {
+        "Resultados": [[f"Grupo {i}" for i in range(10)]]
+        + [[float(i + j) for j in range(10)] for i in range(1000)]
+    }
+    monkeypatch.setattr(ExcelPreview, "exec", lambda self: 1)
+    panel.finish_import(("coleta.xlsx", panel.revision, sheets, "hash-conferido"))
+    assert panel.data.columnCount() == 41
+    assert sum(map(len, panel.read_groups().values())) == 10000
+    panel.analyze()
+    assert len(panel.report["resumos"]) == 10
+    assert panel.report["resumos"]["Grupo 0"]["n"] == 1000
+    assert panel.graph_page.count() == 2
+    w.close()
