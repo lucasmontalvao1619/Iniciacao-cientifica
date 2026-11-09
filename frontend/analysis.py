@@ -520,7 +520,7 @@ class AnalysisWidget(QWidget):
         axes = self.figure.add_subplot()
         for i, (name, values) in enumerate(groups.items()):
             offsets = [
-                i - 0.12 + 0.24 * j / max(1, len(values) - 1)
+                i - 0.18 + 0.12 * j / max(1, len(values) - 1)
                 for j in range(len(values))
             ]
             axes.scatter(

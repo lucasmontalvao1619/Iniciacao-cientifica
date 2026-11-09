@@ -117,3 +117,6 @@ Verificação local: 315 testes aprovados e Ruff aprovado. Abertura fria, mesma 
 
 
 A conferência do bundle encontrou o runtime hook pyi_rth_mplconfig do PyInstaller criando um diretório de fontes temporário a cada execução. A publicação 0.2.5 foi cancelada antes da release. Correção 0.2.6: cache de fontes persistente por caminho de instalação nos bundles onedir; se a pasta não puder ser criada, mantém o cache temporário. Primeiro carregamento da figura/fontes também roda em tarefa de fundo, tanto para simulação quanto para análise, mantendo o Qt na thread principal. Suíte ampliada para 317 testes, incluindo responsividade durante carga de fontes e estabilidade do cache.
+
+
+Revisão final 0.2.7: seções recolhidas sem molduras que pareciam campos vazios; uma única exportação JSON no fluxo PREP. Pontos observados ocupam uma faixa ao lado da média, sem esconder a observação coincidente com ela. Capturas finais em `docs/interface/capturas/*-027.png`; quadro mínimo 880 px sem rolagem horizontal e resumo nativo conferido. A primeira carga de fontes pode levar segundos, com janela responsiva; cache de fontes permanece para as aberturas seguintes.

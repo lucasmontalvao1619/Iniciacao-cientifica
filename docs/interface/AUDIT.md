@@ -311,3 +311,18 @@ Gates: pytest e Ruff. Scanners upstream ausentes, sem score. Verificação visua
 
 
 Conferência intermediária: 315 testes passaram; comparação no mesmo script de processo frio PREP-003: 0,3877 s no HEAD 0.2.4 e 0,0277 s na revisão (janela Qt com processamento de eventos). Capturas de resumo/medições/gráfico a 880 px abertas, sem rolagem horizontal. Ao testar o bundle, encontrado cache Matplotlib temporário a cada execução pelo runtime hook do PyInstaller; cancelada publicação 0.2.5. 0.2.6 inclui cache estável por instalação e carregamento das fontes em tarefa de fundo. 317 testes e Ruff passaram; verificação nativa/pacotes em andamento. Banco pessoal copiado consistentemente antes da substituição, com integridade ok e dois registros existentes; sessão antiga encerrada por fechamento normal.
+
+
+Inspeção nativa 0.2.6 em sessão temporária: resumo abre sem espera perceptível; colagem TSV por teclado conferida com Controle [2,4,6] e Tratamento [3,5,7], médias 4/5 e DP 2. Recolher/expandir medições durante a primeira carga de fontes respondeu imediatamente; cache fontlist gerado e análise concluída. Gráfico foi visto na janela. Encontrados três ajustes visuais finais: borda de grupos recolhidos parecia campo vazio, exportação JSON duplicada dentro/fora da análise e ponto central podia coincidir com marcador da média. Publicação 0.2.6 cancelada para corrigir esses achados antes da entrega 0.2.7.
+
+
+## Screen seen — revisão final 0.2.7
+
+| Tela | Ambiente/dados | Resultado observado |
+|---|---|---|
+| Resultados resumidos | Qt 880×720 e instalado Mac 1180 px, PREP-003 1,5 mg/mL, 100 mL, pureza 100% | 150 mg em destaque; parâmetros e simulação recolhidos; sem campos vazios aparentes; exportação única |
+| Medições e gráfico | Qt 880 px; dois grupos com três valores cada | Tabela por célula; pontos separados da média/DP; legenda e unidades legíveis, sem rolagem horizontal |
+| Entrada e análise nativa | Instalado Mac, sessão temporária | TSV colado pelo teclado, médias 4/5 e DP 2; recolher/expandir respondeu durante carga de fontes; gráfico e tabela vistos |
+| Simulação nativa | Instalado 0.2.7, cache persistente da sessão anterior | Carga sob demanda solicitada, sem iniciar dependências na abertura do resumo |
+
+Sem score, scanners upstream ou teste manual Windows. CI final e instaladores em conferência.

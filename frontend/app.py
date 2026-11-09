@@ -282,7 +282,9 @@ class PlannerWindow(QMainWindow):
                 self.analysis.layout().setContentsMargins(0, 16, 0, 0)
                 self.configure_analysis()
                 self.analysis.back.hide()
+                self.analysis.save_experiment.hide()
                 group = QGroupBox("Medições observadas e análise estatística")
+                group.setProperty("foldable", True)
                 group.setCheckable(True)
                 group.setChecked(False)
                 group.setMaximumHeight(group.fontMetrics().height() + 20)
@@ -1349,6 +1351,9 @@ def create_app():
     app.setStyleSheet("""
         QFrame#sidebar { background: palette(base); border-right: 1px solid palette(mid); }
         QGroupBox { background: palette(base); border: 1px solid palette(mid); border-radius: 8px; margin-top: 16px; padding: 24px; }
+        QGroupBox[foldable="true"]:!checked { border: none; background: transparent; padding: 0px; }
+        QGroupBox[foldable="true"]::indicator { width: 14px; height: 14px; border: 1px solid palette(mid); background: palette(base); }
+        QGroupBox[foldable="true"]::indicator:checked { background: palette(highlight); }
         QGroupBox::title { subcontrol-origin: margin; left: 16px; }
         QPushButton { background: palette(button); padding: 8px 16px; border: 1px solid palette(mid); border-radius: 6px; }
         QPushButton[primary="true"] { background: palette(highlight); color: palette(highlighted-text); }
