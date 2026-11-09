@@ -308,3 +308,6 @@ Conferência nativa do instalado Mac em sessão temporária separada dos dados p
 | Orientação | T3/C | Inferência habilitada sem perguntas sobre desenho | Perguntas sobre independência e pressupostos antes de comparar, gráfico com pontos e média/DP identificados |
 
 Gates: pytest e Ruff. Scanners upstream ausentes, sem score. Verificação visual e nativa pendente até alterações concluídas.
+
+
+Conferência intermediária: 315 testes passaram; comparação no mesmo script de processo frio PREP-003: 0,3877 s no HEAD 0.2.4 e 0,0277 s na revisão (janela Qt com processamento de eventos). Capturas de resumo/medições/gráfico a 880 px abertas, sem rolagem horizontal. Ao testar o bundle, encontrado cache Matplotlib temporário a cada execução pelo runtime hook do PyInstaller; cancelada publicação 0.2.5. 0.2.6 inclui cache estável por instalação e carregamento das fontes em tarefa de fundo. 317 testes e Ruff passaram; verificação nativa/pacotes em andamento. Banco pessoal copiado consistentemente antes da substituição, com integridade ok e dois registros existentes; sessão antiga encerrada por fechamento normal.

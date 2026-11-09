@@ -1,6 +1,6 @@
 """Parâmetros específicos de preparos e resultados recalculados ao editar."""
 
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import QThreadPool, pyqtSignal
 from PyQt6.QtWidgets import (
     QAbstractItemView,
     QCheckBox,
@@ -751,6 +751,10 @@ class PreparoResults(QWidget):
         layout.addWidget(self.chart_group)
         self.chart_body.hide()
         self.figure = None
+        self.font_job = None
+        self.chart_status = QLabel()
+        self.chart_status.setWordWrap(True)
+        self.chart_layout.addWidget(self.chart_status)
         self.canvas = None
         self.chart_group.toggled.connect(self.toggle_chart)
         note = QLabel(
@@ -774,15 +778,30 @@ class PreparoResults(QWidget):
         if checked:
             self.recalculate()
 
+    def fonts_loaded(self, error):
+        self.font_job = None
+        self.chart_status.setText(f"Não foi possível abrir o gráfico: {error}" if error else "")
+        if not error and self.chart_group.isChecked():
+            self.recalculate()
+
     def prepare_chart(self, params, plan):
         if not self.chart_group.isChecked():
             self.updated.emit(params, plan)
             return False
+        from frontend import plotting
+
+        if not plotting.figure_ready:
+            if self.font_job is None:
+                self.chart_status.setText("Preparando fontes do gráfico… A janela continua disponível.")
+                self.font_job = plotting.FontJob()
+                self.font_job.signals.finished.connect(self.fonts_loaded)
+                QThreadPool.globalInstance().start(self.font_job)
+            self.updated.emit(params, plan)
+            return False
         if self.figure is None:
             from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
-            from matplotlib.figure import Figure
 
-            self.figure = Figure(figsize=(6, 3.6), layout="constrained")
+            self.figure = plotting.load_figure()(figsize=(6, 3.6), layout="constrained")
             self.canvas = FigureCanvasQTAgg(self.figure)
             self.canvas.setMinimumHeight(340)
             self.chart_layout.insertWidget(1, self.canvas)

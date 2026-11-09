@@ -92,6 +92,9 @@ class AnalysisJob(QRunnable):
     def run(self):
         try:
             result = calculate_report(self.groups, self.infer, self.alpha)
+            from frontend.plotting import load_figure
+
+            load_figure()
         except Exception as exc:
             result = str(exc)
         self.signals.finished.emit((self.revision, self.groups, result))
@@ -506,9 +509,10 @@ class AnalysisWidget(QWidget):
                 self.table.setItem(i, j, QTableWidgetItem(text))
         if self.figure is None:
             from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
-            from matplotlib.figure import Figure
 
-            self.figure = Figure(figsize=(6, 3.8), layout="constrained")
+            from frontend.plotting import load_figure
+
+            self.figure = load_figure()(figsize=(6, 3.8), layout="constrained")
             self.canvas = FigureCanvasQTAgg(self.figure)
             self.canvas.setMinimumHeight(360)
             self.graph_layout.addWidget(self.canvas)

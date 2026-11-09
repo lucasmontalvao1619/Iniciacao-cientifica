@@ -1321,6 +1321,9 @@ def create_app():
     app.setApplicationName("Planejador de Experimentos")
     app.setApplicationDisplayName("Planejador de Experimentos")
     app.setOrganizationName("Lucas Montalvão")
+    from frontend.plotting import configure_cache
+
+    configure_cache()
     icon = Path(__file__).with_name("assets") / "app.png"
     if icon.is_file():
         app.setWindowIcon(QIcon(str(icon)))

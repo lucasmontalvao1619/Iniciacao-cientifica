@@ -1866,6 +1866,11 @@ w.navigate(4)
 assert w.percent_results.figure is None
 assert "matplotlib" not in sys.modules
 w.percent_results.chart_group.setChecked(True)
+from PyQt6.QtTest import QTest
+for _ in range(500):
+    QTest.qWait(20)
+    if w.percent_results.figure is not None:
+        break
 assert w.percent_results.figure.axes
 assert "planejador.services.estatistica_service" not in sys.modules
 assert "scipy.stats" not in sys.modules
@@ -2076,4 +2081,77 @@ def test_background_analysis_keeps_events_and_discards_stale_result(app, monkeyp
             break
     assert p.report["resumos"]["A"]["media"] == 6
     assert p.run_button.isEnabled()
+    w.close()
+
+
+def test_frozen_font_cache_is_stable_per_installation(app, monkeypatch, tmp_path):
+    import sys
+
+    from frontend.plotting import configure_cache
+
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr(
+        sys, "_MEIPASS", str(tmp_path / "app-frameworks"), raising=False
+    )
+    monkeypatch.setenv("MPLCONFIGDIR", str(tmp_path / "temporary"))
+    configure_cache()
+    first = os.environ["MPLCONFIGDIR"]
+    assert "fontes-graficos" in first
+    marker = __import__("pathlib").Path(first) / "cache-preservado"
+    marker.write_text("ok")
+    configure_cache()
+    assert os.environ["MPLCONFIGDIR"] == first and marker.read_text() == "ok"
+    monkeypatch.setattr(sys, "_MEIPASS", str(tmp_path / "outra-instalacao"))
+    configure_cache()
+    assert os.environ["MPLCONFIGDIR"] != first
+
+
+def test_first_simulation_loads_fonts_without_blocking_events(app, monkeypatch):
+    import threading
+
+    from PyQt6.QtCore import QTimer
+
+    from frontend import plotting
+
+    w = PlannerWindow()
+    w.protocol.setCurrentIndex(w.protocol.findData("PREP-003"))
+    w.complete_protocol()
+    w.percent_form.set_values(
+        {
+            "unidade_concentracao": "mg/mL",
+            "concentracao": 1,
+            "quantidade_final": 100,
+            "pureza": 100,
+            "correcao": "pureza",
+            "forma": "pesagem",
+        }
+    )
+    w.generate()
+    w.navigate(4)
+    p = w.percent_results
+    original = plotting.load_figure
+    started, release = threading.Event(), threading.Event()
+
+    def slow_load():
+        started.set()
+        assert release.wait(5)
+        return original()
+
+    monkeypatch.setattr(plotting, "figure_ready", False)
+    monkeypatch.setattr(plotting, "load_figure", slow_load)
+    p.chart_group.setChecked(True)
+    try:
+        assert started.wait(5)
+        assert p.figure is None and p.font_job is not None
+        events = []
+        QTimer.singleShot(0, lambda: events.append(True))
+        app.processEvents()
+        assert events
+    finally:
+        release.set()
+    for _ in range(100):
+        QTest.qWait(20)
+        if p.font_job is None:
+            break
+    assert p.font_job is None and p.figure.axes
     w.close()
