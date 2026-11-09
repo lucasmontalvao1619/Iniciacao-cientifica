@@ -4,17 +4,17 @@ Lucas autorizou concluir o produto atual, deixando apenas a ampliação do catá
 
 | Área | Critério verificável | Estado atual |
 |---|---|---|
-| Protocolos atuais | Dez PREP, cálculo, entradas/unidades, fonte, POP/DOCX | Implementado, reconferir regressões |
-| Organização experimental | Controles, tratamentos, unidades independentes, repetições e organização em recipientes/microplacas ligados ao plano | Controle e tipo de repetição registrados na coleta; conferir fluxo completo e visualização |
-| Excel | Importação por arquivo, múltiplos formatos/abas, prévia, erros claros, leitura em segundo plano | Leitura/prévia e leitura em segundo plano implementadas; conferir integração nativa |
-| Modelo de coleta | Planilha gerada pelo planejamento com identificadores e espaços vazios para medições reais | Gerador e interface implementados; conferir persistência/vínculo |
-| Vínculo | Conferir correspondência entre coleta/importação e organização planejada, preservar proveniência | Implementado manifesto com registro/hash do plano e amostras; ampliar integração/UI |
-| Estatística básica | Média, DP, variância, t/ANOVA com desenho e pressupostos explícitos; resultados indefinidos tratados | Existente; ampliar conferência e orientação |
-| Gráficos | Dados observados identificados, legíveis, exportáveis, sem confundir com simulação | Existente; conferir seleção e exportação |
-| Exportações | Dados e resumo em Excel/CSV, relatório do experimento com parâmetros, fontes e análise; figuras | Excel/CSV/Word com plano, parâmetros e fontes; falta QA visual do relatório |
-| Continuidade | Preservar rascunhos, histórico, importações e exportações; recuperação/backup verificáveis | Retomada de registros recentes com coleta/proveniência implementada e testada; arquivos seguem consulta; conferir interface nativa |
-| Interface | Estilo Bancada, ajuda contextual, estados vazios/erro/sucesso e teclado; nenhuma etapa pareça indisponível sem motivo | Conferir após integração |
-| Distribuição | Mac instalado e verificado; instalador Windows e preservação de registros testados; downloads atualizados | Recompilar ao concluir |
+| Protocolos atuais | Dez PREP, cálculo, entradas/unidades, fonte, POP/DOCX | Implementado; regressões e dez POPs conferidos |
+| Organização experimental | Controles, tratamentos, unidades independentes, repetições e organização em recipientes/microplacas ligados ao plano | Implementado; controle/tipo de repetição, mapa e posições testados; inspeção nativa pendente |
+| Excel | Importação por arquivo, múltiplos formatos/abas, prévia, erros claros, leitura em segundo plano | Implementado e testado em três formatos, com mapeamento; diálogo nativo pendente |
+| Modelo de coleta | Planilha gerada pelo planejamento com identificadores e espaços vazios para medições reais | Modelo vazio, manifesto e retomada testados de ponta a ponta |
+| Vínculo | Conferir correspondência entre coleta/importação e organização planejada, preservar proveniência | Manifesto, amostras, grupos e contagens conferidos antes da substituição |
+| Estatística básica | Média, DP, variância, t/ANOVA com desenho e pressupostos explícitos; resultados indefinidos tratados | Testes, limites, ajuda e resultados analíticos independentes conferidos |
+| Gráficos | Dados observados identificados, legíveis, exportáveis, sem confundir com simulação | Gráficos de oito grupos por página; PNG e todas as páginas no Word |
+| Exportações | Dados e resumo em Excel/CSV, relatório do experimento com parâmetros, fontes e análise; figuras | Formatos testados; relatório com gráfico de quatro páginas inspecionado; gravação atômica |
+| Continuidade | Preservar rascunhos, histórico, importações e exportações; recuperação/backup verificáveis | Retomada recente e proveniência testadas; arquivos somente consulta/exportação; instalação preservada |
+| Interface | Estilo Bancada, ajuda contextual, estados vazios/erro/sucesso e teclado; nenhuma etapa pareça indisponível sem motivo | Bancada, ajuda e diálogos inspecionados offscreen; janela nativa pendente pelo Mac bloqueado |
+| Distribuição | Mac instalado e verificado; instalador Windows e preservação de registros testados; downloads atualizados | Pacotes 0.2.9 e instalador Windows aprovados no CI; atualização instalada/publicação final pendentes |
 
 Conclusão exige execução integrada, inspeção de telas e evidências por item. Não declarar que testes computacionais substituem avaliação de usabilidade, validação em bancada ou aprovação científica. Não adicionar novos protocolos durante esta entrega. Não ampliar para técnicas estatísticas sem limite: o escopo estatístico obrigatório é o do projeto (descritiva, t e ANOVA); desenhos incompatíveis devem ser identificados e encaminhados com clareza.
 
