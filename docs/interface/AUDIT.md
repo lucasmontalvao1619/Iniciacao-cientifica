@@ -326,3 +326,6 @@ Inspeção nativa 0.2.6 em sessão temporária: resumo abre sem espera perceptí
 | Simulação nativa | Instalado 0.2.7, cache persistente da sessão anterior | Carga sob demanda solicitada, sem iniciar dependências na abertura do resumo |
 
 Sem score, scanners upstream ou teste manual Windows. CI final e instaladores em conferência.
+
+
+Conclusão 0.2.7: [CI 42551354018](https://github.com/lucasmontalvao1619/Iniciacao-cientifica/actions/runs/42551354018) aprovado; Mac 317 testes, Windows 316 aprovados e um caso SQLite/diretório aberto inaplicável. Executáveis Mac/Windows e instalado Windows: ok, dez protocolos, dez POPs e média observada 4. Instalador Windows passou instalação/desinstalação com preservação de registro. Assets v0.2.7 baixados para Instaladores; ZIP conferido sem erro e plist 0.2.7. Tamanhos: Mac 78,6 MiB e instalador Windows 75,0 MiB. Instalado Mac local 0.2.7 passou verificação empacotada assíncrona, reaberto no Início; dois registros pessoais vistos e conteúdo comparado com backup consistente sem alterações. Sessões de QA isoladas dos dados reais; bundles intermediários e backups temporários de aplicativos removidos. Primeira preparação de fontes pode demorar segundos, com janela responsiva e cache reutilizado; não foi feito teste manual no PC Windows nem avaliação de usabilidade com pesquisadores.

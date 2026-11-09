@@ -120,3 +120,6 @@ A conferência do bundle encontrou o runtime hook pyi_rth_mplconfig do PyInstall
 
 
 Revisão final 0.2.7: seções recolhidas sem molduras que pareciam campos vazios; uma única exportação JSON no fluxo PREP. Pontos observados ocupam uma faixa ao lado da média, sem esconder a observação coincidente com ela. Capturas finais em `docs/interface/capturas/*-027.png`; quadro mínimo 880 px sem rolagem horizontal e resumo nativo conferido. A primeira carga de fontes pode levar segundos, com janela responsiva; cache de fontes permanece para as aberturas seguintes.
+
+
+Entrega 0.2.7 conferida: 317 testes Mac; 316 Windows e um inaplicável. Executáveis e instalação Windows aprovados no CI 42551354018; instalado Mac local verificado e reaberto com registros pessoais preservados. Auditoria final em `docs/interface/AUDIT.md`. Não equivale a teste manual Windows, estudo de usabilidade ou validação em bancada.

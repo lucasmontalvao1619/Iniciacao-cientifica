@@ -1,7 +1,6 @@
 # Requisitos funcionais
 
-O que o sistema deve fazer. A coluna **Estado** reflete o código em
-`backend/planejador/` — o backend está implementado; a interface, não.
+O que o sistema deve fazer. A coluna **Estado** identifica as implementações disponíveis. O fluxo desktop dos dez PREP integra planejamento, medições, estatística e gráficos; as limitações estão nas fichas de módulo.
 
 ## Planejamento experimental
 
@@ -37,7 +36,7 @@ Etapas do fluxo entre a execução na bancada e a análise.
 | RF13 | Calcular variância | Implementado | `core/estatistica.py` |
 | RF14 | Executar teste t | Implementado | `core/estatistica.py` |
 | RF15 | Executar ANOVA (uma via) | Implementado | `core/estatistica.py` |
-| RF16 | Gerar gráficos | Pendente | depende da interface |
+| RF16 | Gerar gráficos | Implementado | `frontend/preparos.py` (simulação) e `frontend/analysis.py` (observações, média e DP; PNG) |
 
 ## Requisitos futuros
 
